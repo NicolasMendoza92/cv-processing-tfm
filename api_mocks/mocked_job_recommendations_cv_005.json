@@ -1,0 +1,29 @@
+{
+  "candidateId": "cv_005",
+  "recommendations": [
+    {
+      "id": "job_011",
+      "title": "Ayudante de Cocina",
+      "description": "Preparación de alimentos, limpieza de cocina y apoyo al equipo culinario.",
+      "requiredSkills": ["Cocina", "Higiene alimentaria", "Trabajo en equipo", "Rapidez"],
+      "compatibility": "Alta",
+      "cluster": "Hostelería"
+    },
+    {
+      "id": "job_012",
+      "title": "Camarero/a",
+      "description": "Atención al cliente en restaurante, toma de pedidos y servicio de mesas.",
+      "requiredSkills": ["Atención al cliente", "Comunicación", "Trabajo bajo presión", "Multitarea"],
+      "compatibility": "Media",
+      "cluster": "Hostelería"
+    },
+    {
+      "id": "job_013",
+      "title": "Auxiliar de Limpieza",
+      "description": "Limpieza y mantenimiento de espacios, uso de productos de limpieza.",
+      "requiredSkills": ["Limpieza", "Organización", "Responsabilidad", "Trabajo autónomo"],
+      "compatibility": "Media",
+      "cluster": "Servicios"
+    }
+  ]
+}

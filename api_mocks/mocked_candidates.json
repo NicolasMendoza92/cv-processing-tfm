@@ -1,0 +1,23 @@
+[
+  {
+    "id": "cv_001",
+    "name": "Juan Pérez",
+    "employabilityScore": 75,
+    "topRecommendations": ["Mozo/a de Almacén", "Operario de Logística"],
+    "lastProcessed": "2025-10-28T16:00:00Z"
+  },
+  {
+    "id": "cv_003",
+    "name": "Carlos Sánchez",
+    "employabilityScore": 60,
+    "topRecommendations": ["Limpiador", "Auxiliar de Servicios"],
+    "lastProcessed": "2025-10-29T09:15:00Z"
+  },
+  {
+    "id": "cv_005",
+    "name": "Laura Martínez",
+    "employabilityScore": 82,
+    "topRecommendations": ["Asistente Administrativo", "Recepcionista"],
+    "lastProcessed": "2025-10-29T14:30:00Z"
+  }
+]

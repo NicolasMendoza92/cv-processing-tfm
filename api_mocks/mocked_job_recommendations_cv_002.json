@@ -1,0 +1,29 @@
+{
+  "candidateId": "cv_002",
+  "recommendations": [
+    {
+      "id": "job_005",
+      "title": "Asistente de Recursos Humanos",
+      "description": "Apoyo en procesos de selección, gestión de documentación y atención a empleados.",
+      "requiredSkills": ["Recursos Humanos", "Comunicación", "Ofimática", "Organización"],
+      "compatibility": "Alta",
+      "cluster": "Administrativo"
+    },
+    {
+      "id": "job_006",
+      "title": "Recepcionista",
+      "description": "Atención al público, gestión de llamadas y tareas administrativas básicas.",
+      "requiredSkills": ["Atención al cliente", "Comunicación", "Ofimática", "Multitarea"],
+      "compatibility": "Alta",
+      "cluster": "Atención al Cliente"
+    },
+    {
+      "id": "job_007",
+      "title": "Auxiliar Contable",
+      "description": "Soporte en tareas contables básicas, archivo y gestión de facturas.",
+      "requiredSkills": ["Contabilidad básica", "Excel", "Atención al detalle", "Organización"],
+      "compatibility": "Media",
+      "cluster": "Administrativo"
+    }
+  ]
+}

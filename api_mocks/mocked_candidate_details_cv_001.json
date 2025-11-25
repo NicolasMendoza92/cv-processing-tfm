@@ -1,0 +1,22 @@
+{
+  "id": "cv_001",
+  "name": "Juan Pérez",
+  "email": "juan.perez@example.com",
+  "phone": "+34 600 123 456",
+  "lastJob": "Mozo de Almacén - Logística Rápida S.A.",
+  "lastEducation": "Bachillerato - IES Garcilaso (2015)",
+  "skills": ["Organización", "Trabajo en equipo", "Gestión de inventario", "Conducción de carretillas"],
+  "languages": [{ "name": "Español", "level": "Nativo" }, { "name": "Inglés", "level": "Básico" }],
+  "disability": "No",
+  "previousIncarceration": "Sí",
+  "formalEducationYears": 12,
+  "workExperienceYears": 5,
+  "employabilityScore": 75,
+  "isAptForEmployment": true,
+  "developmentRecommendations": [
+    "Curso de Excel básico",
+    "Certificación de prevención de riesgos laborales",
+    "Mejora de habilidades de comunicación interpersonal"
+  ],
+  "cvFileName": "juan_perez_cv.pdf"
+}
