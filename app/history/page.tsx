@@ -20,7 +20,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react"
-import { getCVsStatus } from "@/services/cv-service"
+import { getCVsStatus } from "@/services/cvServices"
 import type { CVRecord } from "@/types/cv"
 import { cn } from "@/lib/utils"
 import { DeleteConfirmationDialog } from "@/components/delete-confirmation-dialog"

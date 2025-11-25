@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { Loader2, Users } from "lucide-react"
-import { getCandidatesSummary, deleteCandidate, sendFeedback } from "@/services/cv-service"
+import { getCandidatesSummary, deleteCandidate, sendFeedback } from "@/services/cvServices"
 import type { CandidateSummary, FeedbackData } from "@/types/cv"
 import { CandidateCard } from "@/components/candidate-card"
 import { DeleteConfirmationDialog } from "@/components/delete-confirmation-dialog"

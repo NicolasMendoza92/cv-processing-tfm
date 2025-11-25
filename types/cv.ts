@@ -53,6 +53,26 @@ export interface CandidateSummary {
   lastProcessed: string
 }
 
+export interface ExtractedCVData {
+  id: string
+  name: string
+  email: string
+  phone: string
+  experience: Array<{
+    title: string
+    company: string
+    years: number
+  }>
+  education: Array<{
+    degree: string
+    institution: string
+    year?: number
+  }>
+  skills: string[]
+  languages: Language[]
+  summary?: string
+}
+
 export interface FeedbackData {
   candidateId: string
   candidateName: string
