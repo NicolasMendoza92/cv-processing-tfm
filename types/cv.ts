@@ -48,9 +48,11 @@ export interface JobRecommendationsResponse {
 export interface CandidateSummary {
   id: string
   name: string
-  employabilityScore: number
-  topRecommendations: string[]
-  lastProcessed: string
+  employability_score: number
+  top_recommendations: string[]
+  last_processed: string
+  areas_for_development: string[]
+  interview_questions?: string[]
 }
 
 export interface ExtractedCVData {
@@ -73,6 +75,19 @@ export interface ExtractedCVData {
   summary?: string
 }
 
+
+export interface UploadedFile {
+  id: string
+  file: File // Referencia al archivo original
+  name: string
+  size: number
+  status: "uploading" | "processing" | "ready_for_review" | "approved" | "error"
+  progress: number // Progreso de la subida real
+  errorMessage?: string
+  extractedData?: ExtractedCVData // Datos extraídos para revisión
+  candidateSummary?: CandidateSummary // Resumen final después de aprobación
+}
+
 export interface FeedbackData {
   candidateId: string
   candidateName: string
@@ -83,4 +98,8 @@ export interface FeedbackData {
   rejectionReason?: string
   additionalComments?: string
   predictionAccuracy: string
+}
+
+export interface ErrorResponse {
+  detail: string
 }
