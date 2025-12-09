@@ -46,11 +46,11 @@ export function CandidateCard({ candidate, onViewDetails, onDelete, onFeedback }
             <CardTitle className="text-xl mb-2">{candidate.name}</CardTitle>
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Calendar className="w-4 h-4" />
-              <span>{formatDate(candidate.lastProcessed)}</span>
+              <span>{formatDate(candidate.last_processed)}</span>
             </div>
           </div>
-          <Badge variant={getScoreBadgeVariant(candidate.employabilityScore)} className="text-base px-3 py-1">
-            {candidate.employabilityScore}%
+          <Badge variant={getScoreBadgeVariant(candidate.employability_score)} className="text-base px-3 py-1">
+            {candidate.employability_score}%
           </Badge>
         </div>
       </CardHeader>
@@ -63,11 +63,11 @@ export function CandidateCard({ candidate, onViewDetails, onDelete, onFeedback }
           <div className="w-full bg-secondary rounded-full h-2.5">
             <div
               className={cn("h-2.5 rounded-full transition-all", {
-                "bg-green-600": candidate.employabilityScore >= 70,
-                "bg-amber-500": candidate.employabilityScore >= 50 && candidate.employabilityScore < 70,
-                "bg-red-600": candidate.employabilityScore < 50,
+                "bg-green-600": candidate.employability_score >= 70,
+                "bg-amber-500": candidate.employability_score >= 50 && candidate.employability_score < 70,
+                "bg-red-600": candidate.employability_score < 50,
               })}
-              style={{ width: `${candidate.employabilityScore}%` }}
+              style={{ width: `${candidate.employability_score}%` }}
             />
           </div>
         </div>
@@ -78,14 +78,14 @@ export function CandidateCard({ candidate, onViewDetails, onDelete, onFeedback }
             <p className="text-sm font-medium">Puestos Recomendados</p>
           </div>
           <div className="flex flex-wrap gap-2">
-            {candidate.topRecommendations.slice(0, 2).map((job, index) => (
+            {candidate.top_recommendations.slice(0, 2).map((job, index) => (
               <Badge key={index} variant="outline" className="text-xs">
                 {job}
               </Badge>
             ))}
-            {candidate.topRecommendations.length > 2 && (
+            {candidate.top_recommendations.length > 2 && (
               <Badge variant="outline" className="text-xs">
-                +{candidate.topRecommendations.length - 2} más
+                +{candidate.top_recommendations.length - 2} más
               </Badge>
             )}
           </div>

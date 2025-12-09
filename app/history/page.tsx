@@ -20,7 +20,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react"
-import { getCVsStatus } from "@/services/cv-service"
+import { getCVsStatus } from "@/services/cvServices"
 import type { CVRecord } from "@/types/cv"
 import { cn } from "@/lib/utils"
 import { DeleteConfirmationDialog } from "@/components/delete-confirmation-dialog"
@@ -295,7 +295,7 @@ export default function HistoryPage() {
                   )}
                 >
                   <div className="flex items-center gap-3 flex-1 min-w-0">
-                    <div className="flex-shrink-0">
+                    <div className="shrink-0">
                       <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
                         <FileText className="w-5 h-5 text-primary" />
                       </div>

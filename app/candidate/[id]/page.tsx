@@ -20,7 +20,7 @@ import {
   Target,
   MessageSquare,
 } from "lucide-react"
-import { getCandidateDetails, getJobRecommendations } from "@/services/cv-service"
+import { getCandidateDetails, getJobRecommendations } from "@/services/cvServices"
 import { EmployabilityScoreCard } from "@/components/employability-score-card"
 import { JobRecommendationCard } from "@/components/job-recommendation-card"
 import type { CandidateDetails, JobRecommendationsResponse } from "@/types/cv"

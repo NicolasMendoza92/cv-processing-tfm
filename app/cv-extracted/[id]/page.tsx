@@ -5,7 +5,7 @@ import { useParams } from 'next/navigation'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Loader2, CheckCircle, XCircle, Edit, ArrowLeft } from "lucide-react"
-import { getExtractedData, saveCandidate } from "@/services/cv-service"
+import { getExtractedData, saveCandidate } from "@/services/cvServices"
 import type { CandidateDetails } from "@/types/cv"
 import { ExtractedDataDisplay } from "@/components/extracted-data-display"
 import {  toast } from 'sonner'
