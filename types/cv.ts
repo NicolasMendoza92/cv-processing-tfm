@@ -7,7 +7,17 @@ export interface CVRecord {
   errorMessage?: string
 }
 
-export interface Language {
+export interface ExperienceItem {
+  title: string
+  years: number
+}
+
+export interface EducationItem {
+  degree: string
+  year?: number
+}
+
+export interface LanguageItem {
   name: string
   level: string
 }
@@ -20,7 +30,7 @@ export interface CandidateDetails {
   lastJob: string
   lastEducation: string
   skills: string[]
-  languages: Language[]
+  languages: LanguageItem[]
   disability: string
   previousIncarceration: string
   formalEducationYears: number
@@ -71,7 +81,7 @@ export interface ExtractedCVData {
     year?: number
   }>
   skills: string[]
-  languages: Language[]
+  languages: LanguageItem[]
   summary?: string
 }
 

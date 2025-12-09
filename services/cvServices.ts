@@ -175,8 +175,6 @@ export async function processCandidateDataAction(
     const data: CandidateSummary = await response.json()
     console.log("Candidate Summary from backend:", data)
 
-    // Opcional: Revalidar cualquier path que muestre summaries de candidatos
-
     return { success: true, data: data }
   } catch (e: any) {
     console.error("Network or unexpected error during candidate data processing:", e)
