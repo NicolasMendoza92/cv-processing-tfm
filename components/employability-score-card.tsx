@@ -60,7 +60,7 @@ export function EmployabilityScoreCard({ score, isApt, recommendations }: Employ
         </div>
 
         {/* Recommendations */}
-        {recommendations.length > 0 && (
+        {recommendations?.length > 0 && (
           <div className="space-y-3">
             <h4 className="font-semibold text-sm text-foreground">Áreas de Desarrollo Recomendadas</h4>
             <div className="flex flex-wrap gap-2">

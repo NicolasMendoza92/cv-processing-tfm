@@ -25,11 +25,9 @@ export function DeleteConfirmationDialog({ open, onOpenChange, onConfirm, fileNa
         <AlertDialogHeader>
           <AlertDialogTitle>¿Estás seguro?</AlertDialogTitle>
           <AlertDialogDescription className="space-y-2">
-            <p>
-              Estás a punto de eliminar el historial del CV:{" "}
-              <span className="font-semibold text-foreground">{fileName}</span>
-            </p>
-            <p className="text-destructive">Esta acción no se puede deshacer.</p>
+            Estas a punto de eliminar a {fileName}
+            <br />
+            Esta acción no se puede deshacer.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

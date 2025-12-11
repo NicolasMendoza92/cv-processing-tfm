@@ -25,64 +25,26 @@ export interface LanguageItem {
 export interface CandidateDetails {
   id: string;
   name: string;
-  email?: string | null; // Ahora puede ser null o undefined
-  phone?: string | null; // Ahora puede ser null o undefined
-  lastJob?: string | null;
-  lastEducation?: string | null;
+  email: string;
+  phone: string;
+  lastJob: string;
+  lastEducation: string;
   skills: string[];
   languages: LanguageItem[];
-  disability?: string | null;
-  previousIncarceration?: string | null;
-  formalEducationYears?: number | null;
-  workExperienceYears?: number | null;
+  disability?: string;
+  previousIncarceration?: string;
+  formalEducationYears: number;
+  workExperienceYears: number;
   employabilityScore: number;
-  isAptForEmployment?: boolean | null;
-  developmentRecommendations: string[]; // Asumo que siempre es un array, incluso si vacío
-  cvFileName?: string | null;
-  // Añade campos que pueden venir de CandidateRecord si los necesitas:
-  summary?: string | null;
-  rawText?: string | null;
-  topRecommendations: string[];
-  lastProcessed: string; // ISO string
-  areasForDevelopment?: string[];
-  interviewQuestions?: string[] | null;
-  createdAt?: string;
-  updatedAt?: string;
-}
-// export interface CandidateDetails {
-//   id: string;
-//   name: string;
-//   email: string;
-//   phone: string;
-//   lastJob: string;
-//   lastEducation: string;
-//   skills: string[];
-//   languages: LanguageItem[];
-//   disability: string;
-//   previousIncarceration: string;
-//   formalEducationYears: number;
-//   workExperienceYears: number;
-//   employabilityScore: number;
-//   isAptForEmployment: boolean;
-//   developmentRecommendations: string[];
-//   cvFileName: string;
-// }
-
-export interface JobRecommendation {
-  id: string;
-  title: string;
-  description: string;
-  requiredSkills: string[];
-  compatibility: "Alta" | "Media" | "Baja";
-  cluster?: string;
+  isAptForEmployment: boolean;
+  topRecomendations: string[];
+  developmentRecommendations: string[];
+  interviewQuestions: string[]; 
+  cvFileName: string;
 }
 
-export interface JobRecommendationsResponse {
-  candidateId: string;
-  recommendations: JobRecommendation[];
-}
 
-export interface CandidateSummary {
+export interface CandidateAnalysisResponse {
   id: string;
   name: string;
   employability_score: number;
@@ -113,21 +75,25 @@ export interface ExtractedCVData {
   raw_text?: string;
 }
 
+export type FileStatus =
+  | "pending"
+  | "uploading"
+  | "processing"
+  | "ready_for_review"
+  | "approved"
+  | "error";
+  
+
 export interface UploadedFile {
   id: string;
-  file: File; // Referencia al archivo original
+  file: File; 
   name: string;
   size: number;
-  status:
-    | "uploading"
-    | "processing"
-    | "ready_for_review"
-    | "approved"
-    | "error";
-  progress: number; // Progreso de la subida real
+  status:FileStatus;
+  progress: number; 
   errorMessage?: string;
   extractedData?: ExtractedCVData;
-  candidateSummary?: CandidateSummary;
+  candidateAnalysis?: CandidateAnalysisResponse;
 }
 
 export interface FeedbackData {
@@ -146,22 +112,15 @@ export interface ErrorResponse {
   detail: string;
 }
 
-export type FileStatus =
-  | "pending"
-  | "uploading"
-  | "processing"
-  | "ready_for_review"
-  | "approved"
-  | "error";
 export interface CandidateFile {
-  id: string; // ID único para el archivo en el UI (puede ser diferente del ID del CV)
+  id: string; 
   name: string;
   size: number;
   status: FileStatus;
-  progress: number; // 0-100 para el progreso de subida
-  errorMessage?: string; // Si hay un error
+  progress: number; 
+  errorMessage?: string; 
   extractedData?: ExtractedCVData;
-  candidateSummary?: CandidateSummary;
+  candidateAnalysis?: CandidateAnalysisResponse;
 }
 
 export interface CandidateSaveData {
@@ -176,7 +135,7 @@ export interface CandidateSaveData {
   rawText?: string;
   employabilityScore: number;
   topRecommendations: string[];
-  lastProcessed: string; // ISO String
+  lastProcessed: string; 
   areasForDevelopment?: string[];
   interviewQuestions?: string[];
   lastJob?: string;
@@ -195,7 +154,7 @@ export interface CandidateRecord {
   name: string;
   email: string | null;
   phone: string | null;
-  experience: any[]; // Json en Prisma, en TS es 'any[]' o 'unknown[]'
+  experience: any[]; 
   education: any[];
   skills: string[];
   languages: any[];
@@ -216,4 +175,27 @@ export interface CandidateRecord {
   cvFileName: string | null; // El nombre del archivo que subiste
   createdAt: string; // ISO string
   updatedAt: string; // ISO string
+}
+
+export interface CandidateExtractedData {
+  id: string;
+  name: string;
+  email?: string | null; 
+  phone?: string | null; 
+  experience: ExperienceItem[];
+  education: EducationItem[];
+  skills: string[];
+  languages: LanguageItem[];
+  summary?: string | null; 
+  rawText?: string | null; 
+  disability?: string | null; 
+  previousIncarceration?: string | null;
+  employabilityScore: number;
+  topRecommendations: string[]; 
+  lastProcessed: string; 
+  areasForDevelopment: string[]; 
+  interviewQuestions: string[]; 
+  cvFileName?: string | null; 
+  createdAt: string;
+  updatedAt: string;
 }

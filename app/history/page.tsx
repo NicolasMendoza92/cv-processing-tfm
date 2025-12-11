@@ -20,10 +20,11 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react"
-import { getCVsStatus } from "@/services/cvServices"
-import type { CVRecord } from "@/types/cv"
+import { deleteCandidate, getCVsStatus } from "@/services/cvServices"
+import type { CVRecord } from "@/types"
 import { cn } from "@/lib/utils"
 import { DeleteConfirmationDialog } from "@/components/delete-confirmation-dialog"
+import { toast } from "sonner"
 
 const ITEMS_PER_PAGE = 10
 
@@ -31,6 +32,7 @@ export default function HistoryPage() {
   const router = useRouter()
   const [cvs, setCvs] = useState<CVRecord[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [isDeleting, setIsDeleting] = useState(false)
 
   const [searchQuery, setSearchQuery] = useState("")
   const [statusFilter, setStatusFilter] = useState<string>("Todos")
@@ -59,25 +61,22 @@ export default function HistoryPage() {
   const filteredCvs = useMemo(() => {
     let filtered = [...cvs]
 
-    // Search filter (case-insensitive, fuzzy)
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase()
       filtered = filtered.filter((cv) => cv.fileName.toLowerCase().includes(query))
     }
 
-    // Status filter
     if (statusFilter !== "Todos") {
       filtered = filtered.filter((cv) => cv.status === statusFilter)
     }
 
-    // Date range filter
     if (dateFrom) {
       const fromDate = new Date(dateFrom)
       filtered = filtered.filter((cv) => new Date(cv.uploadDate) >= fromDate)
     }
     if (dateTo) {
       const toDate = new Date(dateTo)
-      toDate.setHours(23, 59, 59, 999) // Include the entire day
+      toDate.setHours(23, 59, 59, 999) 
       filtered = filtered.filter((cv) => new Date(cv.uploadDate) <= toDate)
     }
 
@@ -89,7 +88,6 @@ export default function HistoryPage() {
   const endIndex = startIndex + ITEMS_PER_PAGE
   const paginatedCvs = filteredCvs.slice(startIndex, endIndex)
 
-  // Reset to page 1 when filters change
   useEffect(() => {
     setCurrentPage(1)
   }, [searchQuery, statusFilter, dateFrom, dateTo])
@@ -149,13 +147,27 @@ export default function HistoryPage() {
     setDeleteDialogOpen(true)
   }
 
-  const handleDeleteConfirm = () => {
-    if (cvToDelete) {
-      setCvs((prevCvs) => prevCvs.filter((cv) => cv.id !== cvToDelete.id))
-      setDeleteDialogOpen(false)
-      setCvToDelete(null)
+  const handleDeleteConfirm = async () => {
+    if (!cvToDelete) return; 
+
+    setIsDeleting(true); 
+    try {
+      const success = await deleteCandidate(cvToDelete.id);
+      if (success) { 
+        toast.success(`Candidato "${cvToDelete.fileName}" eliminado exitosamente.`);
+        setCvs((prevCvs) => prevCvs.filter((cv) => cv.id !== cvToDelete.id));
+      } else {
+        toast.error(`No se pudo eliminar el candidato "${cvToDelete.fileName}".`);
+      }
+    } catch (error: any) {
+      console.error("Error al eliminar candidato:", error);
+      toast.error(`Error al eliminar el candidato: ${error.message || "Error desconocido."}`);
+    } finally {
+      setIsDeleting(false); 
+      setDeleteDialogOpen(false); 
+      setCvToDelete(null); 
     }
-  }
+  };
 
   const handlePreviousPage = () => {
     setCurrentPage((prev) => Math.max(1, prev - 1))
@@ -341,7 +353,11 @@ export default function HistoryPage() {
                       className="gap-2 text-destructive hover:text-destructive hover:bg-destructive/10"
                       onClick={() => handleDeleteClick(cv)}
                     >
-                      <Trash2 className="w-4 h-4" />
+                      {isDeleting && cvToDelete?.id === cv.id ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <Trash2 className="w-4 h-4" />
+                      )}
                     </Button>
                   </div>
                 </div>

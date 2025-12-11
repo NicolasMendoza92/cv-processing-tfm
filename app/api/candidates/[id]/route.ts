@@ -1,9 +1,8 @@
-// app/api/candidates/[id]/route.ts
-import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/database';
-import { EducationItem, ExperienceItem, LanguageItem } from '@/types/cv';
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/database";
+import { candidateSchema } from "@/schemas";
+import z from "zod";
 
-// Tipos para los parámetros de la ruta
 interface RouteParams {
   id: string;
 }
@@ -11,11 +10,16 @@ interface RouteParams {
 // GET - Obtener un candidato por ID
 export async function GET(
   request: NextRequest,
-  { params }: { params: RouteParams } // Desestructura params de Next.js
+  context: { params: Promise<RouteParams> }
 ) {
   try {
-    const { id } = params;
-
+    const { id } = await context.params;
+    if (!id) {
+      return NextResponse.json(
+        { message: "ID del candidato es requerido." },
+        { status: 400 }
+      );
+    }
     const candidate = await prisma.candidate.findUnique({
       where: {
         id: id,
@@ -29,52 +33,112 @@ export async function GET(
       );
     }
 
-    // Mapear el CandidateRecord (lo que devuelve Prisma) a tu CandidateDetails
-    // Esto es crucial para mantener tu interfaz de frontend
-    const mappedCandidateDetails = {
-      id: candidate.id,
-      name: candidate.name,
-      email: candidate.email,
-      phone: candidate.phone,
-      
-      // Mapear los campos JSON a los tipos de frontend
-      skills: candidate.skills, // Ya es string[]
-      languages: candidate.languages as LanguageItem[], // Cast a tu interfaz de frontend
-      
-      // Aquí viene la lógica para los campos adicionales de CandidateDetails
-      // Si lastJob / lastEducation no se guardan directamente en tu DB,
-      // tendrás que inferirlos de los arrays 'experience'/'education' o dejarlos como null/undefined.
-      lastJob: (candidate.experience as ExperienceItem[])?.[0]?.company || null, // Ejemplo: tomar el nombre de la compañía del primer item de experiencia
-      lastEducation: (candidate.education as EducationItem[])?.[0]?.institution || null, // Ejemplo: tomar la institución del primer item de educación
-      
-      disability: candidate.disability,
-      previousIncarceration: candidate.previousIncarceration,
-      formalEducationYears: candidate.formalEducationYears,
-      workExperienceYears: candidate.workExperienceYears,
-      employabilityScore: candidate.employabilityScore,
-      isAptForEmployment: candidate.isAptForEmployment,
-      // Mapeo de `areasForDevelopment` a `developmentRecommendations`
-      developmentRecommendations: candidate.areasForDevelopment,
-      cvFileName: candidate.cvFileName,
-
-      // Otros campos que pueden ser útiles y están en CandidateRecord pero no en tu CandidateDetails original
-      summary: candidate.summary,
-      rawText: candidate.rawText,
-      topRecommendations: candidate.topRecommendations,
-      lastProcessed: candidate.lastProcessed.toISOString(), // Convertir a string ISO
-      interviewQuestions: candidate.interviewQuestions,
-      createdAt: candidate.createdAt.toISOString(),
-      updatedAt: candidate.updatedAt.toISOString(),
-    };
-
-
-    return NextResponse.json(mappedCandidateDetails, { status: 200 });
+    return NextResponse.json(candidate, { status: 200 });
   } catch (error) {
-    console.error(`Error fetching candidate with ID ${params.id}:`, error);
-    let errorMessage = "Error interno del servidor al obtener el candidato.";
-    if (error instanceof Error) {
-      errorMessage = `Error al obtener el candidato: ${error.message}`;
+    console.error("Error fetching candidate:", error);
+    return NextResponse.json(
+      { message: "Error interno del servidor al obtener el candidato." },
+      { status: 500 }
+    );
+  }
+}
+
+export async function PUT(
+  request: NextRequest,
+  context: { params: Promise<RouteParams> }
+) {
+  try {
+    const { id } = await context.params;
+    if (!id) {
+      return NextResponse.json(
+        { message: "ID del candidato es requerido." },
+        { status: 400 }
+      );
     }
-    return NextResponse.json({ message: errorMessage }, { status: 500 });
+    const body = await request.json();
+    const validatedData = candidateSchema.parse(body);
+    const updatedCandidate = await prisma.candidate.update({
+      where: {
+        id: id,
+      },
+      data: {
+        name: validatedData.name,
+        email: validatedData.email,
+        phone: validatedData.phone,
+        experience: validatedData.experience,
+        education: validatedData.education,
+        skills: validatedData.skills,
+        languages: validatedData.languages,
+        summary: validatedData.summary,
+        rawText: validatedData.rawText,
+        disability: validatedData.disability,
+        previousIncarceration: validatedData.previousIncarceration,
+        employabilityScore: validatedData.employabilityScore,
+        topRecommendations: validatedData.topRecommendations,
+        lastProcessed: new Date(validatedData.lastProcessed),
+        areasForDevelopment: validatedData.areasForDevelopment,
+        interviewQuestions: validatedData.interviewQuestions,
+        cvFileName: validatedData.cvFileName,
+      },
+    });
+
+    return NextResponse.json(updatedCandidate, { status: 200 });
+  } catch (error) {
+    console.error(`Error al actualizar candidato}:`, error);
+
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        {
+          message: "Datos de entrada inválidos para la actualización",
+          errors: error.errors,
+        },
+        { status: 400 } // Bad Request
+      );
+    } else if (error instanceof Error) {
+      if (error.message.includes("Record to update not found")) {
+        return NextResponse.json(
+          { message: `Candidato  no encontrado para actualizar.` },
+          { status: 404 }
+        );
+      }
+      return NextResponse.json(
+        { message: `Error al actualizar candidato: ${error.message}` },
+        { status: 500 }
+      );
+    } else {
+      return NextResponse.json(
+        { message: "Error interno del servidor al actualizar candidato." },
+        { status: 500 }
+      );
+    }
+  }
+}
+
+export async function DELETE(
+  request: NextRequest,
+  context: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await context.params;  
+    console.log("ID recibido en DELETE:", id);
+    
+    if (!id) {
+      return NextResponse.json(
+        { message: "ID del candidato es requerido." },
+        { status: 400 }
+      );
+    }
+    
+    const deletedCandidate = await prisma.candidate.delete({
+      where: { id },
+    });
+
+    return NextResponse.json(deletedCandidate, { status: 200 });
+  } catch (error: any) {
+    console.error("Error al borrar candidato:", error);
+    return NextResponse.json(
+      { message: `Error al borrar candidato: ${error.message}` },
+      { status: 500 }
+    );
   }
 }

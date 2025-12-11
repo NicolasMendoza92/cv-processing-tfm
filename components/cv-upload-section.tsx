@@ -20,7 +20,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import type { CandidateFile, CandidateSaveData, ExtractedCVData, UploadedFile } from "@/types/cv";
+import type { CandidateFile, CandidateSaveData, ExtractedCVData, UploadedFile } from "@/types";
 import {
   extractCVDataAction,
   processCandidateDataAction,
@@ -159,17 +159,17 @@ export function CVUploadSection() {
           return;
         }
 
-        const candidateSummary = result.data!;
+        const candidateAnalysis = result.data!;
         setFiles((prev) =>
           prev.map((f) =>
             f.id === fileId
-              ? { ...f, status: "approved", candidateSummary: candidateSummary }
+              ? { ...f, status: "approved", candidateAnalysis: candidateAnalysis }
               : f
           )
         );
         console.log(
           "Candidato aprobado y resumen final recibido:",
-          candidateSummary
+          candidateAnalysis
         );
       } catch (error: any) {
         console.error(
@@ -283,7 +283,7 @@ export function CVUploadSection() {
   if (
     fileToSave.status !== "approved" ||
     !fileToSave.extractedData ||
-    !fileToSave.candidateSummary
+    !fileToSave.candidateAnalysis
   ) {
     console.error("El archivo no está aprobado o le faltan datos para guardar.");
     alert("No se puede guardar el candidato. Faltan datos o el estado no es 'aprobado'.");
@@ -292,28 +292,21 @@ export function CVUploadSection() {
 
   // Prepara los datos que enviarás a tu API
   const dataToSend: CandidateSaveData = {
-    name: fileToSave.candidateSummary?.name, 
-    email: fileToSave.extractedData?.email,
-    phone: fileToSave.extractedData?.phone,
-    experience: fileToSave.extractedData?.experience,
-    education: fileToSave.extractedData?.education,
-    skills: fileToSave.extractedData?.skills,
-    languages: fileToSave.extractedData?.languages,
-    summary: fileToSave.extractedData?.summary,
-    rawText: fileToSave.extractedData?.raw_text,
-    employabilityScore: fileToSave.candidateSummary?.employability_score,
-    topRecommendations: fileToSave.candidateSummary?.top_recommendations,
-    lastProcessed: fileToSave.candidateSummary?.last_processed,
-    areasForDevelopment: fileToSave.candidateSummary?.areas_for_development,
-    interviewQuestions: fileToSave.candidateSummary?.interview_questions,
+    name: fileToSave.candidateAnalysis.name, 
+    email: fileToSave.extractedData.email,
+    phone: fileToSave.extractedData.phone,
+    experience: fileToSave.extractedData.experience,
+    education: fileToSave.extractedData.education,
+    skills: fileToSave.extractedData.skills,
+    languages: fileToSave.extractedData.languages,
+    summary: fileToSave.extractedData.summary,
+    rawText: fileToSave.extractedData.raw_text,
+    employabilityScore: fileToSave.candidateAnalysis.employability_score,
+    topRecommendations: fileToSave.candidateAnalysis.top_recommendations,
+    lastProcessed: fileToSave.candidateAnalysis.last_processed,
+    areasForDevelopment: fileToSave.candidateAnalysis.areas_for_development,
+    interviewQuestions: fileToSave.candidateAnalysis.interview_questions,
     cvFileName: fileToSave.name, 
-    lastJob: undefined, 
-    lastEducation: undefined, 
-    disability: undefined,
-    previousIncarceration: undefined,
-    formalEducationYears: undefined,
-    workExperienceYears: undefined,
-    isAptForEmployment: undefined,
   };
 
   try {
@@ -569,43 +562,43 @@ export function CVUploadSection() {
                     </div>
 
                     {/* Mostrar summary si el estado es 'approved' */}
-                    {file.status === "approved" && file.candidateSummary && (
+                    {file.status === "approved" && file.candidateAnalysis && (
                       <div className="border-t pt-3 mt-3 space-y-2 text-sm text-muted-foreground">
                         <p>
                           <strong>Candidato:</strong>{" "}
-                          {file.candidateSummary.name}
+                          {file.candidateAnalysis.name}
                         </p>
                         <p>
                           <strong>Score Empleabilidad:</strong>{" "}
                           <span className="font-bold text-primary">
-                            {file.candidateSummary.employability_score.toFixed(
+                            {file.candidateAnalysis.employability_score.toFixed(
                               2
                             )}
                           </span>
                         </p>
                         <p>
                           <strong>Puestos Recomendados:</strong>{" "}
-                          {file.candidateSummary.top_recommendations.join(", ")}
+                          {file.candidateAnalysis.top_recommendations.join(", ")}
                         </p>
-                        {file.candidateSummary.areas_for_development &&
-                          file.candidateSummary.areas_for_development.length >
+                        {file.candidateAnalysis.areas_for_development &&
+                          file.candidateAnalysis.areas_for_development.length >
                             0 && (
                             <p>
                               <strong>Áreas de Desarrollo:</strong>{" "}
-                              {file.candidateSummary.areas_for_development.join(
+                              {file.candidateAnalysis.areas_for_development.join(
                                 ", "
                               )}
                             </p>
                           )}
-                        {file.candidateSummary.interview_questions &&
-                          file.candidateSummary.interview_questions.length >
+                        {file.candidateAnalysis.interview_questions &&
+                          file.candidateAnalysis.interview_questions.length >
                             0 && (
                             <p className="text-xs text-muted-foreground">
                               Preguntas:{" "}
-                              {file.candidateSummary.interview_questions
+                              {file.candidateAnalysis.interview_questions
                                 .slice(0, 3)
                                 .join("... ") +
-                                (file.candidateSummary.interview_questions
+                                (file.candidateAnalysis.interview_questions
                                   .length > 3
                                   ? "..."
                                   : "")}
@@ -614,7 +607,7 @@ export function CVUploadSection() {
                         <p className="text-xs text-right text-muted-foreground">
                           Procesado:{" "}
                           {new Date(
-                            file.candidateSummary.last_processed
+                            file.candidateAnalysis.last_processed
                           ).toLocaleString()}
                         </p>
                       </div>
@@ -648,14 +641,14 @@ export function CVUploadSection() {
           </DialogHeader>
 
           {showModalForFile?.status === "approved" &&
-          showModalForFile?.candidateSummary ? (
+          showModalForFile?.candidateAnalysis ? (
             <div className="space-y-6 py-4">
               {/* Resumen de Empleabilidad aquí */}
               <div className="space-y-3">
                 <h3 className="font-semibold text-lg text-foreground">
                   Score de Empleabilidad:{" "}
                   <span className="text-primary">
-                    {showModalForFile.candidateSummary.employability_score.toFixed(
+                    {showModalForFile.candidateAnalysis.employability_score.toFixed(
                       2
                     )}
                   </span>
@@ -671,7 +664,7 @@ export function CVUploadSection() {
                   Puestos Recomendados
                 </h3>
                 <div className="flex flex-wrap gap-2">
-                  {showModalForFile.candidateSummary.top_recommendations.map(
+                  {showModalForFile.candidateAnalysis.top_recommendations.map(
                     (rec, idx) => (
                       <Badge
                         key={idx}
@@ -685,15 +678,15 @@ export function CVUploadSection() {
                 </div>
               </div>
 
-              {showModalForFile.candidateSummary.areas_for_development &&
-                showModalForFile.candidateSummary.areas_for_development.length >
+              {showModalForFile.candidateAnalysis.areas_for_development &&
+                showModalForFile.candidateAnalysis.areas_for_development.length >
                   0 && (
                   <div className="space-y-3">
                     <h3 className="font-semibold text-base text-foreground">
                       Áreas de Desarrollo Sugeridas
                     </h3>
                     <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1">
-                      {showModalForFile.candidateSummary.areas_for_development.map(
+                      {showModalForFile.candidateAnalysis.areas_for_development.map(
                         (area, idx) => (
                           <li key={idx}>{area}</li>
                         )
@@ -702,15 +695,15 @@ export function CVUploadSection() {
                   </div>
                 )}
 
-              {showModalForFile.candidateSummary.interview_questions &&
-                showModalForFile.candidateSummary.interview_questions.length >
+              {showModalForFile.candidateAnalysis.interview_questions &&
+                showModalForFile.candidateAnalysis.interview_questions.length >
                   0 && (
                   <div className="space-y-3">
                     <h3 className="font-semibold text-base text-foreground">
                       Preguntas de Entrevista Sugeridas
                     </h3>
                     <ul className="list-decimal list-inside text-sm text-muted-foreground space-y-1">
-                      {showModalForFile.candidateSummary.interview_questions.map(
+                      {showModalForFile.candidateAnalysis.interview_questions.map(
                         (q, idx) => (
                           <li key={idx}>{q}</li>
                         )
@@ -722,7 +715,7 @@ export function CVUploadSection() {
               <p className="text-xs text-right text-muted-foreground mt-4">
                 Último procesamiento:{" "}
                 {new Date(
-                  showModalForFile.candidateSummary.last_processed
+                  showModalForFile.candidateAnalysis.last_processed
                 ).toLocaleString()}
               </p>
             </div>

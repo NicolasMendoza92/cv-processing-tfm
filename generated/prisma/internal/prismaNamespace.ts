@@ -527,19 +527,14 @@ export const CandidateScalarFieldEnum = {
   skills: 'skills',
   languages: 'languages',
   summary: 'summary',
+  disability: 'disability',
+  previousIncarceration: 'previousIncarceration',
   rawText: 'rawText',
   employabilityScore: 'employabilityScore',
   topRecommendations: 'topRecommendations',
   lastProcessed: 'lastProcessed',
   areasForDevelopment: 'areasForDevelopment',
   interviewQuestions: 'interviewQuestions',
-  lastJob: 'lastJob',
-  lastEducation: 'lastEducation',
-  disability: 'disability',
-  previousIncarceration: 'previousIncarceration',
-  formalEducationYears: 'formalEducationYears',
-  workExperienceYears: 'workExperienceYears',
-  isAptForEmployment: 'isAptForEmployment',
   cvFileName: 'cvFileName',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -661,13 +656,6 @@ export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'In
  * Reference to a field of type 'Int[]'
  */
 export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
-    
-
-
-/**
- * Reference to a field of type 'Boolean'
- */
-export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 /**

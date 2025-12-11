@@ -1,11 +1,17 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { useParams, useRouter } from "next/navigation"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Separator } from "@/components/ui/separator"
+import { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 import {
   Loader2,
   ArrowLeft,
@@ -15,70 +21,73 @@ import {
   Briefcase,
   GraduationCap,
   Languages,
-  Download,
-  Send,
   Target,
-  MessageSquare,
-} from "lucide-react"
-import { getCandidateDetails, getJobRecommendations } from "@/services/cvServices"
-import { EmployabilityScoreCard } from "@/components/employability-score-card"
-import { JobRecommendationCard } from "@/components/job-recommendation-card"
-import type { CandidateDetails, JobRecommendationsResponse } from "@/types/cv"
-
+} from "lucide-react";
+import {
+  getCandidateDetails,
+  getTopRecommendations,
+} from "@/services/cvServices";
+import { EmployabilityScoreCard } from "@/components/employability-score-card";
+import type { CandidateDetails } from "@/types";
 
 export default function CandidateDetailPage() {
-  const params = useParams()
-   const router = useRouter()
-  const [candidate, setCandidate] = useState<CandidateDetails | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [jobRecommendations, setJobRecommendations] = useState<JobRecommendationsResponse | null>(null)
-  const [isLoadingJobs, setIsLoadingJobs] = useState(false)
-  const [jobsError, setJobsError] = useState<string | null>(null)
+  const params = useParams();
+  const router = useRouter();
+  const [candidate, setCandidate] = useState<CandidateDetails | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [jobRecommendations, setJobRecommendations] = useState<string[] | null>(
+    null
+  );
+  const [isLoadingJobs, setIsLoadingJobs] = useState(false);
+  const [jobsError, setJobsError] = useState<string | null>(null);
 
   useEffect(() => {
     async function loadCandidateDetails() {
-      setIsLoading(true)
-      setError(null)
+      setIsLoading(true);
+      setError(null);
 
       try {
-        const id = params.id as string
-        const data = await getCandidateDetails(id)
+        const id = params.id as string;
+        const data = await getCandidateDetails(id);
 
         if (!data) {
-          setError("No se encontraron detalles para este candidato")
+          setError("No se encontraron detalles para este candidato");
         } else {
-          setCandidate(data)
-          loadJobRecommendations(id)
+          setCandidate(data);
+          loadJobRecommendations(id);
         }
       } catch (err) {
-        console.error("[v0] Error loading candidate details:", err)
-        setError("Error al cargar los detalles del candidato")
+        console.error("[v0] Error loading candidate details:", err);
+        setError("Error al cargar los detalles del candidato");
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
     }
 
-    loadCandidateDetails()
-  }, [params.id])
+    loadCandidateDetails();
+  }, [params.id]);
 
   async function loadJobRecommendations(candidateId: string) {
-    setIsLoadingJobs(true)
-    setJobsError(null)
+    setIsLoadingJobs(true);
+    setJobsError(null);
 
     try {
-      const data = await getJobRecommendations(candidateId)
+      // const data = await getJobRecommendations(candidateId)
+      const data = await getTopRecommendations(candidateId);
 
       if (!data) {
-        setJobsError("No se encontraron recomendaciones de puestos para este candidato")
+        setJobsError(
+          "No se encontraron recomendaciones de puestos para este candidato"
+        );
       } else {
-        setJobRecommendations(data)
+        setJobRecommendations(data);
       }
     } catch (err) {
-      console.error("[v0] Error loading job recommendations:", err)
-      setJobsError("Error al cargar las recomendaciones de puestos")
+      console.error("[v0] Error loading job recommendations:", err);
+      setJobsError("Error al cargar las recomendaciones de puestos");
     } finally {
-      setIsLoadingJobs(false)
+      setIsLoadingJobs(false);
     }
   }
 
@@ -88,35 +97,47 @@ export default function CandidateDetailPage() {
         <div className="flex items-center justify-center min-h-[500px]">
           <div className="flex flex-col items-center gap-4">
             <Loader2 className="w-10 h-10 animate-spin text-primary" />
-            <p className="text-muted-foreground text-lg">Cargando detalles del candidato...</p>
+            <p className="text-muted-foreground text-lg">
+              Cargando detalles del candidato...
+            </p>
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   if (error || !candidate) {
     return (
       <div className="container mx-auto px-4 py-8 md:py-12">
-        <Button variant="ghost" onClick={() => router.push("/history")} className="mb-6 gap-2">
+        <Button
+          variant="ghost"
+          onClick={() => router.push("/candidates")}
+          className="mb-6 gap-2"
+        >
           <ArrowLeft className="w-4 h-4" />
-          Volver al Historial
+          Volver a candidatos
         </Button>
         <Card className="border-destructive">
           <CardContent className="pt-6">
-            <p className="text-destructive text-center">{error || "Candidato no encontrado"}</p>
+            <p className="text-destructive text-center">
+              {error || "Candidato no encontrado"}
+            </p>
           </CardContent>
         </Card>
       </div>
-    )
+    );
   }
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-12">
       {/* Breadcrumb Navigation */}
-      <Button variant="ghost" onClick={() => router.push("/history")} className="mb-6 gap-2">
+      <Button
+        variant="ghost"
+        onClick={() => router.push("/candidates")}
+        className="mb-6 gap-2"
+      >
         <ArrowLeft className="w-4 h-4" />
-        Volver al Historial
+          Volver a candidatos
       </Button>
 
       {/* Page Title */}
@@ -139,7 +160,10 @@ export default function CandidateDetailPage() {
                 <User className="w-5 h-5 text-primary" />
                 Información General del Candidato
               </CardTitle>
-              <CardDescription>Datos extraídos del CV mediante procesamiento de lenguaje natural</CardDescription>
+              <CardDescription>
+                Datos extraídos del CV mediante procesamiento de lenguaje
+                natural
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               {/* Contact Information */}
@@ -149,7 +173,9 @@ export default function CandidateDetailPage() {
                     <Mail className="w-4 h-4" />
                     <span className="font-medium">Email</span>
                   </div>
-                  <p className="text-sm text-foreground pl-6">{candidate.email}</p>
+                  <p className="text-sm text-foreground pl-6">
+                    {candidate.email}
+                  </p>
                 </div>
 
                 <div className="space-y-1">
@@ -157,7 +183,9 @@ export default function CandidateDetailPage() {
                     <Phone className="w-4 h-4" />
                     <span className="font-medium">Teléfono</span>
                   </div>
-                  <p className="text-sm text-foreground pl-6">{candidate.phone}</p>
+                  <p className="text-sm text-foreground pl-6">
+                    {candidate.phone}
+                  </p>
                 </div>
               </div>
 
@@ -169,7 +197,9 @@ export default function CandidateDetailPage() {
                   <Briefcase className="w-4 h-4" />
                   Último Puesto de Trabajo
                 </div>
-                <p className="text-sm text-foreground pl-6">{candidate.lastJob}</p>
+                <p className="text-sm text-foreground pl-6">
+                  {candidate.lastJob}
+                </p>
                 <p className="text-xs text-muted-foreground pl-6">
                   Experiencia laboral: {candidate.workExperienceYears}{" "}
                   {candidate.workExperienceYears === 1 ? "año" : "años"}
@@ -184,7 +214,9 @@ export default function CandidateDetailPage() {
                   <GraduationCap className="w-4 h-4" />
                   Última Formación Académica
                 </div>
-                <p className="text-sm text-foreground pl-6">{candidate.lastEducation}</p>
+                <p className="text-sm text-foreground pl-6">
+                  {candidate.lastEducation}
+                </p>
                 <p className="text-xs text-muted-foreground pl-6">
                   Años de educación formal: {candidate.formalEducationYears}
                 </p>
@@ -194,10 +226,16 @@ export default function CandidateDetailPage() {
 
               {/* Skills */}
               <div className="space-y-3">
-                <h4 className="text-sm font-medium text-muted-foreground">Habilidades Clave</h4>
+                <h4 className="text-sm font-medium text-muted-foreground">
+                  Habilidades Clave
+                </h4>
                 <div className="flex flex-wrap gap-2">
                   {candidate.skills.map((skill, index) => (
-                    <Badge key={index} variant="secondary" className="px-3 py-1">
+                    <Badge
+                      key={index}
+                      variant="secondary"
+                      className="px-3 py-1"
+                    >
                       {skill}
                     </Badge>
                   ))}
@@ -225,49 +263,35 @@ export default function CandidateDetailPage() {
 
               {/* Additional Dataset Information */}
               <div className="space-y-3">
-                <h4 className="text-sm font-medium text-muted-foreground">Datos Adicionales del Dataset</h4>
+                <h4 className="text-sm font-medium text-muted-foreground">
+                  Datos Adicionales del Dataset
+                </h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
                   <div className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
                     <span className="text-muted-foreground">Discapacidad:</span>
-                    <Badge variant={candidate.disability === "Sí" ? "default" : "secondary"}>
+                    <Badge
+                      variant={
+                        candidate.disability === "Sí" ? "destructive" : "default"
+                      }
+                    >
                       {candidate.disability}
                     </Badge>
                   </div>
                   <div className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
-                    <span className="text-muted-foreground">Situación de Reclusión Previa:</span>
-                    <Badge variant={candidate.previousIncarceration === "Sí" ? "default" : "secondary"}>
+                    <span className="text-muted-foreground">
+                      Situación de Reclusión Previa:
+                    </span>
+                    <Badge
+                      variant={
+                        candidate.previousIncarceration === "Sí"
+                          ? "default"
+                          : "destructive"
+                      }
+                    >
                       {candidate.previousIncarceration}
                     </Badge>
                   </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Action Buttons */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Acciones Disponibles</CardTitle>
-              <CardDescription>Funcionalidades para gestionar el candidato</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <Button variant="outline" className="gap-2 justify-start bg-transparent">
-                  <Target className="w-4 h-4" />
-                  Ver Puestos Recomendados
-                </Button>
-                <Button variant="outline" className="gap-2 justify-start bg-transparent">
-                  <MessageSquare className="w-4 h-4" />
-                  Generar Entrevista Simulada
-                </Button>
-                <Button variant="outline" className="gap-2 justify-start bg-transparent">
-                  <Download className="w-4 h-4" />
-                  Exportar Reporte
-                </Button>
-                <Button variant="outline" className="gap-2 justify-start bg-transparent">
-                  <Send className="w-4 h-4" />
-                  Enviar a Empresa/Voluntario
-                </Button>
               </div>
             </CardContent>
           </Card>
@@ -278,7 +302,7 @@ export default function CandidateDetailPage() {
           <EmployabilityScoreCard
             score={candidate.employabilityScore}
             isApt={candidate.isAptForEmployment}
-            recommendations={candidate.developmentRecommendations}
+            recommendations={candidate.topRecomendations}
           />
         </div>
       </div>
@@ -291,36 +315,23 @@ export default function CandidateDetailPage() {
               Puestos de Trabajo Recomendados
             </CardTitle>
             <CardDescription>
-              Basado en el perfil del candidato, estos son los roles que mejor se ajustan a sus habilidades y
-              experiencia
+              Basado en el perfil del candidato, estos son los roles que mejor
+              se ajustan a sus habilidades y experiencia
             </CardDescription>
           </CardHeader>
           <CardContent>
-            {isLoadingJobs ? (
-              <div className="flex items-center justify-center py-12">
-                <div className="flex flex-col items-center gap-4">
-                  <Loader2 className="w-8 h-8 animate-spin text-primary" />
-                  <p className="text-muted-foreground text-sm">Analizando perfil y generando recomendaciones...</p>
-                </div>
-              </div>
-            ) : jobsError ? (
-              <div className="text-center py-8">
-                <p className="text-destructive text-sm">{jobsError}</p>
-              </div>
-            ) : jobRecommendations && jobRecommendations.recommendations.length > 0 ? (
+            {jobRecommendations && jobRecommendations.length > 0 && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {jobRecommendations.recommendations.map((job) => (
-                  <JobRecommendationCard key={job.id} job={job} />
+                {jobRecommendations.map((job, index) => (
+                  <div key={index} className="p-3 border rounded">
+                    {job}
+                  </div>
                 ))}
-              </div>
-            ) : (
-              <div className="text-center py-8">
-                <p className="text-muted-foreground text-sm">No hay recomendaciones disponibles para este candidato</p>
               </div>
             )}
           </CardContent>
         </Card>
       </div>
     </div>
-  )
+  );
 }

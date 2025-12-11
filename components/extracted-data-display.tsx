@@ -1,13 +1,20 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import type { CandidateDetails } from "@/types/cv"
-import { User, Briefcase, GraduationCap, Languages, Wrench, AlertCircle } from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import {
+  User,
+  Briefcase,
+  GraduationCap,
+  Languages,
+  Wrench,
+  AlertCircle,
+} from "lucide-react";
+import { CandidateDetails } from "@/types";
 
-interface ExtractedDataDisplayProps {
-  data: CandidateDetails
+interface candidateDetailsDisplayProps {
+  data: CandidateDetails;
 }
 
-export function ExtractedDataDisplay({ data }: ExtractedDataDisplayProps) {
+export function ExtractedDataDisplay({ data }: candidateDetailsDisplayProps) {
   return (
     <div className="space-y-6">
       {/* Personal Information */}
@@ -21,7 +28,9 @@ export function ExtractedDataDisplay({ data }: ExtractedDataDisplayProps) {
         <CardContent className="space-y-3">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <p className="text-sm font-medium text-muted-foreground">Nombre Completo</p>
+              <p className="text-sm font-medium text-muted-foreground">
+                Nombre Completo
+              </p>
               <p className="text-base font-semibold">{data.name}</p>
             </div>
             <div>
@@ -29,7 +38,9 @@ export function ExtractedDataDisplay({ data }: ExtractedDataDisplayProps) {
               <p className="text-base">{data.email}</p>
             </div>
             <div>
-              <p className="text-sm font-medium text-muted-foreground">Teléfono</p>
+              <p className="text-sm font-medium text-muted-foreground">
+                Teléfono
+              </p>
               <p className="text-base">{data.phone}</p>
             </div>
           </div>
@@ -46,11 +57,15 @@ export function ExtractedDataDisplay({ data }: ExtractedDataDisplayProps) {
         </CardHeader>
         <CardContent className="space-y-3">
           <div>
-            <p className="text-sm font-medium text-muted-foreground">Último Puesto</p>
+            <p className="text-sm font-medium text-muted-foreground">
+              Último Puesto
+            </p>
             <p className="text-base font-semibold">{data.lastJob}</p>
           </div>
           <div>
-            <p className="text-sm font-medium text-muted-foreground">Años de Experiencia</p>
+            <p className="text-sm font-medium text-muted-foreground">
+              Años de Experiencia
+            </p>
             <p className="text-base">{data.workExperienceYears} años</p>
           </div>
         </CardContent>
@@ -66,11 +81,15 @@ export function ExtractedDataDisplay({ data }: ExtractedDataDisplayProps) {
         </CardHeader>
         <CardContent className="space-y-3">
           <div>
-            <p className="text-sm font-medium text-muted-foreground">Última Formación</p>
+            <p className="text-sm font-medium text-muted-foreground">
+              Última Formación
+            </p>
             <p className="text-base font-semibold">{data.lastEducation}</p>
           </div>
           <div>
-            <p className="text-sm font-medium text-muted-foreground">Años de Educación Formal</p>
+            <p className="text-sm font-medium text-muted-foreground">
+              Años de Educación Formal
+            </p>
             <p className="text-base">{data.formalEducationYears} años</p>
           </div>
         </CardContent>
@@ -126,16 +145,20 @@ export function ExtractedDataDisplay({ data }: ExtractedDataDisplayProps) {
         <CardContent className="space-y-3">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <p className="text-sm font-medium text-muted-foreground">Discapacidad</p>
+              <p className="text-sm font-medium text-muted-foreground">
+                Discapacidad
+              </p>
               <p className="text-base">{data.disability}</p>
             </div>
             <div>
-              <p className="text-sm font-medium text-muted-foreground">Reclusión Previa</p>
+              <p className="text-sm font-medium text-muted-foreground">
+                Reclusión Previa
+              </p>
               <p className="text-base">{data.previousIncarceration}</p>
             </div>
           </div>
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

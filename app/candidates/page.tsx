@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { Loader2, Users } from "lucide-react"
 import { getCandidatesSummary, deleteCandidate, sendFeedback } from "@/services/cvServices"
-import type { CandidateSummary, FeedbackData } from "@/types/cv"
+import type { CandidateExtractedData, FeedbackData } from "@/types"
 import { CandidateCard } from "@/components/candidate-card"
 import { DeleteConfirmationDialog } from "@/components/delete-confirmation-dialog"
 import { FeedbackModal } from "@/components/feedback-modal"
@@ -13,12 +13,12 @@ import { useRouter } from "next/navigation"
 
 export default function CandidatesPage() {
   const router = useRouter()
-  const [candidates, setCandidates] = useState<CandidateSummary[]>([])
+  const [candidates, setCandidates] = useState<CandidateExtractedData[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
-  const [candidateToDelete, setCandidateToDelete] = useState<CandidateSummary | null>(null)
+  const [candidateToDelete, setCandidateToDelete] = useState<CandidateExtractedData | null>(null)
   const [feedbackModalOpen, setFeedbackModalOpen] = useState(false)
-  const [candidateForFeedback, setCandidateForFeedback] = useState<CandidateSummary | null>(null)
+  const [candidateForFeedback, setCandidateForFeedback] = useState<CandidateExtractedData | null>(null)
 
   useEffect(() => {
     async function loadCandidates() {
