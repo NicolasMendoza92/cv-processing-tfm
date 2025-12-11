@@ -1,4 +1,4 @@
-import type { CVRecord, CandidateDetails, JobRecommendationsResponse, CandidateSummary, ExtractedCVData, ErrorResponse } from "@/types/cv"
+import type { CVRecord, CandidateDetails, JobRecommendationsResponse, CandidateSummary, ExtractedCVData, ErrorResponse, CandidateRecord } from "@/types/cv"
 import cvsData from "@/api_mocks/cvs-status.json"
 import candidateData001 from "@/api_mocks/mocked_candidate_details_cv_001.json"
 import candidateData002 from "@/api_mocks/mocked_candidate_details_cv_002.json"
@@ -27,11 +27,49 @@ const jobRecommendationsMocks: Record<string, JobRecommendationsResponse> = {
   cv_005: jobRecommendations005 as JobRecommendationsResponse,
 }
 
-export async function getCVsStatus(): Promise<CVRecord[]> {
-  // Simulate API latency
-  await new Promise((resolve) => setTimeout(resolve, 800))
+// Función que recupera todos los candidatos
+export async function getCandidates(): Promise<CandidateRecord[]> {
+  const response = await fetch('/api/candidates', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    // cache: 'no-store' // Si quieres asegurarte de que siempre se obtengan los datos más recientes
+  });
 
-  return cvsData as CVRecord[]
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || 'Fallo al obtener los candidatos');
+  }
+
+  const candidates: CandidateRecord[] = await response.json();
+  return candidates;
+}
+
+export async function getCVsStatus(): Promise<CVRecord[]> {
+  // Por ahora, vamos a simular los datos de `CVRecord` a partir de `CandidateRecord`
+  // En una aplicación real, probablemente tendrías una tabla `UploadHistory`
+  // separada o adaptarías `CandidateRecord` para mostrar la información del historial.
+
+  try {
+    const candidates = await getCandidates(); // Usamos la nueva función para obtener los candidatos
+    
+    // Transformar los CandidateRecord en CVRecord para tu componente de historial
+    const cvRecords: CVRecord[] = candidates.map(candidate => ({
+      id: candidate.id,
+      fileName: candidate.cvFileName || candidate.name, // Usar cvFileName o el nombre del candidato
+      uploadDate: candidate.createdAt, // Usar la fecha de creación del registro del candidato
+      status: "Procesado", // Si ya está en la tabla Candidate, asumimos que está "Procesado"
+      detailsLink: `/cv-extracted/${candidate.id}`, // Enlazar a los detalles
+      errorMessage: undefined, // Sin error si ya está procesado
+    }));
+
+    return cvRecords;
+  } catch (error) {
+    console.error("Error transformando candidatos a CVRecords:", error);
+    // Si falla getCandidates, devolvemos un array vacío o relanzamos el error.
+    throw error;
+  }
 }
 
 export async function getCVById(id: string): Promise<CVRecord | null> {
@@ -70,16 +108,29 @@ export async function getJobRecommendations(candidateId: string): Promise<JobRec
 }
 
 export async function getExtractedData(id: string): Promise<CandidateDetails | null> {
-  // Simulate API latency for PLN processing
-  await new Promise((resolve) => setTimeout(resolve, Math.random() * 500 + 600))
+  try {
+    const response = await fetch(`/api/candidates/${id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      cache: 'no-store' // Para asegurar que siempre se obtenga la última versión
+    });
 
-  const candidateData = candidateMocks[id]
+    if (!response.ok) {
+      if (response.status === 404) {
+        console.warn(`Candidato con ID ${id} no encontrado en la API.`);
+        return null;
+      }
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Error al obtener datos extraídos del candidato.');
+    }
 
-  if (candidateData) {
-    return candidateData
-  } else {
-    console.error(`[v0] No extracted data found for CV ID: ${id}`)
-    return null
+    const data: CandidateDetails = await response.json();
+    return data;
+  } catch (error) {
+    console.error(`Fallo al obtener datos extraídos para ID ${id}:`, error);
+    throw error; // Relanza el error para que el componente pueda manejarlo
   }
 }
 

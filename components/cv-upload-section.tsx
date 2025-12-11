@@ -20,7 +20,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import type { ExtractedCVData, UploadedFile } from "@/types/cv";
+import type { CandidateFile, CandidateSaveData, ExtractedCVData, UploadedFile } from "@/types/cv";
 import {
   extractCVDataAction,
   processCandidateDataAction,
@@ -249,17 +249,6 @@ export function CVUploadSection() {
   );
 
   const removeFile = useCallback(async (fileId: string) => {
-    // Si tienes un Server Action para eliminar del backend real:
-    // const result = await deleteCandidateAction(fileId);
-    // if (result.success) {
-    //   setFiles((prev) => prev.filter((f) => f.id !== fileId));
-    //   setFileToDelete(null);
-    // } else {
-    //   console.error("Error al eliminar candidato:", result.error);
-    //   // Mostrar un error al usuario
-    // }
-
-    // Por ahora, solo elimina del estado local
     setFiles((prev) => prev.filter((f) => f.id !== fileId));
     setFileToDelete(null);
   }, []);
@@ -275,7 +264,6 @@ export function CVUploadSection() {
   // FUNCIONES HANDLE ACTIONS
   const handleAnalyzeCandidate = () => {
     if (!showModalForFile || !showModalForFile.extractedData) return;
-    // Llamamos a la funcion para procesar datos
     processExtractedCandidateData(
       showModalForFile.id,
       showModalForFile.extractedData
@@ -290,10 +278,67 @@ export function CVUploadSection() {
     setShowModalForFile(null);
   };
 
-  const handleSaveCandidate = () => {
-    // funcion para guardar info del candidato en base de datos
-    alert("esto guarda en db y aparece en historial");
+  const handleSaveCandidate = async (fileToSave: CandidateFile) => {
+    console.log("Guardando candidato para el archivo:", fileToSave);
+  if (
+    fileToSave.status !== "approved" ||
+    !fileToSave.extractedData ||
+    !fileToSave.candidateSummary
+  ) {
+    console.error("El archivo no está aprobado o le faltan datos para guardar.");
+    alert("No se puede guardar el candidato. Faltan datos o el estado no es 'aprobado'.");
+    return;
+  }
+
+  // Prepara los datos que enviarás a tu API
+  const dataToSend: CandidateSaveData = {
+    name: fileToSave.candidateSummary?.name, 
+    email: fileToSave.extractedData?.email,
+    phone: fileToSave.extractedData?.phone,
+    experience: fileToSave.extractedData?.experience,
+    education: fileToSave.extractedData?.education,
+    skills: fileToSave.extractedData?.skills,
+    languages: fileToSave.extractedData?.languages,
+    summary: fileToSave.extractedData?.summary,
+    rawText: fileToSave.extractedData?.raw_text,
+    employabilityScore: fileToSave.candidateSummary?.employability_score,
+    topRecommendations: fileToSave.candidateSummary?.top_recommendations,
+    lastProcessed: fileToSave.candidateSummary?.last_processed,
+    areasForDevelopment: fileToSave.candidateSummary?.areas_for_development,
+    interviewQuestions: fileToSave.candidateSummary?.interview_questions,
+    cvFileName: fileToSave.name, 
+    lastJob: undefined, 
+    lastEducation: undefined, 
+    disability: undefined,
+    previousIncarceration: undefined,
+    formalEducationYears: undefined,
+    workExperienceYears: undefined,
+    isAptForEmployment: undefined,
   };
+
+  try {
+    const response = await fetch('/api/candidates', { 
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(dataToSend),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Error al guardar el candidato');
+    }
+
+    const savedCandidate = await response.json();
+    console.log("Candidato guardado exitosamente:", savedCandidate);
+    alert(`Candidato "${savedCandidate.name}" guardado exitosamente!`);
+
+  } catch (error) {
+    console.error("Fallo al guardar el candidato:", error);
+    alert(`Error al guardar el candidato: ${(error as Error).message}`);
+  }
+};
 
   const getStatusDisplay = (status: UploadedFile["status"]) => {
     switch (status) {
@@ -500,7 +545,7 @@ export function CVUploadSection() {
                         {file.status === "approved" && (
                           <Button
                             size="sm"
-                            onClick={handleSaveCandidate}
+                            onClick={() => handleSaveCandidate(file)}
                             className="gap-2 h-8"
                           >
                             <CheckCircle2 className="w-4 h-4" />

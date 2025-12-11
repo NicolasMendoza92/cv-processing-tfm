@@ -1,0 +1,37 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+
+model Candidate {
+  id                      String    @id @default(uuid())
+  name                    String
+  email                   String?   @unique // Email podría ser opcional en ExtractedCVData, pero en CandidateDetails es String. Lo hacemos opcional y único.
+  phone                   String?
+  experience              Json      @default("[]") // List[ExperienceItem]
+  education               Json      @default("[]") // List[EducationItem]
+  skills                  String[]  // Lista de strings para las habilidades
+  languages               Json      @default("[]") // List[LanguageItem]
+  summary                 String?
+  rawText                 String?   @map("raw_text")
+  employabilityScore      Float
+  topRecommendations      String[]  @map("top_recommendations")
+  lastProcessed           DateTime  @map("last_processed")
+  areasForDevelopment     String[]  @map("areas_for_development")
+  interviewQuestions      String[] @map("interview_questions")
+  lastJob                 String?   @map("last_job")
+  lastEducation           String?   @map("last_education")
+  disability              String?
+  previousIncarceration   String?   @map("previous_incarceration")
+  formalEducationYears    Int?      @map("formal_education_years")
+  workExperienceYears     Int?      @map("work_experience_years")
+  isAptForEmployment      Boolean?  @map("is_apt_for_employment")
+  cvFileName              String?   @map("cv_file_name")
+  createdAt               DateTime  @default(now())
+  updatedAt               DateTime  @updatedAt
+}
