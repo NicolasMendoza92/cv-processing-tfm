@@ -7,26 +7,39 @@ datasource db {
   provider = "postgresql"
 }
 
-
 model Candidate {
-  id                      String    @id @default(uuid())
-  name                    String
-  email                   String?   @unique 
-  phone                   String?
-  experience              Json      @default("[]") 
-  education               Json      @default("[]") 
-  skills                  String[]  
-  languages               Json      @default("[]") 
-  summary                 String?
-  disability              String?
-  previousIncarceration   String?  
-  rawText                 String?   @map("raw_text")
-  employabilityScore      Float
-  topRecommendations      String[]  @map("top_recommendations")
-  lastProcessed           DateTime  @map("last_processed")
-  areasForDevelopment     String[]  @map("areas_for_development")
-  interviewQuestions      String[] @map("interview_questions")
-  cvFileName              String?   @map("cv_file_name")
-  createdAt               DateTime  @default(now())
-  updatedAt               DateTime  @updatedAt
+  id                    String   @id @default(uuid())
+  name                  String
+  email                 String?  @unique
+  phone                 String?
+  experience            Json     @default("[]")
+  education             Json     @default("[]")
+  skills                String[]
+  languages             Json     @default("[]")
+  summary               String?
+  rawText               String?  @map("raw_text")
+  cvFileName            String?  @map("cv_file_name")
+  gender                String?  @map("sexo")              
+  age                   Int?     @map("edad")
+  maritalStatus         String?  @map("estado_civil")
+  birthCountry          String?  @map("pais_nacimiento")
+  numLanguages          Int?     @map("num_idiomas")
+  hasCar                Boolean? @map("coche_propio")
+  criminalRecord        Boolean? @map("antecedentes_penales")
+  restrainingOrder      Boolean? @map("orden_alejamiento")
+  numChildren           Int?     @map("num_hijos")
+  workDisability        Boolean? @map("incapacidad_laboral")
+  disability            String?                           
+  disabilityFlag        Boolean? @map("minusvalia")
+  jobSeeker             Boolean? @map("demandante_empleo")
+  weaknesses            String?  @map("puntos_debiles")    
+  trainingProfile       String?  @map("formacion_candidato")
+  employabilityScore    Float
+  topRecommendations    String[] @map("top_recommendations")
+  areasForDevelopment   String[] @map("areas_for_development")
+  interviewQuestions    String[] @map("interview_questions")
+  lastProcessed         DateTime @map("last_processed")
+  previousIncarceration String?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
 }

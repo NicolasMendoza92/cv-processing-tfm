@@ -16,14 +16,14 @@ interface CandidateCardProps {
 
 export function CandidateCard({ candidate, onViewDetails, onDelete, onFeedback }: CandidateCardProps) {
   const getScoreColor = (score: number) => {
-    if (score >= 70) return "text-green-600 dark:text-green-400"
-    if (score >= 50) return "text-amber-600 dark:text-amber-400"
-    return "text-red-600 dark:text-red-400"
+    if (score >= 0.70) return "secondary"
+    if (score >= 0.50) return "default"
+    return "destructive"
   }
 
   const getScoreBadgeVariant = (score: number) => {
-    if (score >= 70) return "default"
-    if (score >= 50) return "secondary"
+    if (score >= 0.70) return "secondary"
+    if (score >= 0.50) return "default"
     return "destructive"
   }
 
@@ -63,9 +63,9 @@ export function CandidateCard({ candidate, onViewDetails, onDelete, onFeedback }
           <div className="w-full bg-secondary rounded-full h-2.5">
             <div
               className={cn("h-2.5 rounded-full transition-all", {
-                "bg-green-600": candidate.employabilityScore >= 70,
-                "bg-amber-500": candidate.employabilityScore >= 50 && candidate.employabilityScore < 70,
-                "bg-red-600": candidate.employabilityScore < 50,
+                "bg-green-600": candidate.employabilityScore >= 0.70,
+                "bg-amber-500": candidate.employabilityScore >= 0.50 && candidate.employabilityScore < 0.70,
+                "bg-red-600": candidate.employabilityScore < 0.50,
               })}
               style={{ width: `${candidate.employabilityScore}%` }}
             />

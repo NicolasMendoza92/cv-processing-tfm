@@ -86,7 +86,7 @@ export default function CandidatesPage() {
   if (isLoading) {
     return (
       <div className="container mx-auto px-4 py-8 md:py-12">
-        <div className="flex items-center justify-center min-h-[400px]">
+        <div className="flex items-center justify-center min-h-40vh">
           <div className="flex flex-col items-center gap-4">
             <Loader2 className="w-8 h-8 animate-spin text-primary" />
             <p className="text-muted-foreground">Cargando candidatos...</p>
@@ -106,7 +106,7 @@ export default function CandidatesPage() {
       </div>
 
       {candidates.length === 0 ? (
-        <div className="flex flex-col items-center justify-center min-h-[400px] text-center">
+        <div className="flex flex-col items-center justify-center min-h-40vh text-center">
           <Users className="w-16 h-16 text-muted-foreground mb-4" />
           <h2 className="text-xl font-semibold mb-2">No hay candidatos procesados</h2>
           <p className="text-muted-foreground max-w-md">
