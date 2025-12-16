@@ -1,16 +1,15 @@
-import type { CVRecord, CandidateDetails, CandidateAnalysisResponse, ExtractedCVData, ErrorResponse, CandidateRecord, CandidateExtractedData } from "@/types"
+import type { CVRecord, CandidateDetails, CandidateAnalysisResponse, ExtractedCVData, ErrorResponse, CandidateRecord, CandidateExtractedData, CandidateSummarizeResponse } from "@/types"
 
 const API_BASE_URL = "http://127.0.0.1:8000"
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
 
 // Función que recupera todos los candidatos
-export async function getCandidates(): Promise<CandidateRecord[]> {
+async function getCandidates(): Promise<CandidateRecord[]> {
   const response = await fetch(`${baseUrl}/api/candidates`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
     },
-    // cache: 'no-store' // Si quieres asegurarte de que siempre se obtengan los datos más recientes
   });
 
   if (!response.ok) {
@@ -69,7 +68,7 @@ export async function getExtractedData(id: string): Promise<CandidateExtractedDa
   }
 }
 
-// --- Server Action para extraer datos del CV ---
+// --- MICROSERVICIO 1 para extraer datos del CV (adjunto) ---
 export async function extractCVDataAction(file: File): Promise<{
   success: boolean
   data?: ExtractedCVData
@@ -91,8 +90,6 @@ export async function extractCVDataAction(file: File): Promise<{
     }
 
     const data: ExtractedCVData = await response.json()
-    console.log("Extracted CV Data from backend:", data)
-
 
     return { success: true, data: data }
   } catch (e: any) {
@@ -101,7 +98,7 @@ export async function extractCVDataAction(file: File): Promise<{
   }
 }
 
-// --- Server Action para procesar los datos extraídos del candidato ---
+// --- Server Action MICROSERVICIO 2 para procesar los datos extraídos del candidato ---
 export async function processCandidateDataAction(
   candidateData: ExtractedCVData,
 ): Promise<{ success: boolean; data?: CandidateAnalysisResponse; error?: string }> {
@@ -121,7 +118,6 @@ export async function processCandidateDataAction(
     }
 
     const data: CandidateAnalysisResponse = await response.json()
-    console.log("Candidate Summary from backend:", data)
 
     return { success: true, data: data }
   } catch (e: any) {
@@ -131,24 +127,31 @@ export async function processCandidateDataAction(
 }
 
 // --- Server Action para obtener el resumen de un candidato por ID ---
-export async function getCandidateSummaryAction(
-  candidateId: string,
-): Promise<{ success: boolean; data?: CandidateAnalysisResponse; error?: string }> {
+export async function candidateSummaryAction(
+  candidateRawText: string,
+): Promise<{ success: boolean; data?: CandidateSummarizeResponse; error?: string }> {
   try {
-    const response = await fetch(`${API_BASE_URL}/candidate-summary/${candidateId}`, {
-      method: "GET",
+    const response = await fetch(`${API_BASE_URL}/summarize-cv`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+       body: JSON.stringify({
+        raw_text: candidateRawText,
+      }),
     })
 
     if (!response.ok) {
       const errorData: ErrorResponse = await response.json()
-      console.error("Backend error fetching candidate summary:", errorData.detail)
+      console.error("Backend error during candidate data processing:", errorData.detail)
       return { success: false, error: errorData.detail }
     }
 
-    const data: CandidateAnalysisResponse = await response.json()
+    const data: CandidateSummarizeResponse = await response.json()
+
     return { success: true, data: data }
   } catch (e: any) {
-    console.error("Network or unexpected error fetching candidate summary:", e)
+    console.error("Network or unexpected error during candidate data processing:", e)
     return { success: false, error: e.message || "Error de red o inesperado." }
   }
 }

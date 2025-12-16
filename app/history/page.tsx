@@ -1,13 +1,18 @@
-"use client"
+"use client";
 
-import { useEffect, useState, useMemo } from "react"
-import { useRouter } from "next/navigation"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { useEffect, useState, useMemo } from "react";
+import { useRouter } from "next/navigation";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Loader2,
   FileText,
@@ -19,89 +24,85 @@ import {
   Trash2,
   ChevronLeft,
   ChevronRight,
-} from "lucide-react"
-import { deleteCandidate, getCVsStatus } from "@/services/cvServices"
-import type { CVRecord } from "@/types"
-import { cn } from "@/lib/utils"
-import { DeleteConfirmationDialog } from "@/components/delete-confirmation-dialog"
-import { toast } from "sonner"
+} from "lucide-react";
+import { deleteCandidate, getCVsStatus } from "@/services/cvServices";
+import type { CVRecord } from "@/types";
+import { cn } from "@/lib/utils";
+import { DeleteConfirmationDialog } from "@/components/delete-confirmation-dialog";
+import { toast } from "sonner";
 
-const ITEMS_PER_PAGE = 10
+const ITEMS_PER_PAGE = 10;
 
 export default function HistoryPage() {
-  const router = useRouter()
-  const [cvs, setCvs] = useState<CVRecord[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [isDeleting, setIsDeleting] = useState(false)
-
-  const [searchQuery, setSearchQuery] = useState("")
-  const [statusFilter, setStatusFilter] = useState<string>("Todos")
-  const [dateFrom, setDateFrom] = useState("")
-  const [dateTo, setDateTo] = useState("")
-  const [currentPage, setCurrentPage] = useState(1)
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
-  const [cvToDelete, setCvToDelete] = useState<CVRecord | null>(null)
+  const router = useRouter();
+  const [cvs, setCvs] = useState<CVRecord[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [cvToDelete, setCvToDelete] = useState<CVRecord | null>(null);
 
   useEffect(() => {
     async function loadCVs() {
-      setIsLoading(true)
+      setIsLoading(true);
       try {
-        const data = await getCVsStatus()
-        setCvs(data)
+        const data = await getCVsStatus();
+        setCvs(data);
       } catch (error) {
-        console.error("[v0] Error loading CVs:", error)
+        console.error("[v0] Error loading CVs:", error);
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
     }
 
-    loadCVs()
-  }, [])
+    loadCVs();
+  }, []);
 
   const filteredCvs = useMemo(() => {
-    let filtered = [...cvs]
+    let filtered = [...cvs];
 
     if (searchQuery.trim()) {
-      const query = searchQuery.toLowerCase()
-      filtered = filtered.filter((cv) => cv.fileName.toLowerCase().includes(query))
-    }
-
-    if (statusFilter !== "Todos") {
-      filtered = filtered.filter((cv) => cv.status === statusFilter)
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter((cv) =>
+        cv.fileName.toLowerCase().includes(query)
+      );
     }
 
     if (dateFrom) {
-      const fromDate = new Date(dateFrom)
-      filtered = filtered.filter((cv) => new Date(cv.uploadDate) >= fromDate)
+      const fromDate = new Date(dateFrom);
+      filtered = filtered.filter((cv) => new Date(cv.uploadDate) >= fromDate);
     }
     if (dateTo) {
-      const toDate = new Date(dateTo)
-      toDate.setHours(23, 59, 59, 999) 
-      filtered = filtered.filter((cv) => new Date(cv.uploadDate) <= toDate)
+      const toDate = new Date(dateTo);
+      toDate.setHours(23, 59, 59, 999);
+      filtered = filtered.filter((cv) => new Date(cv.uploadDate) <= toDate);
     }
 
-    return filtered
-  }, [cvs, searchQuery, statusFilter, dateFrom, dateTo])
+    return filtered;
+  }, [cvs, searchQuery, dateFrom, dateTo]);
 
-  const totalPages = Math.ceil(filteredCvs.length / ITEMS_PER_PAGE)
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE
-  const endIndex = startIndex + ITEMS_PER_PAGE
-  const paginatedCvs = filteredCvs.slice(startIndex, endIndex)
+  const totalPages = Math.ceil(filteredCvs.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const paginatedCvs = filteredCvs.slice(startIndex, endIndex);
 
   useEffect(() => {
-    setCurrentPage(1)
-  }, [searchQuery, statusFilter, dateFrom, dateTo])
+    setCurrentPage(1);
+  }, [searchQuery, dateFrom, dateTo]);
 
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString)
+    const date = new Date(dateString);
     return new Intl.DateTimeFormat("es-ES", {
       day: "2-digit",
       month: "short",
       year: "numeric",
       hour: "2-digit",
       minute: "2-digit",
-    }).format(date)
-  }
+    }).format(date);
+  };
 
   const getStatusBadge = (status: CVRecord["status"]) => {
     switch (status) {
@@ -111,71 +112,79 @@ export default function HistoryPage() {
             <Clock className="w-3 h-3" />
             Cargado
           </Badge>
-        )
+        );
       case "Procesando...":
         return (
           <Badge className="gap-1.5 bg-amber-500 hover:bg-amber-600">
             <Loader2 className="w-3 h-3 animate-spin" />
             Procesando
           </Badge>
-        )
+        );
       case "Procesado":
         return (
           <Badge className="gap-1.5 bg-green-600 hover:bg-green-700">
             <CheckCircle2 className="w-3 h-3" />
             Procesado
           </Badge>
-        )
+        );
       case "Error":
         return (
           <Badge variant="destructive" className="gap-1.5">
             <AlertCircle className="w-3 h-3" />
             Error
           </Badge>
-        )
+        );
     }
-  }
+  };
 
   const handleViewResults = (cv: CVRecord) => {
     if (cv.status === "Procesado" && cv.detailsLink) {
-      router.push(`/cv-extracted/${cv.id}`)
+      router.push(`/cv-extracted/${cv.id}`);
     }
-  }
+  };
 
   const handleDeleteClick = (cv: CVRecord) => {
-    setCvToDelete(cv)
-    setDeleteDialogOpen(true)
-  }
+    setCvToDelete(cv);
+    setDeleteDialogOpen(true);
+  };
 
   const handleDeleteConfirm = async () => {
-    if (!cvToDelete) return; 
+    if (!cvToDelete) return;
 
-    setIsDeleting(true); 
+    setIsDeleting(true);
     try {
       const success = await deleteCandidate(cvToDelete.id);
-      if (success) { 
-        toast.success(`Candidato "${cvToDelete.fileName}" eliminado exitosamente.`);
+      if (success) {
+        toast.success(
+          `Candidato "${cvToDelete.fileName}" eliminado exitosamente.`
+        );
         setCvs((prevCvs) => prevCvs.filter((cv) => cv.id !== cvToDelete.id));
       } else {
-        toast.error(`No se pudo eliminar el candidato "${cvToDelete.fileName}".`);
+        toast.error(
+          `No se pudo eliminar el candidato "${cvToDelete.fileName}".`
+        );
       }
     } catch (error: any) {
       console.error("Error al eliminar candidato:", error);
-      toast.error(`Error al eliminar el candidato: ${error.message || "Error desconocido."}`);
+      toast.error(
+        `Error al eliminar el candidato: ${
+          error.message || "Error desconocido."
+        }`
+      );
     } finally {
-      setIsDeleting(false); 
-      setDeleteDialogOpen(false); 
-      setCvToDelete(null); 
+      setIsDeleting(false);
+      setDeleteDialogOpen(false);
+      setCvToDelete(null);
     }
   };
 
   const handlePreviousPage = () => {
-    setCurrentPage((prev) => Math.max(1, prev - 1))
-  }
+    setCurrentPage((prev) => Math.max(1, prev - 1));
+  };
 
   const handleNextPage = () => {
-    setCurrentPage((prev) => Math.min(totalPages, prev + 1))
-  }
+    setCurrentPage((prev) => Math.min(totalPages, prev + 1));
+  };
 
   if (isLoading) {
     return (
@@ -183,11 +192,13 @@ export default function HistoryPage() {
         <div className="flex items-center justify-center min-h-[400px]">
           <div className="flex flex-col items-center gap-4">
             <Loader2 className="w-8 h-8 animate-spin text-primary" />
-            <p className="text-muted-foreground">Cargando historial de CVs...</p>
+            <p className="text-muted-foreground">
+              Cargando historial de CVs...
+            </p>
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -197,7 +208,8 @@ export default function HistoryPage() {
           Historial de Procesamiento de CVs
         </h1>
         <p className="text-muted-foreground text-lg text-pretty">
-          Revisa el estado de tus cargas y accede a los detalles de los CVs procesados.
+          Revisa el estado de tus cargas y accede a los detalles de los CVs
+          procesados.
         </p>
       </div>
 
@@ -205,8 +217,8 @@ export default function HistoryPage() {
         <CardHeader>
           <CardTitle>CVs Registrados</CardTitle>
           <CardDescription>
-            {filteredCvs.filter((cv) => cv.status === "Procesado").length} de {filteredCvs.length} CVs procesados
-            completamente
+            {filteredCvs.filter((cv) => cv.status === "Procesado").length} de{" "}
+            {filteredCvs.length} CVs procesados completamente
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -226,27 +238,7 @@ export default function HistoryPage() {
                   />
                 </div>
               </div>
-
-              {/* Status filter */}
-              <div className="space-y-2">
-                <Label htmlFor="status">Estado</Label>
-                <Select value={statusFilter} onValueChange={setStatusFilter}>
-                  <SelectTrigger id="status">
-                    <SelectValue placeholder="Todos" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Todos">Todos</SelectItem>
-                    <SelectItem value="Cargado">Cargado</SelectItem>
-                    <SelectItem value="Procesando...">Procesando</SelectItem>
-                    <SelectItem value="Procesado">Procesado</SelectItem>
-                    <SelectItem value="Error">Error</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
-            {/* Date range filters */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Date range filters */}
               <div className="space-y-2">
                 <Label htmlFor="dateFrom">Desde</Label>
                 <Input
@@ -270,17 +262,16 @@ export default function HistoryPage() {
             </div>
 
             {/* Active filters summary */}
-            {(searchQuery || statusFilter !== "Todos" || dateFrom || dateTo) && (
+            {(searchQuery || dateFrom || dateTo) && (
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <span>Mostrando {filteredCvs.length} resultados</span>
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => {
-                    setSearchQuery("")
-                    setStatusFilter("Todos")
-                    setDateFrom("")
-                    setDateTo("")
+                    setSearchQuery("");
+                    setDateFrom("");
+                    setDateTo("");
                   }}
                   className="h-auto py-1 px-2"
                 >
@@ -294,7 +285,9 @@ export default function HistoryPage() {
           {paginatedCvs.length === 0 ? (
             <div className="text-center py-12">
               <FileText className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-              <p className="text-muted-foreground">No se encontraron CVs con los filtros aplicados.</p>
+              <p className="text-muted-foreground">
+                No se encontraron CVs con los filtros aplicados.
+              </p>
             </div>
           ) : (
             <div className="space-y-3">
@@ -303,7 +296,9 @@ export default function HistoryPage() {
                   key={cv.id}
                   className={cn(
                     "flex flex-col md:flex-row md:items-center gap-4 p-4 rounded-lg border transition-colors",
-                    cv.status === "Error" ? "bg-destructive/5 border-destructive/20" : "bg-card hover:bg-accent/50",
+                    cv.status === "Error"
+                      ? "bg-destructive/5 border-destructive/20"
+                      : "bg-card hover:bg-accent/50"
                   )}
                 >
                   <div className="flex items-center gap-3 flex-1 min-w-0">
@@ -314,8 +309,12 @@ export default function HistoryPage() {
                     </div>
 
                     <div className="flex-1 min-w-0">
-                      <p className="font-medium text-sm text-foreground truncate">{cv.fileName}</p>
-                      <p className="text-xs text-muted-foreground mt-0.5">{formatDate(cv.uploadDate)}</p>
+                      <p className="font-medium text-sm text-foreground truncate">
+                        {cv.fileName}
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        {formatDate(cv.uploadDate)}
+                      </p>
                       {cv.status === "Error" && cv.errorMessage && (
                         <p className="text-xs text-destructive mt-1 flex items-center gap-1">
                           <AlertCircle className="w-3 h-3" />
@@ -341,7 +340,12 @@ export default function HistoryPage() {
                     )}
 
                     {cv.status !== "Procesado" && (
-                      <Button size="sm" variant="outline" disabled className="gap-2 bg-transparent">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        disabled
+                        className="gap-2 bg-transparent"
+                      >
                         <Eye className="w-4 h-4" />
                         Ver Resultados
                       </Button>
@@ -368,7 +372,9 @@ export default function HistoryPage() {
           {filteredCvs.length > 0 && (
             <div className="flex items-center justify-between pt-4 border-t">
               <p className="text-sm text-muted-foreground">
-                Mostrando {startIndex + 1}-{Math.min(endIndex, filteredCvs.length)} de {filteredCvs.length} resultados
+                Mostrando {startIndex + 1}-
+                {Math.min(endIndex, filteredCvs.length)} de {filteredCvs.length}{" "}
+                resultados
               </p>
               <div className="flex items-center gap-2">
                 <Button
@@ -407,5 +413,5 @@ export default function HistoryPage() {
         fileName={cvToDelete?.fileName || ""}
       />
     </div>
-  )
+  );
 }

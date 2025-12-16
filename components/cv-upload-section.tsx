@@ -3,14 +3,6 @@
 import type React from "react";
 import { useState, useCallback } from "react";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -20,7 +12,12 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import type { CandidateFile, CandidateSaveData, ExtractedCVData, UploadedFile } from "@/types";
+import type {
+  CandidateFile,
+  CandidateSaveData,
+  ExtractedCVData,
+  UploadedFile,
+} from "@/types";
 import {
   extractCVDataAction,
   processCandidateDataAction,
@@ -35,17 +32,17 @@ import {
 import {
   AlertCircle,
   CheckCircle2,
-  Edit,
   Eye,
   FileText,
   Loader2,
-  Trash2,
+  Save,
   Upload,
   X,
 } from "lucide-react";
 import { Button } from "./ui/button";
-import { Badge } from "./ui/badge";
 import { cn } from "@/lib/utils";
+import { DataReviewModal } from "./data-review-modal";
+import { toast } from "sonner";
 
 export function CVUploadSection() {
   const [files, setFiles] = useState<UploadedFile[]>([]);
@@ -65,7 +62,7 @@ export function CVUploadSection() {
     setIsDragging(false);
   }, []);
 
-  // Función para subir y extraer datos del CV (POST /extract_cv_data) usando Server Action
+  // Función para subir y extraer datos del CV (POST /extract-cv-data) usando Server Action
   const uploadAndExtractCVData = useCallback(
     async (fileToUpload: File, fileId: string) => {
       setFiles((prev) =>
@@ -84,8 +81,9 @@ export function CVUploadSection() {
           )
         );
 
-        // Llama a la Server Action
+        // Llama a la Server Action que es el MICROSERVICIO 1
         const result = await extractCVDataAction(fileToUpload);
+        console.log("resultados extraidos del CV", result);
 
         if (!result.success) {
           setFiles((prev) =>
@@ -99,7 +97,7 @@ export function CVUploadSection() {
         }
 
         // Si la extracción es exitosa
-        const extractedData = result.data!; 
+        const extractedData = result.data!;
         setFiles((prev) =>
           prev.map((f) =>
             f.id === fileId
@@ -132,7 +130,7 @@ export function CVUploadSection() {
     []
   );
 
-  // Función para procesar los datos extraídos (POST /process_candidate_data) usando Server Action
+  // Función para procesar los datos extraídos (POST /process-candidate-data) usando Server Action
   const processExtractedCandidateData = useCallback(
     async (fileId: string, dataToProcess: ExtractedCVData) => {
       setFiles((prev) =>
@@ -144,7 +142,7 @@ export function CVUploadSection() {
       );
 
       try {
-        // Llama a la Server Action
+        // Llama a la Server Action MICROSERVICIO 2
         const result = await processCandidateDataAction(dataToProcess);
         console.log("resultados processados desde el backend", result);
 
@@ -163,7 +161,11 @@ export function CVUploadSection() {
         setFiles((prev) =>
           prev.map((f) =>
             f.id === fileId
-              ? { ...f, status: "approved", candidateAnalysis: candidateAnalysis }
+              ? {
+                  ...f,
+                  status: "approved",
+                  candidateAnalysis: candidateAnalysis,
+                }
               : f
           )
         );
@@ -206,15 +208,14 @@ export function CVUploadSection() {
 
         if (validExtensions.includes(extension)) {
           const fileId = `${Date.now()}-${Math.random()
-            .toString(36)
-            .substr(2, 9)}`;
+            .toString(36)}`;
           filesToQueue.push({ id: fileId, file: file });
 
           setFiles((prev) => [
             ...prev,
             {
               id: fileId,
-              file: file, 
+              file: file,
               name: file.name,
               size: file.size,
               status: "uploading",
@@ -271,67 +272,73 @@ export function CVUploadSection() {
     setShowModalForFile(null);
   };
 
-  const handleEditInformation = () => {
-    if (!showModalForFile || !showModalForFile.extractedData) return;
-
-    alert("esto seria un fine tunning");
+  const handleDeleteFileFromModal = (fileId: string) => {
+    setFileToDelete(fileId);
     setShowModalForFile(null);
   };
 
   const handleSaveCandidate = async (fileToSave: CandidateFile) => {
     console.log("Guardando candidato para el archivo:", fileToSave);
-  if (
-    fileToSave.status !== "approved" ||
-    !fileToSave.extractedData ||
-    !fileToSave.candidateAnalysis
-  ) {
-    console.error("El archivo no está aprobado o le faltan datos para guardar.");
-    alert("No se puede guardar el candidato. Faltan datos o el estado no es 'aprobado'.");
-    return;
-  }
-
-  // Prepara los datos que enviarás a tu API
-  const dataToSend: CandidateSaveData = {
-    name: fileToSave.candidateAnalysis.name, 
-    email: fileToSave.extractedData.email,
-    phone: fileToSave.extractedData.phone,
-    experience: fileToSave.extractedData.experience,
-    education: fileToSave.extractedData.education,
-    skills: fileToSave.extractedData.skills,
-    languages: fileToSave.extractedData.languages,
-    summary: fileToSave.extractedData.summary,
-    rawText: fileToSave.extractedData.raw_text,
-    employabilityScore: fileToSave.candidateAnalysis.employability_score,
-    topRecommendations: fileToSave.candidateAnalysis.top_recommendations,
-    lastProcessed: fileToSave.candidateAnalysis.last_processed,
-    areasForDevelopment: fileToSave.candidateAnalysis.areas_for_development,
-    interviewQuestions: fileToSave.candidateAnalysis.interview_questions,
-    cvFileName: fileToSave.name, 
-  };
-
-  try {
-    const response = await fetch('/api/candidates', { 
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(dataToSend),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || 'Error al guardar el candidato');
+    if (
+      fileToSave.status !== "approved" ||
+      !fileToSave.extractedData ||
+      !fileToSave.candidateAnalysis
+    ) {
+      console.error(
+        "El archivo no está aprobado o le faltan datos para guardar."
+      );
+      toast.error(
+        "No se puede guardar el candidato. Faltan datos o el estado no es 'aprobado'."
+      );
+      return;
     }
 
-    const savedCandidate = await response.json();
-    console.log("Candidato guardado exitosamente:", savedCandidate);
-    alert(`Candidato "${savedCandidate.name}" guardado exitosamente!`);
+    // Prepara los datos que enviarás a tu API
+    const dataToSend: CandidateSaveData = {
+      name: fileToSave.candidateAnalysis.name,
+      email: fileToSave.extractedData.email,
+      phone: fileToSave.extractedData.phone,
+      experience: fileToSave.extractedData.experience,
+      education: fileToSave.extractedData.education,
+      skills: fileToSave.extractedData.skills,
+      languages: fileToSave.extractedData.languages,
+      summary: fileToSave.extractedData.summary,
+      rawText: fileToSave.extractedData.raw_text,
+      employabilityScore: fileToSave.candidateAnalysis.employability_score,
+      topRecommendations: fileToSave.candidateAnalysis.top_recommendations,
+      lastProcessed: fileToSave.candidateAnalysis.last_processed,
+      areasForDevelopment: fileToSave.candidateAnalysis.areas_for_development,
+      interviewQuestions: fileToSave.candidateAnalysis.interview_questions,
+      cvFileName: fileToSave.name,
+    };
 
-  } catch (error) {
-    console.error("Fallo al guardar el candidato:", error);
-    alert(`Error al guardar el candidato: ${(error as Error).message}`);
-  }
-};
+    try {
+      const response = await fetch("/api/candidates", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(dataToSend),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Error al guardar el candidato");
+      }
+
+      const savedCandidate = await response.json();
+      console.log("Candidato guardado exitosamente:", savedCandidate);
+      toast.success(`Candidato "${savedCandidate.name}" guardado exitosamente!`);
+       setFiles((prevFiles) =>
+        prevFiles.map((f) =>
+          f.id === fileToSave.id ? { ...f, isSaved: true } : f
+        )
+      );
+    } catch (error) {
+      console.error("Fallo al guardar el candidato:", error);
+      toast.error(`Error al guardar el candidato: ${(error as Error).message}`);
+    }
+  };
 
   const getStatusDisplay = (status: UploadedFile["status"]) => {
     switch (status) {
@@ -540,9 +547,19 @@ export function CVUploadSection() {
                             size="sm"
                             onClick={() => handleSaveCandidate(file)}
                             className="gap-2 h-8"
+                            disabled={file.isSaved} // Disable if already saved
                           >
-                            <CheckCircle2 className="w-4 h-4" />
-                            Guardar informe
+                            {file.isSaved ? (
+                              <>
+                                <CheckCircle2 className="w-4 h-4" />
+                                Guardado
+                              </>
+                            ) : (
+                              <>
+                                <Save className="w-4 h-4" /> {/* Use Save icon */}
+                                Guardar informe
+                              </>
+                            )}
                           </Button>
                         )}
                         {file.status === "error" && (
@@ -578,7 +595,9 @@ export function CVUploadSection() {
                         </p>
                         <p>
                           <strong>Puestos Recomendados:</strong>{" "}
-                          {file.candidateAnalysis.top_recommendations.join(", ")}
+                          {file.candidateAnalysis.top_recommendations.join(
+                            ", "
+                          )}
                         </p>
                         {file.candidateAnalysis.areas_for_development &&
                           file.candidateAnalysis.areas_for_development.length >
@@ -621,284 +640,12 @@ export function CVUploadSection() {
       )}
 
       {/* Modal para Revisar Datos Extraídos (sin cambios significativos) */}
-      <Dialog
-        open={!!showModalForFile}
-        onOpenChange={() => setShowModalForFile(null)}
-      >
-        <DialogContent className="min-w-full max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="text-xl">
-              {showModalForFile?.status === "approved"
-                ? "Resumen de Empleabilidad"
-                : "Datos Extraídos del CV"}
-            </DialogTitle>
-            <DialogDescription>
-              {showModalForFile?.name} -{" "}
-              {showModalForFile?.status === "approved"
-                ? "Información final del candidato"
-                : "Revisa la información extraída por el sistema de PLN"}
-            </DialogDescription>
-          </DialogHeader>
-
-          {showModalForFile?.status === "approved" &&
-          showModalForFile?.candidateAnalysis ? (
-            <div className="space-y-6 py-4">
-              {/* Resumen de Empleabilidad aquí */}
-              <div className="space-y-3">
-                <h3 className="font-semibold text-lg text-foreground">
-                  Score de Empleabilidad:{" "}
-                  <span className="text-primary">
-                    {showModalForFile.candidateAnalysis.employability_score.toFixed(
-                      2
-                    )}
-                  </span>
-                </h3>
-                <p className="text-sm text-muted-foreground">
-                  Este score indica la probabilidad de que el candidato consiga
-                  un empleo, basado en sus habilidades, experiencia y educación.
-                </p>
-              </div>
-
-              <div className="space-y-3">
-                <h3 className="font-semibold text-base text-foreground">
-                  Puestos Recomendados
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {showModalForFile.candidateAnalysis.top_recommendations.map(
-                    (rec, idx) => (
-                      <Badge
-                        key={idx}
-                        variant="default"
-                        className="text-lg py-1 px-3"
-                      >
-                        {rec}
-                      </Badge>
-                    )
-                  )}
-                </div>
-              </div>
-
-              {showModalForFile.candidateAnalysis.areas_for_development &&
-                showModalForFile.candidateAnalysis.areas_for_development.length >
-                  0 && (
-                  <div className="space-y-3">
-                    <h3 className="font-semibold text-base text-foreground">
-                      Áreas de Desarrollo Sugeridas
-                    </h3>
-                    <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1">
-                      {showModalForFile.candidateAnalysis.areas_for_development.map(
-                        (area, idx) => (
-                          <li key={idx}>{area}</li>
-                        )
-                      )}
-                    </ul>
-                  </div>
-                )}
-
-              {showModalForFile.candidateAnalysis.interview_questions &&
-                showModalForFile.candidateAnalysis.interview_questions.length >
-                  0 && (
-                  <div className="space-y-3">
-                    <h3 className="font-semibold text-base text-foreground">
-                      Preguntas de Entrevista Sugeridas
-                    </h3>
-                    <ul className="list-decimal list-inside text-sm text-muted-foreground space-y-1">
-                      {showModalForFile.candidateAnalysis.interview_questions.map(
-                        (q, idx) => (
-                          <li key={idx}>{q}</li>
-                        )
-                      )}
-                    </ul>
-                  </div>
-                )}
-
-              <p className="text-xs text-right text-muted-foreground mt-4">
-                Último procesamiento:{" "}
-                {new Date(
-                  showModalForFile.candidateAnalysis.last_processed
-                ).toLocaleString()}
-              </p>
-            </div>
-          ) : showModalForFile?.extractedData ? (
-            <div className="space-y-6 py-4">
-              {/* Personal Information */}
-              <div className="space-y-3">
-                <h3 className="font-semibold text-base text-foreground">
-                  Información Personal
-                </h3>
-                <div className="grid grid-cols-2 gap-4 p-4 bg-muted/50 rounded-lg">
-                  <div>
-                    <p className="text-xs text-muted-foreground">Nombre</p>
-                    <p className="text-sm font-medium">
-                      {showModalForFile.extractedData.name || "N/A"}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-muted-foreground">Email</p>
-                    <p className="text-sm font-medium">
-                      {showModalForFile.extractedData.email || "N/A"}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-muted-foreground">Teléfono</p>
-                    <p className="text-sm font-medium">
-                      {showModalForFile.extractedData.phone || "N/A"}
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Experience */}
-              <div className="space-y-3">
-                <h3 className="font-semibold text-base text-foreground">
-                  Experiencia Laboral
-                </h3>
-                <div className="space-y-3">
-                  {showModalForFile.extractedData.experience.length > 0 ? (
-                    showModalForFile.extractedData.experience.map(
-                      (exp, idx) => (
-                        <div key={idx} className="p-4 bg-muted/50 rounded-lg">
-                          <p className="font-medium text-sm">{exp.title}</p>
-                          <p className="text-sm text-muted-foreground">
-                            {exp.company}
-                          </p>
-                          <p className="text-xs text-muted-foreground mt-1">
-                            ~{exp.years} años de experiencia
-                          </p>
-                        </div>
-                      )
-                    )
-                  ) : (
-                    <p className="text-sm text-muted-foreground p-4 bg-muted/50 rounded-lg">
-                      No se encontró experiencia laboral.
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              {/* Education */}
-              <div className="space-y-3">
-                <h3 className="font-semibold text-base text-foreground">
-                  Formación Académica
-                </h3>
-                <div className="space-y-3">
-                  {showModalForFile.extractedData.education.length > 0 ? (
-                    showModalForFile.extractedData.education.map((edu, idx) => (
-                      <div key={idx} className="p-4 bg-muted/50 rounded-lg">
-                        <p className="font-medium text-sm">{edu.degree}</p>
-                        <p className="text-sm text-muted-foreground">
-                          {edu.institution}
-                        </p>
-                        {edu.year && (
-                          <p className="text-xs text-muted-foreground mt-1">
-                            Año: {edu.year}
-                          </p>
-                        )}
-                      </div>
-                    ))
-                  ) : (
-                    <p className="text-sm text-muted-foreground p-4 bg-muted/50 rounded-lg">
-                      No se encontró formación académica.
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              {/* Skills */}
-              <div className="space-y-3">
-                <h3 className="font-semibold text-base text-foreground">
-                  Habilidades
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {showModalForFile.extractedData.skills.length > 0 ? (
-                    showModalForFile.extractedData.skills.map((skill, idx) => (
-                      <Badge key={idx} variant="secondary">
-                        {skill}
-                      </Badge>
-                    ))
-                  ) : (
-                    <p className="text-sm text-muted-foreground">
-                      No se encontraron habilidades.
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              {/* Languages */}
-              <div className="space-y-3">
-                <h3 className="font-semibold text-base text-foreground">
-                  Idiomas
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {showModalForFile.extractedData.languages.length > 0 ? (
-                    showModalForFile.extractedData.languages.map(
-                      (lang, idx) => (
-                        <Badge key={idx} variant="outline">
-                          {lang.name} - {lang.level}
-                        </Badge>
-                      )
-                    )
-                  ) : (
-                    <p className="text-sm text-muted-foreground">
-                      No se encontraron idiomas.
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              {/* Summary */}
-              {showModalForFile.extractedData.summary && (
-                <div className="space-y-3">
-                  <h3 className="font-semibold text-base text-foreground">
-                    Resumen Profesional
-                  </h3>
-                  <p className="text-sm text-muted-foreground p-4 bg-muted/50 rounded-lg">
-                    {showModalForFile.extractedData.summary}
-                  </p>
-                </div>
-              )}
-            </div>
-          ) : (
-            <p className="text-sm text-muted-foreground text-center py-8">
-              No hay datos extraídos disponibles para este CV.
-            </p>
-          )}
-
-          <DialogFooter className="flex-col sm:flex-row gap-2">
-            <Button variant="outline" onClick={() => setShowModalForFile(null)}>
-              Cerrar
-            </Button>
-            {showModalForFile?.status === "ready_for_review" && (
-              <Button
-                variant="destructive"
-                onClick={() => {
-                  if (showModalForFile) {
-                    setFileToDelete(showModalForFile.id);
-                    setShowModalForFile(null);
-                  }
-                }}
-                className="gap-2"
-              >
-                <Trash2 className="w-4 h-4" />
-                Eliminar
-              </Button>
-            )}
-            {showModalForFile?.status === "ready_for_review" && (
-              <Button onClick={handleAnalyzeCandidate} className="gap-2">
-                <CheckCircle2 className="w-4 h-4" />
-                Analizar candidato
-              </Button>
-            )}
-            {showModalForFile?.status === "ready_for_review" && (
-              <Button variant="outline" onClick={handleEditInformation} className="gap-2">
-                <Edit className="w-4 h-4" />
-                Editar Información
-              </Button>
-            )}
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
+      <DataReviewModal
+        showModalForFile={showModalForFile}
+        onClose={() => setShowModalForFile(null)}
+        onAnalyzeCandidate={handleAnalyzeCandidate}
+        onDeleteFile={handleDeleteFileFromModal}
+      />
       <AlertDialog
         open={!!fileToDelete}
         onOpenChange={() => setFileToDelete(null)}

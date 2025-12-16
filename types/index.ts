@@ -54,6 +54,10 @@ export interface CandidateAnalysisResponse {
   interview_questions?: string[];
 }
 
+export interface CandidateSummarizeResponse {
+  summary?: string;
+}
+
 export interface ExtractedCVData {
   id: string;
   name: string;
@@ -94,6 +98,7 @@ export interface UploadedFile {
   errorMessage?: string;
   extractedData?: ExtractedCVData;
   candidateAnalysis?: CandidateAnalysisResponse;
+  isSaved?: boolean;
 }
 
 export interface FeedbackData {
