@@ -27,10 +27,16 @@ export type AggregateCandidate = {
 }
 
 export type CandidateAvgAggregateOutputType = {
+  age: number | null
+  numLanguages: number | null
+  numChildren: number | null
   employabilityScore: number | null
 }
 
 export type CandidateSumAggregateOutputType = {
+  age: number | null
+  numLanguages: number | null
+  numChildren: number | null
   employabilityScore: number | null
 }
 
@@ -40,12 +46,26 @@ export type CandidateMinAggregateOutputType = {
   email: string | null
   phone: string | null
   summary: string | null
-  disability: string | null
-  previousIncarceration: string | null
   rawText: string | null
+  cvFileName: string | null
+  gender: string | null
+  age: number | null
+  maritalStatus: string | null
+  birthCountry: string | null
+  numLanguages: number | null
+  hasCar: boolean | null
+  criminalRecord: boolean | null
+  restrainingOrder: boolean | null
+  numChildren: number | null
+  workDisability: boolean | null
+  disability: string | null
+  disabilityFlag: boolean | null
+  jobSeeker: boolean | null
+  weaknesses: string | null
+  trainingProfile: string | null
   employabilityScore: number | null
   lastProcessed: Date | null
-  cvFileName: string | null
+  previousIncarceration: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -56,12 +76,26 @@ export type CandidateMaxAggregateOutputType = {
   email: string | null
   phone: string | null
   summary: string | null
-  disability: string | null
-  previousIncarceration: string | null
   rawText: string | null
+  cvFileName: string | null
+  gender: string | null
+  age: number | null
+  maritalStatus: string | null
+  birthCountry: string | null
+  numLanguages: number | null
+  hasCar: boolean | null
+  criminalRecord: boolean | null
+  restrainingOrder: boolean | null
+  numChildren: number | null
+  workDisability: boolean | null
+  disability: string | null
+  disabilityFlag: boolean | null
+  jobSeeker: boolean | null
+  weaknesses: string | null
+  trainingProfile: string | null
   employabilityScore: number | null
   lastProcessed: Date | null
-  cvFileName: string | null
+  previousIncarceration: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -76,15 +110,29 @@ export type CandidateCountAggregateOutputType = {
   skills: number
   languages: number
   summary: number
-  disability: number
-  previousIncarceration: number
   rawText: number
+  cvFileName: number
+  gender: number
+  age: number
+  maritalStatus: number
+  birthCountry: number
+  numLanguages: number
+  hasCar: number
+  criminalRecord: number
+  restrainingOrder: number
+  numChildren: number
+  workDisability: number
+  disability: number
+  disabilityFlag: number
+  jobSeeker: number
+  weaknesses: number
+  trainingProfile: number
   employabilityScore: number
   topRecommendations: number
-  lastProcessed: number
   areasForDevelopment: number
   interviewQuestions: number
-  cvFileName: number
+  lastProcessed: number
+  previousIncarceration: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -92,10 +140,16 @@ export type CandidateCountAggregateOutputType = {
 
 
 export type CandidateAvgAggregateInputType = {
+  age?: true
+  numLanguages?: true
+  numChildren?: true
   employabilityScore?: true
 }
 
 export type CandidateSumAggregateInputType = {
+  age?: true
+  numLanguages?: true
+  numChildren?: true
   employabilityScore?: true
 }
 
@@ -105,12 +159,26 @@ export type CandidateMinAggregateInputType = {
   email?: true
   phone?: true
   summary?: true
-  disability?: true
-  previousIncarceration?: true
   rawText?: true
+  cvFileName?: true
+  gender?: true
+  age?: true
+  maritalStatus?: true
+  birthCountry?: true
+  numLanguages?: true
+  hasCar?: true
+  criminalRecord?: true
+  restrainingOrder?: true
+  numChildren?: true
+  workDisability?: true
+  disability?: true
+  disabilityFlag?: true
+  jobSeeker?: true
+  weaknesses?: true
+  trainingProfile?: true
   employabilityScore?: true
   lastProcessed?: true
-  cvFileName?: true
+  previousIncarceration?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -121,12 +189,26 @@ export type CandidateMaxAggregateInputType = {
   email?: true
   phone?: true
   summary?: true
-  disability?: true
-  previousIncarceration?: true
   rawText?: true
+  cvFileName?: true
+  gender?: true
+  age?: true
+  maritalStatus?: true
+  birthCountry?: true
+  numLanguages?: true
+  hasCar?: true
+  criminalRecord?: true
+  restrainingOrder?: true
+  numChildren?: true
+  workDisability?: true
+  disability?: true
+  disabilityFlag?: true
+  jobSeeker?: true
+  weaknesses?: true
+  trainingProfile?: true
   employabilityScore?: true
   lastProcessed?: true
-  cvFileName?: true
+  previousIncarceration?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -141,15 +223,29 @@ export type CandidateCountAggregateInputType = {
   skills?: true
   languages?: true
   summary?: true
-  disability?: true
-  previousIncarceration?: true
   rawText?: true
+  cvFileName?: true
+  gender?: true
+  age?: true
+  maritalStatus?: true
+  birthCountry?: true
+  numLanguages?: true
+  hasCar?: true
+  criminalRecord?: true
+  restrainingOrder?: true
+  numChildren?: true
+  workDisability?: true
+  disability?: true
+  disabilityFlag?: true
+  jobSeeker?: true
+  weaknesses?: true
+  trainingProfile?: true
   employabilityScore?: true
   topRecommendations?: true
-  lastProcessed?: true
   areasForDevelopment?: true
   interviewQuestions?: true
-  cvFileName?: true
+  lastProcessed?: true
+  previousIncarceration?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -251,15 +347,29 @@ export type CandidateGroupByOutputType = {
   skills: string[]
   languages: runtime.JsonValue
   summary: string | null
-  disability: string | null
-  previousIncarceration: string | null
   rawText: string | null
+  cvFileName: string | null
+  gender: string | null
+  age: number | null
+  maritalStatus: string | null
+  birthCountry: string | null
+  numLanguages: number | null
+  hasCar: boolean | null
+  criminalRecord: boolean | null
+  restrainingOrder: boolean | null
+  numChildren: number | null
+  workDisability: boolean | null
+  disability: string | null
+  disabilityFlag: boolean | null
+  jobSeeker: boolean | null
+  weaknesses: string | null
+  trainingProfile: string | null
   employabilityScore: number
   topRecommendations: string[]
-  lastProcessed: Date
   areasForDevelopment: string[]
   interviewQuestions: string[]
-  cvFileName: string | null
+  lastProcessed: Date
+  previousIncarceration: string | null
   createdAt: Date
   updatedAt: Date
   _count: CandidateCountAggregateOutputType | null
@@ -297,15 +407,29 @@ export type CandidateWhereInput = {
   skills?: Prisma.StringNullableListFilter<"Candidate">
   languages?: Prisma.JsonFilter<"Candidate">
   summary?: Prisma.StringNullableFilter<"Candidate"> | string | null
-  disability?: Prisma.StringNullableFilter<"Candidate"> | string | null
-  previousIncarceration?: Prisma.StringNullableFilter<"Candidate"> | string | null
   rawText?: Prisma.StringNullableFilter<"Candidate"> | string | null
+  cvFileName?: Prisma.StringNullableFilter<"Candidate"> | string | null
+  gender?: Prisma.StringNullableFilter<"Candidate"> | string | null
+  age?: Prisma.IntNullableFilter<"Candidate"> | number | null
+  maritalStatus?: Prisma.StringNullableFilter<"Candidate"> | string | null
+  birthCountry?: Prisma.StringNullableFilter<"Candidate"> | string | null
+  numLanguages?: Prisma.IntNullableFilter<"Candidate"> | number | null
+  hasCar?: Prisma.BoolNullableFilter<"Candidate"> | boolean | null
+  criminalRecord?: Prisma.BoolNullableFilter<"Candidate"> | boolean | null
+  restrainingOrder?: Prisma.BoolNullableFilter<"Candidate"> | boolean | null
+  numChildren?: Prisma.IntNullableFilter<"Candidate"> | number | null
+  workDisability?: Prisma.BoolNullableFilter<"Candidate"> | boolean | null
+  disability?: Prisma.StringNullableFilter<"Candidate"> | string | null
+  disabilityFlag?: Prisma.BoolNullableFilter<"Candidate"> | boolean | null
+  jobSeeker?: Prisma.BoolNullableFilter<"Candidate"> | boolean | null
+  weaknesses?: Prisma.StringNullableFilter<"Candidate"> | string | null
+  trainingProfile?: Prisma.StringNullableFilter<"Candidate"> | string | null
   employabilityScore?: Prisma.FloatFilter<"Candidate"> | number
   topRecommendations?: Prisma.StringNullableListFilter<"Candidate">
-  lastProcessed?: Prisma.DateTimeFilter<"Candidate"> | Date | string
   areasForDevelopment?: Prisma.StringNullableListFilter<"Candidate">
   interviewQuestions?: Prisma.StringNullableListFilter<"Candidate">
-  cvFileName?: Prisma.StringNullableFilter<"Candidate"> | string | null
+  lastProcessed?: Prisma.DateTimeFilter<"Candidate"> | Date | string
+  previousIncarceration?: Prisma.StringNullableFilter<"Candidate"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Candidate"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Candidate"> | Date | string
 }
@@ -320,15 +444,29 @@ export type CandidateOrderByWithRelationInput = {
   skills?: Prisma.SortOrder
   languages?: Prisma.SortOrder
   summary?: Prisma.SortOrderInput | Prisma.SortOrder
-  disability?: Prisma.SortOrderInput | Prisma.SortOrder
-  previousIncarceration?: Prisma.SortOrderInput | Prisma.SortOrder
   rawText?: Prisma.SortOrderInput | Prisma.SortOrder
+  cvFileName?: Prisma.SortOrderInput | Prisma.SortOrder
+  gender?: Prisma.SortOrderInput | Prisma.SortOrder
+  age?: Prisma.SortOrderInput | Prisma.SortOrder
+  maritalStatus?: Prisma.SortOrderInput | Prisma.SortOrder
+  birthCountry?: Prisma.SortOrderInput | Prisma.SortOrder
+  numLanguages?: Prisma.SortOrderInput | Prisma.SortOrder
+  hasCar?: Prisma.SortOrderInput | Prisma.SortOrder
+  criminalRecord?: Prisma.SortOrderInput | Prisma.SortOrder
+  restrainingOrder?: Prisma.SortOrderInput | Prisma.SortOrder
+  numChildren?: Prisma.SortOrderInput | Prisma.SortOrder
+  workDisability?: Prisma.SortOrderInput | Prisma.SortOrder
+  disability?: Prisma.SortOrderInput | Prisma.SortOrder
+  disabilityFlag?: Prisma.SortOrderInput | Prisma.SortOrder
+  jobSeeker?: Prisma.SortOrderInput | Prisma.SortOrder
+  weaknesses?: Prisma.SortOrderInput | Prisma.SortOrder
+  trainingProfile?: Prisma.SortOrderInput | Prisma.SortOrder
   employabilityScore?: Prisma.SortOrder
   topRecommendations?: Prisma.SortOrder
-  lastProcessed?: Prisma.SortOrder
   areasForDevelopment?: Prisma.SortOrder
   interviewQuestions?: Prisma.SortOrder
-  cvFileName?: Prisma.SortOrderInput | Prisma.SortOrder
+  lastProcessed?: Prisma.SortOrder
+  previousIncarceration?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -346,15 +484,29 @@ export type CandidateWhereUniqueInput = Prisma.AtLeast<{
   skills?: Prisma.StringNullableListFilter<"Candidate">
   languages?: Prisma.JsonFilter<"Candidate">
   summary?: Prisma.StringNullableFilter<"Candidate"> | string | null
-  disability?: Prisma.StringNullableFilter<"Candidate"> | string | null
-  previousIncarceration?: Prisma.StringNullableFilter<"Candidate"> | string | null
   rawText?: Prisma.StringNullableFilter<"Candidate"> | string | null
+  cvFileName?: Prisma.StringNullableFilter<"Candidate"> | string | null
+  gender?: Prisma.StringNullableFilter<"Candidate"> | string | null
+  age?: Prisma.IntNullableFilter<"Candidate"> | number | null
+  maritalStatus?: Prisma.StringNullableFilter<"Candidate"> | string | null
+  birthCountry?: Prisma.StringNullableFilter<"Candidate"> | string | null
+  numLanguages?: Prisma.IntNullableFilter<"Candidate"> | number | null
+  hasCar?: Prisma.BoolNullableFilter<"Candidate"> | boolean | null
+  criminalRecord?: Prisma.BoolNullableFilter<"Candidate"> | boolean | null
+  restrainingOrder?: Prisma.BoolNullableFilter<"Candidate"> | boolean | null
+  numChildren?: Prisma.IntNullableFilter<"Candidate"> | number | null
+  workDisability?: Prisma.BoolNullableFilter<"Candidate"> | boolean | null
+  disability?: Prisma.StringNullableFilter<"Candidate"> | string | null
+  disabilityFlag?: Prisma.BoolNullableFilter<"Candidate"> | boolean | null
+  jobSeeker?: Prisma.BoolNullableFilter<"Candidate"> | boolean | null
+  weaknesses?: Prisma.StringNullableFilter<"Candidate"> | string | null
+  trainingProfile?: Prisma.StringNullableFilter<"Candidate"> | string | null
   employabilityScore?: Prisma.FloatFilter<"Candidate"> | number
   topRecommendations?: Prisma.StringNullableListFilter<"Candidate">
-  lastProcessed?: Prisma.DateTimeFilter<"Candidate"> | Date | string
   areasForDevelopment?: Prisma.StringNullableListFilter<"Candidate">
   interviewQuestions?: Prisma.StringNullableListFilter<"Candidate">
-  cvFileName?: Prisma.StringNullableFilter<"Candidate"> | string | null
+  lastProcessed?: Prisma.DateTimeFilter<"Candidate"> | Date | string
+  previousIncarceration?: Prisma.StringNullableFilter<"Candidate"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Candidate"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Candidate"> | Date | string
 }, "id" | "email">
@@ -369,15 +521,29 @@ export type CandidateOrderByWithAggregationInput = {
   skills?: Prisma.SortOrder
   languages?: Prisma.SortOrder
   summary?: Prisma.SortOrderInput | Prisma.SortOrder
-  disability?: Prisma.SortOrderInput | Prisma.SortOrder
-  previousIncarceration?: Prisma.SortOrderInput | Prisma.SortOrder
   rawText?: Prisma.SortOrderInput | Prisma.SortOrder
+  cvFileName?: Prisma.SortOrderInput | Prisma.SortOrder
+  gender?: Prisma.SortOrderInput | Prisma.SortOrder
+  age?: Prisma.SortOrderInput | Prisma.SortOrder
+  maritalStatus?: Prisma.SortOrderInput | Prisma.SortOrder
+  birthCountry?: Prisma.SortOrderInput | Prisma.SortOrder
+  numLanguages?: Prisma.SortOrderInput | Prisma.SortOrder
+  hasCar?: Prisma.SortOrderInput | Prisma.SortOrder
+  criminalRecord?: Prisma.SortOrderInput | Prisma.SortOrder
+  restrainingOrder?: Prisma.SortOrderInput | Prisma.SortOrder
+  numChildren?: Prisma.SortOrderInput | Prisma.SortOrder
+  workDisability?: Prisma.SortOrderInput | Prisma.SortOrder
+  disability?: Prisma.SortOrderInput | Prisma.SortOrder
+  disabilityFlag?: Prisma.SortOrderInput | Prisma.SortOrder
+  jobSeeker?: Prisma.SortOrderInput | Prisma.SortOrder
+  weaknesses?: Prisma.SortOrderInput | Prisma.SortOrder
+  trainingProfile?: Prisma.SortOrderInput | Prisma.SortOrder
   employabilityScore?: Prisma.SortOrder
   topRecommendations?: Prisma.SortOrder
-  lastProcessed?: Prisma.SortOrder
   areasForDevelopment?: Prisma.SortOrder
   interviewQuestions?: Prisma.SortOrder
-  cvFileName?: Prisma.SortOrderInput | Prisma.SortOrder
+  lastProcessed?: Prisma.SortOrder
+  previousIncarceration?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.CandidateCountOrderByAggregateInput
@@ -400,15 +566,29 @@ export type CandidateScalarWhereWithAggregatesInput = {
   skills?: Prisma.StringNullableListFilter<"Candidate">
   languages?: Prisma.JsonWithAggregatesFilter<"Candidate">
   summary?: Prisma.StringNullableWithAggregatesFilter<"Candidate"> | string | null
-  disability?: Prisma.StringNullableWithAggregatesFilter<"Candidate"> | string | null
-  previousIncarceration?: Prisma.StringNullableWithAggregatesFilter<"Candidate"> | string | null
   rawText?: Prisma.StringNullableWithAggregatesFilter<"Candidate"> | string | null
+  cvFileName?: Prisma.StringNullableWithAggregatesFilter<"Candidate"> | string | null
+  gender?: Prisma.StringNullableWithAggregatesFilter<"Candidate"> | string | null
+  age?: Prisma.IntNullableWithAggregatesFilter<"Candidate"> | number | null
+  maritalStatus?: Prisma.StringNullableWithAggregatesFilter<"Candidate"> | string | null
+  birthCountry?: Prisma.StringNullableWithAggregatesFilter<"Candidate"> | string | null
+  numLanguages?: Prisma.IntNullableWithAggregatesFilter<"Candidate"> | number | null
+  hasCar?: Prisma.BoolNullableWithAggregatesFilter<"Candidate"> | boolean | null
+  criminalRecord?: Prisma.BoolNullableWithAggregatesFilter<"Candidate"> | boolean | null
+  restrainingOrder?: Prisma.BoolNullableWithAggregatesFilter<"Candidate"> | boolean | null
+  numChildren?: Prisma.IntNullableWithAggregatesFilter<"Candidate"> | number | null
+  workDisability?: Prisma.BoolNullableWithAggregatesFilter<"Candidate"> | boolean | null
+  disability?: Prisma.StringNullableWithAggregatesFilter<"Candidate"> | string | null
+  disabilityFlag?: Prisma.BoolNullableWithAggregatesFilter<"Candidate"> | boolean | null
+  jobSeeker?: Prisma.BoolNullableWithAggregatesFilter<"Candidate"> | boolean | null
+  weaknesses?: Prisma.StringNullableWithAggregatesFilter<"Candidate"> | string | null
+  trainingProfile?: Prisma.StringNullableWithAggregatesFilter<"Candidate"> | string | null
   employabilityScore?: Prisma.FloatWithAggregatesFilter<"Candidate"> | number
   topRecommendations?: Prisma.StringNullableListFilter<"Candidate">
-  lastProcessed?: Prisma.DateTimeWithAggregatesFilter<"Candidate"> | Date | string
   areasForDevelopment?: Prisma.StringNullableListFilter<"Candidate">
   interviewQuestions?: Prisma.StringNullableListFilter<"Candidate">
-  cvFileName?: Prisma.StringNullableWithAggregatesFilter<"Candidate"> | string | null
+  lastProcessed?: Prisma.DateTimeWithAggregatesFilter<"Candidate"> | Date | string
+  previousIncarceration?: Prisma.StringNullableWithAggregatesFilter<"Candidate"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Candidate"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Candidate"> | Date | string
 }
@@ -423,15 +603,29 @@ export type CandidateCreateInput = {
   skills?: Prisma.CandidateCreateskillsInput | string[]
   languages?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   summary?: string | null
-  disability?: string | null
-  previousIncarceration?: string | null
   rawText?: string | null
+  cvFileName?: string | null
+  gender?: string | null
+  age?: number | null
+  maritalStatus?: string | null
+  birthCountry?: string | null
+  numLanguages?: number | null
+  hasCar?: boolean | null
+  criminalRecord?: boolean | null
+  restrainingOrder?: boolean | null
+  numChildren?: number | null
+  workDisability?: boolean | null
+  disability?: string | null
+  disabilityFlag?: boolean | null
+  jobSeeker?: boolean | null
+  weaknesses?: string | null
+  trainingProfile?: string | null
   employabilityScore: number
   topRecommendations?: Prisma.CandidateCreatetopRecommendationsInput | string[]
-  lastProcessed: Date | string
   areasForDevelopment?: Prisma.CandidateCreateareasForDevelopmentInput | string[]
   interviewQuestions?: Prisma.CandidateCreateinterviewQuestionsInput | string[]
-  cvFileName?: string | null
+  lastProcessed: Date | string
+  previousIncarceration?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -446,15 +640,29 @@ export type CandidateUncheckedCreateInput = {
   skills?: Prisma.CandidateCreateskillsInput | string[]
   languages?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   summary?: string | null
-  disability?: string | null
-  previousIncarceration?: string | null
   rawText?: string | null
+  cvFileName?: string | null
+  gender?: string | null
+  age?: number | null
+  maritalStatus?: string | null
+  birthCountry?: string | null
+  numLanguages?: number | null
+  hasCar?: boolean | null
+  criminalRecord?: boolean | null
+  restrainingOrder?: boolean | null
+  numChildren?: number | null
+  workDisability?: boolean | null
+  disability?: string | null
+  disabilityFlag?: boolean | null
+  jobSeeker?: boolean | null
+  weaknesses?: string | null
+  trainingProfile?: string | null
   employabilityScore: number
   topRecommendations?: Prisma.CandidateCreatetopRecommendationsInput | string[]
-  lastProcessed: Date | string
   areasForDevelopment?: Prisma.CandidateCreateareasForDevelopmentInput | string[]
   interviewQuestions?: Prisma.CandidateCreateinterviewQuestionsInput | string[]
-  cvFileName?: string | null
+  lastProcessed: Date | string
+  previousIncarceration?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -469,15 +677,29 @@ export type CandidateUpdateInput = {
   skills?: Prisma.CandidateUpdateskillsInput | string[]
   languages?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  disability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  previousIncarceration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rawText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cvFileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maritalStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  numLanguages?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  hasCar?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  criminalRecord?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  restrainingOrder?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  numChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  workDisability?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  disability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  disabilityFlag?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  jobSeeker?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  weaknesses?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  trainingProfile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employabilityScore?: Prisma.FloatFieldUpdateOperationsInput | number
   topRecommendations?: Prisma.CandidateUpdatetopRecommendationsInput | string[]
-  lastProcessed?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   areasForDevelopment?: Prisma.CandidateUpdateareasForDevelopmentInput | string[]
   interviewQuestions?: Prisma.CandidateUpdateinterviewQuestionsInput | string[]
-  cvFileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastProcessed?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  previousIncarceration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -492,15 +714,29 @@ export type CandidateUncheckedUpdateInput = {
   skills?: Prisma.CandidateUpdateskillsInput | string[]
   languages?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  disability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  previousIncarceration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rawText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cvFileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maritalStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  numLanguages?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  hasCar?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  criminalRecord?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  restrainingOrder?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  numChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  workDisability?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  disability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  disabilityFlag?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  jobSeeker?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  weaknesses?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  trainingProfile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employabilityScore?: Prisma.FloatFieldUpdateOperationsInput | number
   topRecommendations?: Prisma.CandidateUpdatetopRecommendationsInput | string[]
-  lastProcessed?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   areasForDevelopment?: Prisma.CandidateUpdateareasForDevelopmentInput | string[]
   interviewQuestions?: Prisma.CandidateUpdateinterviewQuestionsInput | string[]
-  cvFileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastProcessed?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  previousIncarceration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -515,15 +751,29 @@ export type CandidateCreateManyInput = {
   skills?: Prisma.CandidateCreateskillsInput | string[]
   languages?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   summary?: string | null
-  disability?: string | null
-  previousIncarceration?: string | null
   rawText?: string | null
+  cvFileName?: string | null
+  gender?: string | null
+  age?: number | null
+  maritalStatus?: string | null
+  birthCountry?: string | null
+  numLanguages?: number | null
+  hasCar?: boolean | null
+  criminalRecord?: boolean | null
+  restrainingOrder?: boolean | null
+  numChildren?: number | null
+  workDisability?: boolean | null
+  disability?: string | null
+  disabilityFlag?: boolean | null
+  jobSeeker?: boolean | null
+  weaknesses?: string | null
+  trainingProfile?: string | null
   employabilityScore: number
   topRecommendations?: Prisma.CandidateCreatetopRecommendationsInput | string[]
-  lastProcessed: Date | string
   areasForDevelopment?: Prisma.CandidateCreateareasForDevelopmentInput | string[]
   interviewQuestions?: Prisma.CandidateCreateinterviewQuestionsInput | string[]
-  cvFileName?: string | null
+  lastProcessed: Date | string
+  previousIncarceration?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -538,15 +788,29 @@ export type CandidateUpdateManyMutationInput = {
   skills?: Prisma.CandidateUpdateskillsInput | string[]
   languages?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  disability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  previousIncarceration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rawText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cvFileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maritalStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  numLanguages?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  hasCar?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  criminalRecord?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  restrainingOrder?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  numChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  workDisability?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  disability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  disabilityFlag?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  jobSeeker?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  weaknesses?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  trainingProfile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employabilityScore?: Prisma.FloatFieldUpdateOperationsInput | number
   topRecommendations?: Prisma.CandidateUpdatetopRecommendationsInput | string[]
-  lastProcessed?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   areasForDevelopment?: Prisma.CandidateUpdateareasForDevelopmentInput | string[]
   interviewQuestions?: Prisma.CandidateUpdateinterviewQuestionsInput | string[]
-  cvFileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastProcessed?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  previousIncarceration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -561,15 +825,29 @@ export type CandidateUncheckedUpdateManyInput = {
   skills?: Prisma.CandidateUpdateskillsInput | string[]
   languages?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  disability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  previousIncarceration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rawText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cvFileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maritalStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  birthCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  numLanguages?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  hasCar?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  criminalRecord?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  restrainingOrder?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  numChildren?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  workDisability?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  disability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  disabilityFlag?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  jobSeeker?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  weaknesses?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  trainingProfile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employabilityScore?: Prisma.FloatFieldUpdateOperationsInput | number
   topRecommendations?: Prisma.CandidateUpdatetopRecommendationsInput | string[]
-  lastProcessed?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   areasForDevelopment?: Prisma.CandidateUpdateareasForDevelopmentInput | string[]
   interviewQuestions?: Prisma.CandidateUpdateinterviewQuestionsInput | string[]
-  cvFileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastProcessed?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  previousIncarceration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -592,20 +870,37 @@ export type CandidateCountOrderByAggregateInput = {
   skills?: Prisma.SortOrder
   languages?: Prisma.SortOrder
   summary?: Prisma.SortOrder
-  disability?: Prisma.SortOrder
-  previousIncarceration?: Prisma.SortOrder
   rawText?: Prisma.SortOrder
+  cvFileName?: Prisma.SortOrder
+  gender?: Prisma.SortOrder
+  age?: Prisma.SortOrder
+  maritalStatus?: Prisma.SortOrder
+  birthCountry?: Prisma.SortOrder
+  numLanguages?: Prisma.SortOrder
+  hasCar?: Prisma.SortOrder
+  criminalRecord?: Prisma.SortOrder
+  restrainingOrder?: Prisma.SortOrder
+  numChildren?: Prisma.SortOrder
+  workDisability?: Prisma.SortOrder
+  disability?: Prisma.SortOrder
+  disabilityFlag?: Prisma.SortOrder
+  jobSeeker?: Prisma.SortOrder
+  weaknesses?: Prisma.SortOrder
+  trainingProfile?: Prisma.SortOrder
   employabilityScore?: Prisma.SortOrder
   topRecommendations?: Prisma.SortOrder
-  lastProcessed?: Prisma.SortOrder
   areasForDevelopment?: Prisma.SortOrder
   interviewQuestions?: Prisma.SortOrder
-  cvFileName?: Prisma.SortOrder
+  lastProcessed?: Prisma.SortOrder
+  previousIncarceration?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type CandidateAvgOrderByAggregateInput = {
+  age?: Prisma.SortOrder
+  numLanguages?: Prisma.SortOrder
+  numChildren?: Prisma.SortOrder
   employabilityScore?: Prisma.SortOrder
 }
 
@@ -615,12 +910,26 @@ export type CandidateMaxOrderByAggregateInput = {
   email?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   summary?: Prisma.SortOrder
-  disability?: Prisma.SortOrder
-  previousIncarceration?: Prisma.SortOrder
   rawText?: Prisma.SortOrder
+  cvFileName?: Prisma.SortOrder
+  gender?: Prisma.SortOrder
+  age?: Prisma.SortOrder
+  maritalStatus?: Prisma.SortOrder
+  birthCountry?: Prisma.SortOrder
+  numLanguages?: Prisma.SortOrder
+  hasCar?: Prisma.SortOrder
+  criminalRecord?: Prisma.SortOrder
+  restrainingOrder?: Prisma.SortOrder
+  numChildren?: Prisma.SortOrder
+  workDisability?: Prisma.SortOrder
+  disability?: Prisma.SortOrder
+  disabilityFlag?: Prisma.SortOrder
+  jobSeeker?: Prisma.SortOrder
+  weaknesses?: Prisma.SortOrder
+  trainingProfile?: Prisma.SortOrder
   employabilityScore?: Prisma.SortOrder
   lastProcessed?: Prisma.SortOrder
-  cvFileName?: Prisma.SortOrder
+  previousIncarceration?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -631,17 +940,34 @@ export type CandidateMinOrderByAggregateInput = {
   email?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   summary?: Prisma.SortOrder
-  disability?: Prisma.SortOrder
-  previousIncarceration?: Prisma.SortOrder
   rawText?: Prisma.SortOrder
+  cvFileName?: Prisma.SortOrder
+  gender?: Prisma.SortOrder
+  age?: Prisma.SortOrder
+  maritalStatus?: Prisma.SortOrder
+  birthCountry?: Prisma.SortOrder
+  numLanguages?: Prisma.SortOrder
+  hasCar?: Prisma.SortOrder
+  criminalRecord?: Prisma.SortOrder
+  restrainingOrder?: Prisma.SortOrder
+  numChildren?: Prisma.SortOrder
+  workDisability?: Prisma.SortOrder
+  disability?: Prisma.SortOrder
+  disabilityFlag?: Prisma.SortOrder
+  jobSeeker?: Prisma.SortOrder
+  weaknesses?: Prisma.SortOrder
+  trainingProfile?: Prisma.SortOrder
   employabilityScore?: Prisma.SortOrder
   lastProcessed?: Prisma.SortOrder
-  cvFileName?: Prisma.SortOrder
+  previousIncarceration?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type CandidateSumOrderByAggregateInput = {
+  age?: Prisma.SortOrder
+  numLanguages?: Prisma.SortOrder
+  numChildren?: Prisma.SortOrder
   employabilityScore?: Prisma.SortOrder
 }
 
@@ -674,6 +1000,18 @@ export type CandidateUpdateskillsInput = {
   push?: string | string[]
 }
 
+export type NullableIntFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
+export type NullableBoolFieldUpdateOperationsInput = {
+  set?: boolean | null
+}
+
 export type FloatFieldUpdateOperationsInput = {
   set?: number
   increment?: number
@@ -687,10 +1025,6 @@ export type CandidateUpdatetopRecommendationsInput = {
   push?: string | string[]
 }
 
-export type DateTimeFieldUpdateOperationsInput = {
-  set?: Date | string
-}
-
 export type CandidateUpdateareasForDevelopmentInput = {
   set?: string[]
   push?: string | string[]
@@ -699,6 +1033,10 @@ export type CandidateUpdateareasForDevelopmentInput = {
 export type CandidateUpdateinterviewQuestionsInput = {
   set?: string[]
   push?: string | string[]
+}
+
+export type DateTimeFieldUpdateOperationsInput = {
+  set?: Date | string
 }
 
 
@@ -713,15 +1051,29 @@ export type CandidateSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   skills?: boolean
   languages?: boolean
   summary?: boolean
-  disability?: boolean
-  previousIncarceration?: boolean
   rawText?: boolean
+  cvFileName?: boolean
+  gender?: boolean
+  age?: boolean
+  maritalStatus?: boolean
+  birthCountry?: boolean
+  numLanguages?: boolean
+  hasCar?: boolean
+  criminalRecord?: boolean
+  restrainingOrder?: boolean
+  numChildren?: boolean
+  workDisability?: boolean
+  disability?: boolean
+  disabilityFlag?: boolean
+  jobSeeker?: boolean
+  weaknesses?: boolean
+  trainingProfile?: boolean
   employabilityScore?: boolean
   topRecommendations?: boolean
-  lastProcessed?: boolean
   areasForDevelopment?: boolean
   interviewQuestions?: boolean
-  cvFileName?: boolean
+  lastProcessed?: boolean
+  previousIncarceration?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["candidate"]>
@@ -736,15 +1088,29 @@ export type CandidateSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
   skills?: boolean
   languages?: boolean
   summary?: boolean
-  disability?: boolean
-  previousIncarceration?: boolean
   rawText?: boolean
+  cvFileName?: boolean
+  gender?: boolean
+  age?: boolean
+  maritalStatus?: boolean
+  birthCountry?: boolean
+  numLanguages?: boolean
+  hasCar?: boolean
+  criminalRecord?: boolean
+  restrainingOrder?: boolean
+  numChildren?: boolean
+  workDisability?: boolean
+  disability?: boolean
+  disabilityFlag?: boolean
+  jobSeeker?: boolean
+  weaknesses?: boolean
+  trainingProfile?: boolean
   employabilityScore?: boolean
   topRecommendations?: boolean
-  lastProcessed?: boolean
   areasForDevelopment?: boolean
   interviewQuestions?: boolean
-  cvFileName?: boolean
+  lastProcessed?: boolean
+  previousIncarceration?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["candidate"]>
@@ -759,15 +1125,29 @@ export type CandidateSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
   skills?: boolean
   languages?: boolean
   summary?: boolean
-  disability?: boolean
-  previousIncarceration?: boolean
   rawText?: boolean
+  cvFileName?: boolean
+  gender?: boolean
+  age?: boolean
+  maritalStatus?: boolean
+  birthCountry?: boolean
+  numLanguages?: boolean
+  hasCar?: boolean
+  criminalRecord?: boolean
+  restrainingOrder?: boolean
+  numChildren?: boolean
+  workDisability?: boolean
+  disability?: boolean
+  disabilityFlag?: boolean
+  jobSeeker?: boolean
+  weaknesses?: boolean
+  trainingProfile?: boolean
   employabilityScore?: boolean
   topRecommendations?: boolean
-  lastProcessed?: boolean
   areasForDevelopment?: boolean
   interviewQuestions?: boolean
-  cvFileName?: boolean
+  lastProcessed?: boolean
+  previousIncarceration?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["candidate"]>
@@ -782,20 +1162,34 @@ export type CandidateSelectScalar = {
   skills?: boolean
   languages?: boolean
   summary?: boolean
-  disability?: boolean
-  previousIncarceration?: boolean
   rawText?: boolean
+  cvFileName?: boolean
+  gender?: boolean
+  age?: boolean
+  maritalStatus?: boolean
+  birthCountry?: boolean
+  numLanguages?: boolean
+  hasCar?: boolean
+  criminalRecord?: boolean
+  restrainingOrder?: boolean
+  numChildren?: boolean
+  workDisability?: boolean
+  disability?: boolean
+  disabilityFlag?: boolean
+  jobSeeker?: boolean
+  weaknesses?: boolean
+  trainingProfile?: boolean
   employabilityScore?: boolean
   topRecommendations?: boolean
-  lastProcessed?: boolean
   areasForDevelopment?: boolean
   interviewQuestions?: boolean
-  cvFileName?: boolean
+  lastProcessed?: boolean
+  previousIncarceration?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type CandidateOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "phone" | "experience" | "education" | "skills" | "languages" | "summary" | "disability" | "previousIncarceration" | "rawText" | "employabilityScore" | "topRecommendations" | "lastProcessed" | "areasForDevelopment" | "interviewQuestions" | "cvFileName" | "createdAt" | "updatedAt", ExtArgs["result"]["candidate"]>
+export type CandidateOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "phone" | "experience" | "education" | "skills" | "languages" | "summary" | "rawText" | "cvFileName" | "gender" | "age" | "maritalStatus" | "birthCountry" | "numLanguages" | "hasCar" | "criminalRecord" | "restrainingOrder" | "numChildren" | "workDisability" | "disability" | "disabilityFlag" | "jobSeeker" | "weaknesses" | "trainingProfile" | "employabilityScore" | "topRecommendations" | "areasForDevelopment" | "interviewQuestions" | "lastProcessed" | "previousIncarceration" | "createdAt" | "updatedAt", ExtArgs["result"]["candidate"]>
 
 export type $CandidatePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Candidate"
@@ -810,15 +1204,29 @@ export type $CandidatePayload<ExtArgs extends runtime.Types.Extensions.InternalA
     skills: string[]
     languages: runtime.JsonValue
     summary: string | null
-    disability: string | null
-    previousIncarceration: string | null
     rawText: string | null
+    cvFileName: string | null
+    gender: string | null
+    age: number | null
+    maritalStatus: string | null
+    birthCountry: string | null
+    numLanguages: number | null
+    hasCar: boolean | null
+    criminalRecord: boolean | null
+    restrainingOrder: boolean | null
+    numChildren: number | null
+    workDisability: boolean | null
+    disability: string | null
+    disabilityFlag: boolean | null
+    jobSeeker: boolean | null
+    weaknesses: string | null
+    trainingProfile: string | null
     employabilityScore: number
     topRecommendations: string[]
-    lastProcessed: Date
     areasForDevelopment: string[]
     interviewQuestions: string[]
-    cvFileName: string | null
+    lastProcessed: Date
+    previousIncarceration: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["candidate"]>
@@ -1253,15 +1661,29 @@ export interface CandidateFieldRefs {
   readonly skills: Prisma.FieldRef<"Candidate", 'String[]'>
   readonly languages: Prisma.FieldRef<"Candidate", 'Json'>
   readonly summary: Prisma.FieldRef<"Candidate", 'String'>
-  readonly disability: Prisma.FieldRef<"Candidate", 'String'>
-  readonly previousIncarceration: Prisma.FieldRef<"Candidate", 'String'>
   readonly rawText: Prisma.FieldRef<"Candidate", 'String'>
+  readonly cvFileName: Prisma.FieldRef<"Candidate", 'String'>
+  readonly gender: Prisma.FieldRef<"Candidate", 'String'>
+  readonly age: Prisma.FieldRef<"Candidate", 'Int'>
+  readonly maritalStatus: Prisma.FieldRef<"Candidate", 'String'>
+  readonly birthCountry: Prisma.FieldRef<"Candidate", 'String'>
+  readonly numLanguages: Prisma.FieldRef<"Candidate", 'Int'>
+  readonly hasCar: Prisma.FieldRef<"Candidate", 'Boolean'>
+  readonly criminalRecord: Prisma.FieldRef<"Candidate", 'Boolean'>
+  readonly restrainingOrder: Prisma.FieldRef<"Candidate", 'Boolean'>
+  readonly numChildren: Prisma.FieldRef<"Candidate", 'Int'>
+  readonly workDisability: Prisma.FieldRef<"Candidate", 'Boolean'>
+  readonly disability: Prisma.FieldRef<"Candidate", 'String'>
+  readonly disabilityFlag: Prisma.FieldRef<"Candidate", 'Boolean'>
+  readonly jobSeeker: Prisma.FieldRef<"Candidate", 'Boolean'>
+  readonly weaknesses: Prisma.FieldRef<"Candidate", 'String'>
+  readonly trainingProfile: Prisma.FieldRef<"Candidate", 'String'>
   readonly employabilityScore: Prisma.FieldRef<"Candidate", 'Float'>
   readonly topRecommendations: Prisma.FieldRef<"Candidate", 'String[]'>
-  readonly lastProcessed: Prisma.FieldRef<"Candidate", 'DateTime'>
   readonly areasForDevelopment: Prisma.FieldRef<"Candidate", 'String[]'>
   readonly interviewQuestions: Prisma.FieldRef<"Candidate", 'String[]'>
-  readonly cvFileName: Prisma.FieldRef<"Candidate", 'String'>
+  readonly lastProcessed: Prisma.FieldRef<"Candidate", 'DateTime'>
+  readonly previousIncarceration: Prisma.FieldRef<"Candidate", 'String'>
   readonly createdAt: Prisma.FieldRef<"Candidate", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Candidate", 'DateTime'>
 }
