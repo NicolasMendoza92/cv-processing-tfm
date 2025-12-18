@@ -135,16 +135,16 @@ export async function DELETE(
   context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = await context.params;  
+    const { id } = await context.params;
     console.log("ID recibido en DELETE:", id);
-    
+
     if (!id) {
       return NextResponse.json(
         { message: "ID del candidato es requerido." },
         { status: 400 }
       );
     }
-    
+
     const deletedCandidate = await prisma.candidate.delete({
       where: { id },
     });

@@ -29,6 +29,7 @@ import {
 } from "@/services/cvServices";
 import { EmployabilityScoreCard } from "@/components/employability-score-card";
 import type { CandidateDetails } from "@/types";
+import { mapExtendedToDetails } from "@/utils/transformCandidate";
 
 export default function CandidateDetailPage() {
   const params = useParams();
@@ -54,7 +55,8 @@ export default function CandidateDetailPage() {
         if (!data) {
           setError("No se encontraron detalles para este candidato");
         } else {
-          setCandidate(data);
+          const CandidateDetails = mapExtendedToDetails(data)
+          setCandidate(CandidateDetails);
           loadJobRecommendations(id);
         }
       } catch (err) {
@@ -68,12 +70,13 @@ export default function CandidateDetailPage() {
     loadCandidateDetails();
   }, [params.id]);
 
+  console.log("Candidate state:", candidate);
+
   async function loadJobRecommendations(candidateId: string) {
     setIsLoadingJobs(true);
     setJobsError(null);
 
     try {
-      // const data = await getJobRecommendations(candidateId)
       const data = await getTopRecommendations(candidateId);
 
       if (!data) {
@@ -94,7 +97,7 @@ export default function CandidateDetailPage() {
   if (isLoading) {
     return (
       <div className="container mx-auto px-4 py-8 md:py-12">
-        <div className="flex items-center justify-center min-h-[500px]">
+        <div className="flex items-center justify-center min-h-500px">
           <div className="flex flex-col items-center gap-4">
             <Loader2 className="w-10 h-10 animate-spin text-primary" />
             <p className="text-muted-foreground text-lg">

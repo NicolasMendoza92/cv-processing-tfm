@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/card";
 import { Loader2, Edit, ArrowLeft } from "lucide-react";
 import { getExtractedData, updateCandidate } from "@/services/cvServices";
-import type { CandidateDetails, CandidateExtractedData } from "@/types";
+import type { CandidateDataExtended, CandidateDetails, CandidateExtractedData } from "@/types";
 import { ExtractedDataDisplay } from "@/components/extracted-data-display";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -66,7 +66,7 @@ export default function ExtractedDataPage() {
     setIsEditModalOpen(false); 
   };
 
-    const handleSaveEditedCandidate = async (candidateId: string, updatedData: CandidateExtractedData) => {
+    const handleSaveEditedCandidate = async (candidateId: string, updatedData: CandidateDataExtended) => {
     setIsSaving(true);
     try {
       await updateCandidate(candidateId, updatedData);

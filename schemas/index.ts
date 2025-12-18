@@ -7,9 +7,7 @@ export const experienceItemSchema = z.object({
     .min(0, "Los años de experiencia no pueden ser negativos.")
     .optional()
     .nullable(),
-  // Si usaras startDate/endDate como mencioné antes:
-  // startDate: z.string().datetime(),
-  // endDate: z.string().datetime().nullable().optional(),
+  company: z.string().optional().nullable(),
 });
 
 export const educationItemSchema = z.object({
@@ -20,6 +18,7 @@ export const educationItemSchema = z.object({
     .positive("El año de educación debe ser un número positivo.")
     .optional()
     .nullable(),
+  institution: z.string().optional().nullable(),
 });
 
 export const languageItemSchema = z.object({
@@ -53,13 +52,13 @@ export const candidateSchema = z.object({
     .nullable(),
   birthCountry: z.string().optional().nullable(),
   numLanguages: z.number().int().min(0).optional().nullable(),
-  hasCar: z.boolean().optional().nullable(),
-  criminalRecord: z.boolean().optional().nullable(),
-  restrainingOrder: z.boolean().optional().nullable(),
+  hasCar: z.boolean().default(false).nullable(),
+  criminalRecord: z.boolean().default(false).nullable(),
+  restrainingOrder: z.boolean().default(false).nullable(),
   numChildren: z.number().int().min(0).optional().nullable(),
-  workDisability: z.boolean().optional().nullable(),
-  disabilityFlag: z.boolean().optional().nullable(), // minusvalía sí/no
-  jobSeeker: z.boolean().optional().nullable(),
+  workDisability: z.boolean().default(false).nullable(),
+  disabilityFlag: z.boolean().default(false).nullable(), 
+  jobSeeker: z.boolean().default(false).nullable(),
   weaknesses: z.string().optional().nullable(),
   trainingProfile: z.string().optional().nullable(),
   employabilityScore: z

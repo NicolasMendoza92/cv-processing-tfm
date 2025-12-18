@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { CandidateExtractedData } from "@/types" 
+import { CandidateDataExtended, CandidateExtractedData } from "@/types" 
 import { toast } from "sonner"
 import { Loader2 } from "lucide-react"
 
@@ -15,7 +15,7 @@ interface EditCandidateModalProps {
   isOpen: boolean;
   onClose: () => void;
   candidate: CandidateExtractedData | null;
-  onSave: (id: string, data: CandidateExtractedData) => Promise<void>;
+  onSave: (id: string, data: CandidateDataExtended) => Promise<void>;
 }
 
 export function EditCandidateModal({ isOpen, onClose, candidate, onSave }: EditCandidateModalProps) {
@@ -54,11 +54,18 @@ export function EditCandidateModal({ isOpen, onClose, candidate, onSave }: EditC
 
     setIsSubmitting(true);
     try {
-      const parsedData: CandidateExtractedData = {
+      const parsedData: CandidateDataExtended = {
         ...formData,
         experience: JSON.parse(formData.experience as any),
         education: JSON.parse(formData.education as any),
         languages: JSON.parse(formData.languages as any),
+        cvFileName: formData.cvFileName ?? undefined,
+        email: formData.email ?? undefined,
+        phone: formData.phone ?? undefined,
+        summary: formData.summary ?? undefined,
+        rawText: formData.rawText ?? undefined,
+        disability: formData.disability ?? undefined,
+        previousIncarceration: formData.previousIncarceration ?? undefined,
       };
 
       await onSave(candidate.id, parsedData);
