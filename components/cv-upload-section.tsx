@@ -462,7 +462,7 @@ export function CVUploadSection() {
                 return (
                   <div
                     key={file.id}
-                    className="flex flex-col gap-3 p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors"
+                    className="flex flex-col gap-3 p-4 rounded-lg border bg-card hover:bg-black/10 transition-colors"
                   >
                     <div className="flex items-center gap-3">
                       <div className="shrink-0">

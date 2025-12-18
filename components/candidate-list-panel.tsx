@@ -128,7 +128,7 @@ export function CandidateListPanel({
               return (
                 <div
                   key={candidate.id}
-                  className="p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors space-y-3"
+                  className="p-4 rounded-lg border bg-card hover:bg-black/10 transition-colors space-y-3"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex-1 min-w-0 space-y-2">

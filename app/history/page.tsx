@@ -67,7 +67,7 @@ export default function HistoryPage() {
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter((cv) =>
-        cv.fileName.toLowerCase().includes(query)
+        cv.fileName?.toLowerCase().includes(query)
       );
     }
 
@@ -298,7 +298,7 @@ export default function HistoryPage() {
                     "flex flex-col md:flex-row md:items-center gap-4 p-4 rounded-lg border transition-colors",
                     cv.status === "Error"
                       ? "bg-destructive/5 border-destructive/20"
-                      : "bg-card hover:bg-accent/50"
+                      : "bg-card hover:bg-secondary"
                   )}
                 >
                   <div className="flex items-center gap-3 flex-1 min-w-0">

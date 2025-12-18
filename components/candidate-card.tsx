@@ -50,7 +50,7 @@ export function CandidateCard({ candidate, onViewDetails, onDelete, onFeedback }
             </div>
           </div>
           <Badge variant={getScoreBadgeVariant(candidate.employabilityScore)} className="text-base px-3 py-1">
-            {candidate.employabilityScore*100}%
+            {(candidate.employabilityScore*100).toFixed(0)}%
           </Badge>
         </div>
       </CardHeader>
@@ -67,7 +67,7 @@ export function CandidateCard({ candidate, onViewDetails, onDelete, onFeedback }
                 "bg-amber-500": candidate.employabilityScore >= 0.50 && candidate.employabilityScore < 0.70,
                 "bg-red-600": candidate.employabilityScore < 0.50,
               })}
-              style={{ width: `${candidate.employabilityScore}%` }}
+              style={{ width: `${candidate.employabilityScore*100}%` }}
             />
           </div>
         </div>

@@ -34,11 +34,12 @@ async function getCandidates(): Promise<CandidateData[]> {
 export async function getCVsStatus(): Promise<CVRecord[]> {
   try {
     const candidates = await getCandidates();
+    console.log("Candidatos obtenidos para CVRecords:", candidates);
 
     const cvRecords: CVRecord[] = candidates.map((candidate) => ({
       id: candidate.id,
-      fileName: candidate.fileName || "",
-      uploadDate: candidate.extendedData?.updatedAt || new Date().toISOString(),
+      fileName: candidate.fileName|| "",
+      uploadDate: candidate.uploadDate || new Date().toISOString(),
       status: "Procesado",
       detailsLink: `/cv-extracted/${candidate.id}`,
       errorMessage: undefined,
