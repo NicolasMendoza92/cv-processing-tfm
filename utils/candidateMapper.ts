@@ -22,7 +22,6 @@ export function mapCandidateExtractedDataToDetails(
   const isAptForEmployment = data.employabilityScore > 0.5; 
 
   return {
-    id: data.id,
     name: data.name,
     email: data.email ?? 'N/A', 
     phone: data.phone ?? 'N/A', 

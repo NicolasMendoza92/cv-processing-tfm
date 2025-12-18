@@ -14,14 +14,14 @@ interface EmployabilityScoreCardProps {
 
 export function EmployabilityScoreCard({ score, isApt, recommendations }: EmployabilityScoreCardProps) {
   const getScoreColor = (score: number) => {
-    if (score >= 70) return "text-green-600"
-    if (score >= 50) return "text-amber-600"
+    if (score >= 0.70) return "text-green-600"
+    if (score >= 0.50) return "text-amber-600"
     return "text-red-600"
   }
 
   const getProgressColor = (score: number) => {
-    if (score >= 70) return "bg-green-600"
-    if (score >= 50) return "bg-amber-600"
+    if (score >= 0.70) return "bg-green-600"
+    if (score >= 0.50) return "bg-amber-600"
     return "bg-red-600"
   }
 
@@ -39,9 +39,9 @@ export function EmployabilityScoreCard({ score, isApt, recommendations }: Employ
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium text-muted-foreground">Probabilidad de Conseguir Empleo</span>
-            <span className={cn("text-3xl font-bold", getScoreColor(score))}>{score}%</span>
+            <span className={cn("text-3xl font-bold", getScoreColor(score))}>{score*100}%</span>
           </div>
-          <Progress value={score} className="h-3" indicatorClassName={getProgressColor(score)} />
+          <Progress value={score*100} className="h-3" indicatorClassName={getProgressColor(score)} />
         </div>
 
         {/* Apt Badge */}

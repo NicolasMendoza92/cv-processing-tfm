@@ -15,6 +15,7 @@ import {
 import type {
   CandidateFile,
   CandidateSaveData,
+  CandidateToAnalyzeType,
   ExtractedCVData,
   UploadedFile,
 } from "@/types";
@@ -132,7 +133,7 @@ export function CVUploadSection() {
 
   // Función para procesar los datos extraídos (POST /process-candidate-data) usando Server Action
   const processExtractedCandidateData = useCallback(
-    async (fileId: string, dataToProcess: ExtractedCVData) => {
+    async (fileId: string, dataToProcess: CandidateToAnalyzeType) => {
       setFiles((prev) =>
         prev.map((f) =>
           f.id === fileId
@@ -265,10 +266,11 @@ export function CVUploadSection() {
   // FUNCIONES HANDLE ACTIONS
   const handleAnalyzeCandidate = () => {
     if (!showModalForFile || !showModalForFile.extractedData) return;
-    processExtractedCandidateData(
-      showModalForFile.id,
-      showModalForFile.extractedData
-    );
+    // processExtractedCandidateData(
+    //   showModalForFile.id,
+    //   showModalForFile.extractedData
+    // );
+    alert("Analizando candidato...");
     setShowModalForFile(null);
   };
 

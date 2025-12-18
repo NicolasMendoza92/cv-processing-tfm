@@ -50,7 +50,7 @@ export function CandidateCard({ candidate, onViewDetails, onDelete, onFeedback }
             </div>
           </div>
           <Badge variant={getScoreBadgeVariant(candidate.employabilityScore)} className="text-base px-3 py-1">
-            {candidate.employabilityScore}%
+            {candidate.employabilityScore*100}%
           </Badge>
         </div>
       </CardHeader>
