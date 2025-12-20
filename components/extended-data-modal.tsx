@@ -1,121 +1,172 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Badge } from "@/components/ui/badge"
-import { X, Plus, Loader2 } from "lucide-react"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Separator } from "@/components/ui/separator"
-import { Checkbox } from "@/components/ui/checkbox"
-import { CandidateDataExtended, EducationItem, ExperienceItem, LanguageItem } from "@/types"
+import { useState, useEffect } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+import { X, Plus, Loader2 } from "lucide-react";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  CandidateDataExtended,
+  EducationItem,
+  ExperienceItem,
+  LanguageItem,
+} from "@/types";
 
 interface ExtendedDataModalProps {
-  isOpen: boolean
-  onClose: () => void
-  candidateData: CandidateDataExtended | null
-  onSave: (data: CandidateDataExtended) => void
+  isOpen: boolean;
+  onClose: () => void;
+  candidateData: CandidateDataExtended | null;
+  onSave: (data: CandidateDataExtended) => void;
 }
 
-export function ExtendedDataModal({ isOpen, onClose, candidateData, onSave }: ExtendedDataModalProps) {
-  const [formData, setFormData] = useState<CandidateDataExtended | null>(null)
-  const [isSaving, setIsSaving] = useState(false)
+export function ExtendedDataModal({
+  isOpen,
+  onClose,
+  candidateData,
+  onSave,
+}: ExtendedDataModalProps) {
+  const [formData, setFormData] = useState<CandidateDataExtended | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isSkillDialogOpen, setIsSkillDialogOpen] = useState(false);
+  const [newSkill, setNewSkill] = useState("");
 
   useEffect(() => {
     if (candidateData) {
-      setFormData(candidateData)
+      setFormData(candidateData);
     }
-  }, [candidateData])
+  }, [candidateData]);
 
-  if (!formData) return null
+  if (!formData) return null;
 
   const handleSave = async () => {
-    setIsSaving(true)
-    await new Promise((resolve) => setTimeout(resolve, 500))
-    onSave(formData)
-    setIsSaving(false)
-  }
+    setIsSaving(true);
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    onSave(formData);
+    setIsSaving(false);
+  };
 
   const addExperience = () => {
     setFormData({
       ...formData,
-      experience: [...formData.experience, { title: "", company: "", years: 0 }],
-    })
-  }
+      experience: [
+        ...formData.experience,
+        { title: "", company: "", years: 0 },
+      ],
+    });
+  };
 
   const removeExperience = (index: number) => {
     setFormData({
       ...formData,
       experience: formData.experience.filter((_, i) => i !== index),
-    })
-  }
+    });
+  };
 
-  const updateExperience = (index: number, field: keyof ExperienceItem, value: any) => {
-    const newExperience = [...formData.experience]
-    newExperience[index] = { ...newExperience[index], [field]: value }
-    setFormData({ ...formData, experience: newExperience })
-  }
+  const updateExperience = (
+    index: number,
+    field: keyof ExperienceItem,
+    value: any
+  ) => {
+    const newExperience = [...formData.experience];
+    newExperience[index] = { ...newExperience[index], [field]: value };
+    setFormData({ ...formData, experience: newExperience });
+  };
 
   const addEducation = () => {
     setFormData({
       ...formData,
-      education: [...formData.education, { degree: "", institution: "", year: undefined }],
-    })
-  }
+      education: [
+        ...formData.education,
+        { degree: "", institution: "", year: undefined },
+      ],
+    });
+  };
 
   const removeEducation = (index: number) => {
     setFormData({
       ...formData,
       education: formData.education.filter((_, i) => i !== index),
-    })
-  }
+    });
+  };
 
-  const updateEducation = (index: number, field: keyof EducationItem, value: any) => {
-    const newEducation = [...formData.education]
-    newEducation[index] = { ...newEducation[index], [field]: value }
-    setFormData({ ...formData, education: newEducation })
-  }
+  const updateEducation = (
+    index: number,
+    field: keyof EducationItem,
+    value: any
+  ) => {
+    const newEducation = [...formData.education];
+    newEducation[index] = { ...newEducation[index], [field]: value };
+    setFormData({ ...formData, education: newEducation });
+  };
 
   const addLanguage = () => {
     setFormData({
       ...formData,
       languages: [...formData.languages, { name: "", level: "" }],
-    })
-  }
+    });
+  };
 
   const removeLanguage = (index: number) => {
     setFormData({
       ...formData,
       languages: formData.languages.filter((_, i) => i !== index),
-    })
-  }
+    });
+  };
 
-  const updateLanguage = (index: number, field: keyof LanguageItem, value: string) => {
-    const newLanguages = [...formData.languages]
-    newLanguages[index] = { ...newLanguages[index], [field]: value }
-    setFormData({ ...formData, languages: newLanguages })
-  }
+  const updateLanguage = (
+    index: number,
+    field: keyof LanguageItem,
+    value: string
+  ) => {
+    const newLanguages = [...formData.languages];
+    newLanguages[index] = { ...newLanguages[index], [field]: value };
+    setFormData({ ...formData, languages: newLanguages });
+  };
 
   const addSkill = () => {
-    const newSkill = prompt("Ingrese la habilidad:")
-    if (newSkill && newSkill.trim()) {
-      setFormData({
-        ...formData,
-        skills: [...formData.skills, newSkill.trim()],
-      })
+    setNewSkill("");
+    setIsSkillDialogOpen(true);
+  };
+
+  const handleConfirmAddSkill = () => {
+    const trimmed = newSkill.trim();
+    if (!trimmed) {
+      setIsSkillDialogOpen(false);
+      return;
     }
-  }
+
+    setFormData({
+      ...formData,
+      skills: [...formData.skills, trimmed],
+    });
+    setIsSkillDialogOpen(false);
+  };
 
   const removeSkill = (index: number) => {
     setFormData({
       ...formData,
       skills: formData.skills.filter((_, i) => i !== index),
-    })
-  }
+    });
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -135,7 +186,9 @@ export function ExtendedDataModal({ isOpen, onClose, candidateData, onSave }: Ex
                   <Input
                     id="name"
                     value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, name: e.target.value })
+                    }
                   />
                 </div>
                 <div>
@@ -144,7 +197,9 @@ export function ExtendedDataModal({ isOpen, onClose, candidateData, onSave }: Ex
                     id="email"
                     type="email"
                     value={formData.email || ""}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, email: e.target.value })
+                    }
                   />
                 </div>
                 <div>
@@ -152,7 +207,9 @@ export function ExtendedDataModal({ isOpen, onClose, candidateData, onSave }: Ex
                   <Input
                     id="phone"
                     value={formData.phone || ""}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, phone: e.target.value })
+                    }
                   />
                 </div>
                 <div>
@@ -161,14 +218,21 @@ export function ExtendedDataModal({ isOpen, onClose, candidateData, onSave }: Ex
                     id="age"
                     type="number"
                     value={formData.age || ""}
-                    onChange={(e) => setFormData({ ...formData, age: Number.parseInt(e.target.value) || null })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        age: Number.parseInt(e.target.value) || null,
+                      })
+                    }
                   />
                 </div>
                 <div>
                   <Label htmlFor="gender">Género</Label>
                   <Select
                     value={formData.gender || ""}
-                    onValueChange={(value) => setFormData({ ...formData, gender: value as any })}
+                    onValueChange={(value) =>
+                      setFormData({ ...formData, gender: value as any })
+                    }
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Seleccionar..." />
@@ -184,7 +248,9 @@ export function ExtendedDataModal({ isOpen, onClose, candidateData, onSave }: Ex
                   <Label htmlFor="maritalStatus">Estado Civil</Label>
                   <Select
                     value={formData.maritalStatus || ""}
-                    onValueChange={(value) => setFormData({ ...formData, maritalStatus: value as any })}
+                    onValueChange={(value) =>
+                      setFormData({ ...formData, maritalStatus: value as any })
+                    }
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Seleccionar..." />
@@ -203,7 +269,9 @@ export function ExtendedDataModal({ isOpen, onClose, candidateData, onSave }: Ex
                   <Input
                     id="birthCountry"
                     value={formData.birthCountry || ""}
-                    onChange={(e) => setFormData({ ...formData, birthCountry: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, birthCountry: e.target.value })
+                    }
                   />
                 </div>
                 <div>
@@ -212,7 +280,12 @@ export function ExtendedDataModal({ isOpen, onClose, candidateData, onSave }: Ex
                     id="numChildren"
                     type="number"
                     value={formData.numChildren || ""}
-                    onChange={(e) => setFormData({ ...formData, numChildren: Number.parseInt(e.target.value) || null })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        numChildren: Number.parseInt(e.target.value) || null,
+                      })
+                    }
                   />
                 </div>
               </div>
@@ -230,7 +303,10 @@ export function ExtendedDataModal({ isOpen, onClose, candidateData, onSave }: Ex
                 </Button>
               </div>
               {formData.experience.map((exp, index) => (
-                <div key={index} className="p-4 border rounded-lg space-y-3 relative">
+                <div
+                  key={index}
+                  className="p-4 border rounded-lg space-y-3 relative"
+                >
                   <Button
                     size="icon"
                     variant="ghost"
@@ -242,18 +318,34 @@ export function ExtendedDataModal({ isOpen, onClose, candidateData, onSave }: Ex
                   <div className="grid grid-cols-2 gap-3 pr-10">
                     <div>
                       <Label>Cargo</Label>
-                      <Input value={exp.title} onChange={(e) => updateExperience(index, "title", e.target.value)} />
+                      <Input
+                        value={exp.title}
+                        onChange={(e) =>
+                          updateExperience(index, "title", e.target.value)
+                        }
+                      />
                     </div>
                     <div>
                       <Label>Empresa</Label>
-                      <Input value={exp.company|| ""} onChange={(e) => updateExperience(index, "company", e.target.value)} />
+                      <Input
+                        value={exp.company || ""}
+                        onChange={(e) =>
+                          updateExperience(index, "company", e.target.value)
+                        }
+                      />
                     </div>
                     <div>
                       <Label>Años de Experiencia</Label>
                       <Input
                         type="number"
                         value={exp.years || 1}
-                        onChange={(e) => updateExperience(index, "years", Number.parseInt(e.target.value) || 0)}
+                        onChange={(e) =>
+                          updateExperience(
+                            index,
+                            "years",
+                            Number.parseInt(e.target.value) || 0
+                          )
+                        }
                       />
                     </div>
                   </div>
@@ -273,7 +365,10 @@ export function ExtendedDataModal({ isOpen, onClose, candidateData, onSave }: Ex
                 </Button>
               </div>
               {formData.education.map((edu, index) => (
-                <div key={index} className="p-4 border rounded-lg space-y-3 relative">
+                <div
+                  key={index}
+                  className="p-4 border rounded-lg space-y-3 relative"
+                >
                   <Button
                     size="icon"
                     variant="ghost"
@@ -285,13 +380,20 @@ export function ExtendedDataModal({ isOpen, onClose, candidateData, onSave }: Ex
                   <div className="grid grid-cols-2 gap-3 pr-10">
                     <div>
                       <Label>Título/Grado</Label>
-                      <Input value={edu.degree} onChange={(e) => updateEducation(index, "degree", e.target.value)} />
+                      <Input
+                        value={edu.degree}
+                        onChange={(e) =>
+                          updateEducation(index, "degree", e.target.value)
+                        }
+                      />
                     </div>
                     <div>
                       <Label>Institución</Label>
                       <Input
                         value={edu.institution || ""}
-                        onChange={(e) => updateEducation(index, "institution", e.target.value)}
+                        onChange={(e) =>
+                          updateEducation(index, "institution", e.target.value)
+                        }
                       />
                     </div>
                     <div>
@@ -299,7 +401,13 @@ export function ExtendedDataModal({ isOpen, onClose, candidateData, onSave }: Ex
                       <Input
                         type="number"
                         value={edu.year || ""}
-                        onChange={(e) => updateEducation(index, "year", Number.parseInt(e.target.value) || undefined)}
+                        onChange={(e) =>
+                          updateEducation(
+                            index,
+                            "year",
+                            Number.parseInt(e.target.value) || undefined
+                          )
+                        }
                       />
                     </div>
                   </div>
@@ -319,7 +427,10 @@ export function ExtendedDataModal({ isOpen, onClose, candidateData, onSave }: Ex
                 </Button>
               </div>
               {formData.languages.map((lang, index) => (
-                <div key={index} className="p-4 border rounded-lg space-y-3 relative">
+                <div
+                  key={index}
+                  className="p-4 border rounded-lg space-y-3 relative"
+                >
                   <Button
                     size="icon"
                     variant="ghost"
@@ -331,11 +442,21 @@ export function ExtendedDataModal({ isOpen, onClose, candidateData, onSave }: Ex
                   <div className="grid grid-cols-2 gap-3 pr-10">
                     <div>
                       <Label>Idioma</Label>
-                      <Input value={lang.name} onChange={(e) => updateLanguage(index, "name", e.target.value)} />
+                      <Input
+                        value={lang.name}
+                        onChange={(e) =>
+                          updateLanguage(index, "name", e.target.value)
+                        }
+                      />
                     </div>
                     <div>
                       <Label>Nivel</Label>
-                      <Input value={lang.level || ""} onChange={(e) => updateLanguage(index, "level", e.target.value)} />
+                      <Input
+                        value={lang.level || ""}
+                        onChange={(e) =>
+                          updateLanguage(index, "level", e.target.value)
+                        }
+                      />
                     </div>
                   </div>
                 </div>
@@ -357,7 +478,12 @@ export function ExtendedDataModal({ isOpen, onClose, candidateData, onSave }: Ex
                 {formData.skills.map((skill, index) => (
                   <Badge key={index} variant="secondary" className="gap-1">
                     {skill}
-                    <X className="w-3 h-3 cursor-pointer" onClick={() => removeSkill(index)} />
+                    <Button variant={'outline'} className="w-3 h-3 cursor-pointer"
+                      onClick={() => removeSkill(index)}>
+                      <X
+                    />
+                    </Button>
+                    
                   </Badge>
                 ))}
               </div>
@@ -374,15 +500,24 @@ export function ExtendedDataModal({ isOpen, onClose, candidateData, onSave }: Ex
                   <Input
                     id="disability"
                     value={formData.disability || ""}
-                    onChange={(e) => setFormData({ ...formData, disability: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, disability: e.target.value })
+                    }
                   />
                 </div>
                 <div>
-                  <Label htmlFor="previousIncarceration">Reclusión Previa</Label>
+                  <Label htmlFor="previousIncarceration">
+                    Reclusión Previa
+                  </Label>
                   <Input
                     id="previousIncarceration"
                     value={formData.previousIncarceration || ""}
-                    onChange={(e) => setFormData({ ...formData, previousIncarceration: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        previousIncarceration: e.target.value,
+                      })
+                    }
                   />
                 </div>
                 <div>
@@ -390,7 +525,12 @@ export function ExtendedDataModal({ isOpen, onClose, candidateData, onSave }: Ex
                   <Input
                     id="trainingProfile"
                     value={formData.trainingProfile || ""}
-                    onChange={(e) => setFormData({ ...formData, trainingProfile: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        trainingProfile: e.target.value,
+                      })
+                    }
                   />
                 </div>
               </div>
@@ -400,7 +540,9 @@ export function ExtendedDataModal({ isOpen, onClose, candidateData, onSave }: Ex
                   <Checkbox
                     id="hasCar"
                     checked={formData.hasCar || false}
-                    onCheckedChange={(checked) => setFormData({ ...formData, hasCar: checked as boolean })}
+                    onCheckedChange={(checked) =>
+                      setFormData({ ...formData, hasCar: checked as boolean })
+                    }
                   />
                   <Label htmlFor="hasCar">Tiene Vehículo</Label>
                 </div>
@@ -408,23 +550,42 @@ export function ExtendedDataModal({ isOpen, onClose, candidateData, onSave }: Ex
                   <Checkbox
                     id="criminalRecord"
                     checked={formData.criminalRecord || false}
-                    onCheckedChange={(checked) => setFormData({ ...formData, criminalRecord: checked as boolean })}
+                    onCheckedChange={(checked) =>
+                      setFormData({
+                        ...formData,
+                        criminalRecord: checked as boolean,
+                      })
+                    }
                   />
-                  <Label htmlFor="criminalRecord">Tiene Antecedentes Penales</Label>
+                  <Label htmlFor="criminalRecord">
+                    Tiene Antecedentes Penales
+                  </Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Checkbox
                     id="restrainingOrder"
                     checked={formData.restrainingOrder || false}
-                    onCheckedChange={(checked) => setFormData({ ...formData, restrainingOrder: checked as boolean })}
+                    onCheckedChange={(checked) =>
+                      setFormData({
+                        ...formData,
+                        restrainingOrder: checked as boolean,
+                      })
+                    }
                   />
-                  <Label htmlFor="restrainingOrder">Tiene Orden de Alejamiento</Label>
+                  <Label htmlFor="restrainingOrder">
+                    Tiene Orden de Alejamiento
+                  </Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Checkbox
                     id="workDisability"
                     checked={formData.workDisability || false}
-                    onCheckedChange={(checked) => setFormData({ ...formData, workDisability: checked as boolean })}
+                    onCheckedChange={(checked) =>
+                      setFormData({
+                        ...formData,
+                        workDisability: checked as boolean,
+                      })
+                    }
                   />
                   <Label htmlFor="workDisability">Discapacidad Laboral</Label>
                 </div>
@@ -432,15 +593,27 @@ export function ExtendedDataModal({ isOpen, onClose, candidateData, onSave }: Ex
                   <Checkbox
                     id="disabilityFlag"
                     checked={formData.disabilityFlag || false}
-                    onCheckedChange={(checked) => setFormData({ ...formData, disabilityFlag: checked as boolean })}
+                    onCheckedChange={(checked) =>
+                      setFormData({
+                        ...formData,
+                        disabilityFlag: checked as boolean,
+                      })
+                    }
                   />
-                  <Label htmlFor="disabilityFlag">Indicador de Discapacidad</Label>
+                  <Label htmlFor="disabilityFlag">
+                    Indicador de Discapacidad
+                  </Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Checkbox
                     id="jobSeeker"
                     checked={formData.jobSeeker || false}
-                    onCheckedChange={(checked) => setFormData({ ...formData, jobSeeker: checked as boolean })}
+                    onCheckedChange={(checked) =>
+                      setFormData({
+                        ...formData,
+                        jobSeeker: checked as boolean,
+                      })
+                    }
                   />
                   <Label htmlFor="jobSeeker">Buscando Empleo Activamente</Label>
                 </div>
@@ -451,17 +624,23 @@ export function ExtendedDataModal({ isOpen, onClose, candidateData, onSave }: Ex
                 <Textarea
                   id="summary"
                   value={formData.summary || ""}
-                  onChange={(e) => setFormData({ ...formData, summary: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, summary: e.target.value })
+                  }
                   rows={3}
                 />
               </div>
 
               <div>
-                <Label htmlFor="weaknesses">Debilidades / Áreas de Mejora</Label>
+                <Label htmlFor="weaknesses">
+                  Debilidades / Áreas de Mejora
+                </Label>
                 <Textarea
                   id="weaknesses"
                   value={formData.weaknesses || ""}
-                  onChange={(e) => setFormData({ ...formData, weaknesses: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, weaknesses: e.target.value })
+                  }
                   rows={2}
                 />
               </div>
@@ -478,7 +657,36 @@ export function ExtendedDataModal({ isOpen, onClose, candidateData, onSave }: Ex
             Guardar Candidato
           </Button>
         </DialogFooter>
+
+        <Dialog open={isSkillDialogOpen} onOpenChange={setIsSkillDialogOpen}>
+          <DialogContent className="max-w-sm">
+            <DialogHeader>
+              <DialogTitle>Agregar habilidad</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-2 py-2">
+              <Label htmlFor="newSkill">Nombre de la habilidad</Label>
+              <Input
+                id="newSkill"
+                value={newSkill}
+                onChange={(e) => setNewSkill(e.target.value)}
+                placeholder="Ej: Atención al cliente"
+              />
+            </div>
+            <DialogFooter>
+              <Button
+                variant="outline"
+                type="button"
+                onClick={() => setIsSkillDialogOpen(false)}
+              >
+                Cancelar
+              </Button>
+              <Button type="button" onClick={handleConfirmAddSkill}>
+                Añadir
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

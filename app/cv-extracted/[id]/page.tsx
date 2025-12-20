@@ -37,6 +37,7 @@ export default function ExtractedDataPage() {
     setError(null);
     try {
       const data = await getExtractedData(id);
+      console.log("[v0] Extracted data loaded:", data);
       if (data) {
         setOriginalExtractedData(data); 
         const mappedDetails = mapCandidateExtractedDataToDetails(data);
@@ -169,12 +170,12 @@ export default function ExtractedDataPage() {
         </div>
       </div>
       {/* Renderiza el modal de edición */}
-      <EditCandidateModal
+      {/* <EditCandidateModal
         isOpen={isEditModalOpen}
         onClose={handleCloseEditModal}
         candidate={originalExtractedData} 
         onSave={handleSaveEditedCandidate}
-      />
+      /> */}
     </div>
   );
 }

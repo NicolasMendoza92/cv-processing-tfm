@@ -67,7 +67,7 @@ export default function HistoryPage() {
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter((cv) =>
-        cv.fileName?.toLowerCase().includes(query)
+        cv.cvFileName?.toLowerCase().includes(query)
       );
     }
 
@@ -106,20 +106,6 @@ export default function HistoryPage() {
 
   const getStatusBadge = (status: CVRecord["status"]) => {
     switch (status) {
-      case "Cargado":
-        return (
-          <Badge variant="secondary" className="gap-1.5">
-            <Clock className="w-3 h-3" />
-            Cargado
-          </Badge>
-        );
-      case "Procesando...":
-        return (
-          <Badge className="gap-1.5 bg-amber-500 hover:bg-amber-600">
-            <Loader2 className="w-3 h-3 animate-spin" />
-            Procesando
-          </Badge>
-        );
       case "Procesado":
         return (
           <Badge className="gap-1.5 bg-green-600 hover:bg-green-700">
@@ -156,12 +142,12 @@ export default function HistoryPage() {
       const success = await deleteCandidate(cvToDelete.id);
       if (success) {
         toast.success(
-          `Candidato "${cvToDelete.fileName}" eliminado exitosamente.`
+          `Candidato "${cvToDelete.cvFileName}" eliminado exitosamente.`
         );
         setCvs((prevCvs) => prevCvs.filter((cv) => cv.id !== cvToDelete.id));
       } else {
         toast.error(
-          `No se pudo eliminar el candidato "${cvToDelete.fileName}".`
+          `No se pudo eliminar el candidato "${cvToDelete.cvFileName}".`
         );
       }
     } catch (error: any) {
@@ -310,7 +296,7 @@ export default function HistoryPage() {
 
                     <div className="flex-1 min-w-0">
                       <p className="font-medium text-sm text-foreground truncate">
-                        {cv.fileName}
+                        {cv.cvFileName}
                       </p>
                       <p className="text-xs text-muted-foreground mt-0.5">
                         {formatDate(cv.uploadDate)}
@@ -333,18 +319,6 @@ export default function HistoryPage() {
                         variant="outline"
                         className="gap-2 bg-transparent"
                         onClick={() => handleViewResults(cv)}
-                      >
-                        <Eye className="w-4 h-4" />
-                        Ver Resultados
-                      </Button>
-                    )}
-
-                    {cv.status !== "Procesado" && (
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        disabled
-                        className="gap-2 bg-transparent"
                       >
                         <Eye className="w-4 h-4" />
                         Ver Resultados
@@ -410,7 +384,7 @@ export default function HistoryPage() {
         open={deleteDialogOpen}
         onOpenChange={setDeleteDialogOpen}
         onConfirm={handleDeleteConfirm}
-        fileName={cvToDelete?.fileName || ""}
+        cvFileName={cvToDelete?.cvFileName || ""}
       />
     </div>
   );

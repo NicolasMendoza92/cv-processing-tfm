@@ -88,8 +88,6 @@ export default function Home() {
     }
   };
 
-  console.log("Renderizando Home con candidatos:", candidates);
-
   const handleSaveWithoutEditing = async (candidate: CandidateData) => {
     if (!candidate.extendedData) {
       toast.error("No hay datos para guardar");
@@ -135,7 +133,7 @@ export default function Home() {
         lastProcessed: result.data.last_processed,
         areasForDevelopment: result.data.areas_for_development,
         interviewQuestions: result.data.interview_questions,
-        cvFileName: candidate.fileName ?? '',
+        cvFileName: candidate.cvFileName ?? '',
       };
       console.log(
         "Datos extendidos actualizados de candidatos:",

@@ -3,7 +3,7 @@ export interface ErrorResponse {
 }
 export interface ExperienceItem {
   title: string;
-  years?: number | null;  
+  years?: number | null;
   company?: string | null;
 }
 
@@ -47,10 +47,10 @@ export type FileStatus =
   | "saved"
   | "error";
 
-  export interface EmployabilityResults {
-  score: number
-  isApt: boolean
-  developmentAreas: string[]
+export interface EmployabilityResults {
+  score: number;
+  isApt: boolean;
+  developmentAreas: string[];
 }
 
 // Tipado despues del analisis del 2do microservicio (empleabilidad)
@@ -90,23 +90,23 @@ export interface CandidateDataExtended {
   weaknesses?: string | null;
   trainingProfile?: string | null;
   cvFileName?: string;
-  createdAt: string; 
-  updatedAt: string; 
+  createdAt: string;
+  updatedAt: string;
   employabilityScore?: number;
-  topRecommendations?: string[];
+  topRecommendations: string[];
   lastProcessed?: string;
   areasForDevelopment?: string[];
   interviewQuestions?: string[];
 }
 export interface CandidateData {
   id: string;
-  fileName: string;
+  cvFileName: string;
   uploadDate: string;
   status: FileStatus;
   errorMessage?: string;
   extractedData?: ExtractedCVData;
-  employabilityResults?: EmployabilityResults
-  extendedData?: CandidateDataExtended; 
+  employabilityResults?: EmployabilityResults;
+  extendedData?: CandidateDataExtended;
   feedbackStatus?: "sent" | "not_sent";
   candidateAnalysis?: CandidateAnalysisResponse;
 }
@@ -129,6 +129,20 @@ export interface CandidateDetails {
   developmentRecommendations: string[];
   interviewQuestions: string[];
   cvFileName: string;
+  gender?: "h" | "m" | "otro" | null;
+  age?: number | null;
+  maritalStatus?: "soltero" | "casado" | "divorciado" | "viudo" | "otro" | null;
+  birthCountry?: string | null;
+  numLanguages?: number | null;
+  hasCar?: boolean | null;
+  criminalRecord?: boolean | null;
+  restrainingOrder?: boolean | null;
+  numChildren?: number | null;
+  workDisability?: boolean | null;
+  disabilityFlag?: boolean | null;
+  jobSeeker?: boolean | null;
+  weaknesses?: string | null;
+  trainingProfile?: string | null;
 }
 
 export interface CandidateSummarizeResponse {
@@ -145,32 +159,6 @@ export interface FeedbackData {
   additionalComments?: string;
   predictionAccuracy: string;
 }
-
-export interface CandidateSaveData {
-  name: string;
-  email?: string;
-  phone?: string;
-  experience: ExperienceItem[];
-  education: EducationItem[];
-  skills: string[];
-  languages: LanguageItem[];
-  summary?: string;
-  rawText?: string;
-  employabilityScore: number;
-  topRecommendations: string[];
-  lastProcessed: string;
-  areasForDevelopment?: string[];
-  interviewQuestions?: string[];
-  lastJob?: string;
-  lastEducation?: string;
-  disability?: string;
-  previousIncarceration?: string;
-  formalEducationYears?: number;
-  workExperienceYears?: number;
-  isAptForEmployment?: boolean;
-  cvFileName?: string;
-}
-
 
 export interface CandidateToAnalyzeType {
   id: string;
@@ -219,14 +207,39 @@ export interface CandidateExtractedData {
   updatedAt: string;
 }
 
-// TIPADOS QUE QUIZAS NO USARE EN EL FUTURO 
+// TIPADOS QUE QUIZAS NO USARE EN EL FUTURO
+
+export interface CandidateSaveData {
+  name: string;
+  email?: string;
+  phone?: string;
+  experience: ExperienceItem[];
+  education: EducationItem[];
+  skills: string[];
+  languages: LanguageItem[];
+  summary?: string;
+  rawText?: string;
+  employabilityScore: number;
+  topRecommendations: string[];
+  lastProcessed: string;
+  areasForDevelopment?: string[];
+  interviewQuestions?: string[];
+  lastJob?: string;
+  lastEducation?: string;
+  disability?: string;
+  previousIncarceration?: string;
+  formalEducationYears?: number;
+  workExperienceYears?: number;
+  isAptForEmployment?: boolean;
+  cvFileName?: string;
+}
 
 // USADO EN history.tsx y cvServices.ts
 export interface CVRecord {
   id: string;
-  fileName: string | null;
+  cvFileName: string | null;
   uploadDate: string;
-  status: "Cargado" | "Procesando..." | "Procesado" | "Error";
+  status: "Procesado" | "Error";
   detailsLink: string | null;
   errorMessage?: string;
 }

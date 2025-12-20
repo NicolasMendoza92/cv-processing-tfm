@@ -15,17 +15,17 @@ interface DeleteConfirmationDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   onConfirm: () => void
-  fileName: string
+  cvFileName: string
 }
 
-export function DeleteConfirmationDialog({ open, onOpenChange, onConfirm, fileName }: DeleteConfirmationDialogProps) {
+export function DeleteConfirmationDialog({ open, onOpenChange, onConfirm, cvFileName }: DeleteConfirmationDialogProps) {
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>¿Estás seguro?</AlertDialogTitle>
           <AlertDialogDescription className="space-y-2">
-            Estas a punto de eliminar a {fileName}
+            Estas a punto de eliminar a {cvFileName}
             <br />
             Esta acción no se puede deshacer.
           </AlertDialogDescription>

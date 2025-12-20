@@ -3,26 +3,22 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import type { CandidateExtractedData } from "@/types"
-import { Eye, Trash2, MessageSquare, TrendingUp, Briefcase, Calendar } from "lucide-react"
+import type { CandidateDataExtended, CandidateExtractedData } from "@/types"
+import { Eye, Trash2, MessageSquare, TrendingUp, Briefcase, Calendar, Edit2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface CandidateCardProps {
-  candidate: CandidateExtractedData
+  candidate: CandidateDataExtended
   onViewDetails: (id: string) => void
   onDelete: (id: string) => void
   onFeedback: (id: string) => void
+  onEdit: (id: string) => void
 }
 
-export function CandidateCard({ candidate, onViewDetails, onDelete, onFeedback }: CandidateCardProps) {
-  const getScoreColor = (score: number) => {
-    if (score >= 0.70) return "secondary"
-    if (score >= 0.50) return "default"
-    return "destructive"
-  }
+export function CandidateCard({ candidate, onViewDetails, onDelete, onFeedback, onEdit }: CandidateCardProps) {
 
   const getScoreBadgeVariant = (score: number) => {
-    if (score >= 0.70) return "secondary"
+    if (score >= 0.70) return "success"
     if (score >= 0.50) return "default"
     return "destructive"
   }
@@ -46,11 +42,11 @@ export function CandidateCard({ candidate, onViewDetails, onDelete, onFeedback }
             <CardTitle className="text-xl mb-2">{candidate.name}</CardTitle>
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Calendar className="w-4 h-4" />
-              <span>{formatDate(candidate.lastProcessed)}</span>
+              <span>{formatDate(candidate.lastProcessed || "")}</span>
             </div>
           </div>
-          <Badge variant={getScoreBadgeVariant(candidate.employabilityScore)} className="text-base px-3 py-1">
-            {(candidate.employabilityScore*100).toFixed(0)}%
+          <Badge variant={getScoreBadgeVariant(candidate.employabilityScore || 0)} className="text-base px-3 py-1">
+            {((candidate.employabilityScore || 0)*100).toFixed(0)}%
           </Badge>
         </div>
       </CardHeader>
@@ -63,11 +59,11 @@ export function CandidateCard({ candidate, onViewDetails, onDelete, onFeedback }
           <div className="w-full bg-secondary rounded-full h-2.5">
             <div
               className={cn("h-2.5 rounded-full transition-all", {
-                "bg-green-600": candidate.employabilityScore >= 0.70,
-                "bg-amber-500": candidate.employabilityScore >= 0.50 && candidate.employabilityScore < 0.70,
-                "bg-red-600": candidate.employabilityScore < 0.50,
+                "bg-green-600": (candidate.employabilityScore || 0) >= 0.70,
+                "bg-amber-500": (candidate.employabilityScore || 0) >= 0.50 && (candidate.employabilityScore || 0) < 0.70,
+                "bg-red-600": (candidate.employabilityScore || 0) < 0.50,
               })}
-              style={{ width: `${candidate.employabilityScore*100}%` }}
+              style={{ width: `${(candidate.employabilityScore || 0)*100}%` }}
             />
           </div>
         </div>
@@ -77,8 +73,8 @@ export function CandidateCard({ candidate, onViewDetails, onDelete, onFeedback }
             <Briefcase className="w-4 h-4 text-primary" />
             <p className="text-sm font-medium">Puestos Recomendados</p>
           </div>
-          <div className="flex flex-wrap gap-2">
-            {candidate.topRecommendations.slice(0, 2).map((job, index) => (
+          <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2">
+            {candidate.topRecommendations?.slice(0, 2).map((job, index) => (
               <Badge key={index} variant="outline" className="text-xs">
                 {job}
               </Badge>
@@ -96,7 +92,7 @@ export function CandidateCard({ candidate, onViewDetails, onDelete, onFeedback }
             <Eye className="w-4 h-4" />
             Ver Detalles
           </Button>
-          <div className="flex gap-2">
+          <div className="flex flex-col sm:flex-row gap-2">
             <Button onClick={() => onFeedback(candidate.id)} variant="outline" className="flex-1 gap-2" size="sm">
               <MessageSquare className="w-4 h-4" />
               Registrar Feedback
@@ -109,6 +105,14 @@ export function CandidateCard({ candidate, onViewDetails, onDelete, onFeedback }
             >
               <Trash2 className="w-4 h-4" />
             </Button>
+             <Button
+              onClick={() => onEdit(candidate.id)}
+              variant="outline"
+              size="sm"
+            >
+              <Edit2 className="w-4 h-4" />
+            </Button>
+            
           </div>
         </div>
       </CardContent>

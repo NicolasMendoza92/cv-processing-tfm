@@ -57,7 +57,7 @@ export function CandidateListPanel({
   // Filter candidates
   const filteredCandidates = candidates.filter((candidate) => {
     const matchesSearch =
-      candidate.fileName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      candidate.cvFileName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       candidate.extendedData?.name.toLowerCase().includes(searchTerm.toLowerCase())
 
     const matchesStatus = statusFilter === "all" || candidate.status === statusFilter
@@ -134,9 +134,9 @@ export function CandidateListPanel({
                     <div className="flex-1 min-w-0 space-y-2">
                       <div>
                         <p className="font-semibold text-sm truncate">
-                          {candidate.extendedData?.name || candidate.fileName}
+                          {candidate.extendedData?.name || candidate.cvFileName}
                         </p>
-                        <p className="text-xs text-muted-foreground">{candidate.fileName}</p>
+                        <p className="text-xs text-muted-foreground">{candidate.cvFileName}</p>
                       </div>
 
                       <div className="flex items-center gap-2 flex-wrap">

@@ -34,18 +34,17 @@ async function getCandidates(): Promise<CandidateData[]> {
 export async function getCVsStatus(): Promise<CVRecord[]> {
   try {
     const candidates = await getCandidates();
-    console.log("Candidatos obtenidos para CVRecords:", candidates);
 
-    const cvRecords: CVRecord[] = candidates.map((candidate) => ({
+    const cvRecords =candidates.map((candidate) => ({
       id: candidate.id,
-      fileName: candidate.fileName|| "",
+      cvFileName: candidate.cvFileName,
       uploadDate: candidate.uploadDate || new Date().toISOString(),
       status: "Procesado",
       detailsLink: `/cv-extracted/${candidate.id}`,
       errorMessage: undefined,
     }));
 
-    return cvRecords;
+    return cvRecords as CVRecord[];
   } catch (error) {
     console.error("Error transformando candidatos a CVRecords:", error);
     throw error;
@@ -259,7 +258,7 @@ export async function getTopRecommendations(
 }
 
 export async function getCandidatesSummary(): Promise<
-  CandidateExtractedData[]
+  CandidateDataExtended[]
 > {
   const response = await fetch(`${baseUrl}/api/allcandidates`, {
     method: "GET",
@@ -273,7 +272,7 @@ export async function getCandidatesSummary(): Promise<
     throw new Error(errorData.message || "Fallo al obtener los candidatos");
   }
 
-  const candidates: CandidateExtractedData[] = await response.json();
+  const candidates = await response.json();
   return candidates;
 }
 

@@ -10,18 +10,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import {
   Loader2,
   ArrowLeft,
-  User,
-  Mail,
-  Phone,
-  Briefcase,
-  GraduationCap,
-  Languages,
   Target,
+
 } from "lucide-react";
 import {
   getCandidateDetails,
@@ -30,6 +23,9 @@ import {
 import { EmployabilityScoreCard } from "@/components/employability-score-card";
 import type { CandidateDetails } from "@/types";
 import { mapExtendedToDetails } from "@/utils/transformCandidate";
+import { CandidateGeneralInfoCard } from "@/components/candidate-general-card";
+import { CandidateAdditionalDataCard } from "@/components/candidate-aditional-card";
+
 
 export default function CandidateDetailPage() {
   const params = useParams();
@@ -55,7 +51,7 @@ export default function CandidateDetailPage() {
         if (!data) {
           setError("No se encontraron detalles para este candidato");
         } else {
-          const CandidateDetails = mapExtendedToDetails(data)
+          const CandidateDetails = mapExtendedToDetails(data);
           setCandidate(CandidateDetails);
           loadJobRecommendations(id);
         }
@@ -69,8 +65,6 @@ export default function CandidateDetailPage() {
 
     loadCandidateDetails();
   }, [params.id]);
-
-  console.log("Candidate state:", candidate);
 
   async function loadJobRecommendations(candidateId: string) {
     setIsLoadingJobs(true);
@@ -140,7 +134,7 @@ export default function CandidateDetailPage() {
         className="mb-6 gap-2"
       >
         <ArrowLeft className="w-4 h-4" />
-          Volver a candidatos
+        Volver a candidatos
       </Button>
 
       {/* Page Title */}
@@ -154,150 +148,9 @@ export default function CandidateDetailPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left Column - Basic Information */}
-        <div className="lg:col-span-2 space-y-6">
-          {/* General Information Card */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <User className="w-5 h-5 text-primary" />
-                Información General del Candidato
-              </CardTitle>
-              <CardDescription>
-                Datos extraídos del CV mediante procesamiento de lenguaje
-                natural
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              {/* Contact Information */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Mail className="w-4 h-4" />
-                    <span className="font-medium">Email</span>
-                  </div>
-                  <p className="text-sm text-foreground pl-6">
-                    {candidate.email}
-                  </p>
-                </div>
-
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Phone className="w-4 h-4" />
-                    <span className="font-medium">Teléfono</span>
-                  </div>
-                  <p className="text-sm text-foreground pl-6">
-                    {candidate.phone}
-                  </p>
-                </div>
-              </div>
-
-              <Separator />
-
-              {/* Work Experience */}
-              <div className="space-y-2">
-                <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-                  <Briefcase className="w-4 h-4" />
-                  Último Puesto de Trabajo
-                </div>
-                <p className="text-sm text-foreground pl-6">
-                  {candidate.lastJob}
-                </p>
-                <p className="text-xs text-muted-foreground pl-6">
-                  Experiencia laboral: {candidate.workExperienceYears}{" "}
-                  {candidate.workExperienceYears === 1 ? "año" : "años"}
-                </p>
-              </div>
-
-              <Separator />
-
-              {/* Education */}
-              <div className="space-y-2">
-                <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-                  <GraduationCap className="w-4 h-4" />
-                  Última Formación Académica
-                </div>
-                <p className="text-sm text-foreground pl-6">
-                  {candidate.lastEducation}
-                </p>
-                <p className="text-xs text-muted-foreground pl-6">
-                  Años de educación formal: {candidate.formalEducationYears}
-                </p>
-              </div>
-
-              <Separator />
-
-              {/* Skills */}
-              <div className="space-y-3">
-                <h4 className="text-sm font-medium text-muted-foreground">
-                  Habilidades Clave
-                </h4>
-                <div className="flex flex-wrap gap-2">
-                  {candidate.skills.map((skill, index) => (
-                    <Badge
-                      key={index}
-                      variant="secondary"
-                      className="px-3 py-1"
-                    >
-                      {skill}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-
-              <Separator />
-
-              {/* Languages */}
-              <div className="space-y-3">
-                <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-                  <Languages className="w-4 h-4" />
-                  Idiomas
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {candidate.languages.map((lang, index) => (
-                    <Badge key={index} variant="outline" className="px-3 py-1">
-                      {lang.name} - {lang.level}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-
-              <Separator />
-
-              {/* Additional Dataset Information */}
-              <div className="space-y-3">
-                <h4 className="text-sm font-medium text-muted-foreground">
-                  Datos Adicionales del Dataset
-                </h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
-                  <div className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
-                    <span className="text-muted-foreground">Discapacidad:</span>
-                    <Badge
-                      variant={
-                        candidate.disability === "Sí" ? "destructive" : "default"
-                      }
-                    >
-                      {candidate.disability}
-                    </Badge>
-                  </div>
-                  <div className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
-                    <span className="text-muted-foreground">
-                      Situación de Reclusión Previa:
-                    </span>
-                    <Badge
-                      variant={
-                        candidate.previousIncarceration === "Sí"
-                          ? "default"
-                          : "destructive"
-                      }
-                    >
-                      {candidate.previousIncarceration}
-                    </Badge>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+       <div className="lg:col-span-2 space-y-6">
+          <CandidateGeneralInfoCard candidate={candidate} />
+          <CandidateAdditionalDataCard candidate={candidate} />
         </div>
 
         {/* Right Column - Employability Score */}

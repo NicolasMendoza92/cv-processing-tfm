@@ -39,7 +39,7 @@ export function SimpleUploadPanel({ onFileUploaded }: SimpleUploadPanelProps) {
 
       const initialCandidate: CandidateData = {
         id: fileId, // esto genera uno que despues no uso mas
-        fileName: file.name,
+        cvFileName: file.name,
         uploadDate: new Date().toISOString(),
         status: "processing",
       };
