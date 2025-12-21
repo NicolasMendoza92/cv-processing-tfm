@@ -5,19 +5,16 @@ import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { CheckCircle2, XCircle, TrendingUp } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { getScoreColor } from "@/utils"
 
 interface EmployabilityScoreCardProps {
   score: number
   isApt: boolean
-  recommendations: string[]
+  recommendations: string[] | null
 }
 
 export function EmployabilityScoreCard({ score, isApt, recommendations }: EmployabilityScoreCardProps) {
-  const getScoreColor = (score: number) => {
-    if (score >= 0.70) return "text-green-600"
-    if (score >= 0.50) return "text-amber-600"
-    return "text-red-600"
-  }
+
 
   const getProgressColor = (score: number) => {
     if (score >= 0.70) return "bg-green-600"
@@ -60,11 +57,11 @@ export function EmployabilityScoreCard({ score, isApt, recommendations }: Employ
         </div>
 
         {/* Recommendations */}
-        {recommendations?.length > 0 && (
+        {recommendations?.length || 0 > 0 && (
           <div className="space-y-3">
             <h4 className="font-semibold text-sm text-foreground">Áreas de Desarrollo Recomendadas</h4>
             <div className="flex flex-wrap gap-2">
-              {recommendations.map((rec, index) => (
+              {recommendations?.map((rec, index) => (
                 <Badge key={index} variant="outline" className="px-3 py-1.5 text-xs font-normal">
                   {rec}
                 </Badge>

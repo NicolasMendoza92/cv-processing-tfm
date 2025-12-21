@@ -7,6 +7,7 @@ import {
   deleteCandidate,
   sendFeedback,
   updateCandidate,
+  processCandidateDataAction,
 } from "@/services/cvServices";
 import type {
   CandidateDataExtended,
@@ -19,6 +20,8 @@ import { FeedbackModal } from "@/components/feedback-modal";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { EditCandidateModal } from "@/components/edit-candidate-modal";
+import { transformToCandidateToAnalyze } from "@/utils";
+
 
 export default function CandidatesPage() {
   const router = useRouter();
@@ -60,6 +63,64 @@ export default function CandidatesPage() {
     if (candidate) {
       setCandidateToDelete(candidate);
       setDeleteDialogOpen(true);
+    }
+  };
+
+  const handleProcessEmployability = async (candidate: CandidateDataExtended) => {
+    if (!candidate) {
+      toast.error("El candidato no tiene datos extendidos completos");
+      return;
+    }
+
+    const candidateToAnalyze = transformToCandidateToAnalyze(
+      candidate,
+      candidate.id
+    );
+    setCandidates((prev) =>
+      prev.map((c) => (c.id === candidate.id ? { ...c, status: "pending" } : c))
+    );
+
+    try {
+      const result = await processCandidateDataAction(candidateToAnalyze);
+
+      if (!result.success || !result.data) {
+        throw new Error(result.error || "Error en análisis de empleabilidad");
+      }
+
+      const updatedExtendedData: CandidateDataExtended = {
+        ...candidate,
+        employabilityScore: result.data.employability_score,
+        topRecommendations: result.data.top_recommendations,
+        lastProcessed: result.data.last_processed,
+        areasForDevelopment: result.data.areas_for_development,
+        interviewQuestions: result.data.interview_questions,
+        cvFileName: candidate.cvFileName ?? "",
+      };
+
+      // 1) Actualizar en el backend
+      await updateCandidate(candidate.id, updatedExtendedData);
+      // 2) Actualizar en el estado local
+      setCandidates((prev) =>
+        prev.map((c) =>
+          c.id === candidate.id
+            ? {
+                ...c,
+                status: "approved",
+                extendedData: updatedExtendedData,
+              }
+            : c
+        )
+      );
+      toast.success("Evaluación completada");
+    } catch (error) {
+      setCandidates((prev) =>
+        prev.map((c) =>
+          c.id === candidate.id
+            ? { ...c, status: "saved", errorMessage: (error as Error).message }
+            : c
+        )
+      );
+      toast.error("Error en evaluación");
     }
   };
 
@@ -183,6 +244,7 @@ export default function CandidatesPage() {
               onDelete={handleDeleteClick}
               onFeedback={handleFeedbackClick}
               onEdit={handleEditClick}
+              onAnalyze={handleProcessEmployability}
             />
           ))}
         </div>
@@ -195,7 +257,7 @@ export default function CandidatesPage() {
         cvFileName={candidateToDelete?.name || ""}
       />
 
-       {/* Modal de edición */}
+      {/* Modal de edición */}
       <EditCandidateModal
         isOpen={isEditModalOpen}
         onClose={handleCloseEditModal}
@@ -212,7 +274,6 @@ export default function CandidatesPage() {
           onSubmit={handleFeedbackSubmit}
         />
       )}
-
     </div>
   );
 }

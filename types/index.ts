@@ -125,7 +125,7 @@ export interface CandidateDetails {
   workExperienceYears: number;
   employabilityScore: number;
   isAptForEmployment: boolean;
-  topRecomendations: string[];
+  topRecommendations: string[];
   developmentRecommendations: string[];
   interviewQuestions: string[];
   cvFileName: string;
@@ -207,33 +207,6 @@ export interface CandidateExtractedData {
   updatedAt: string;
 }
 
-// TIPADOS QUE QUIZAS NO USARE EN EL FUTURO
-
-export interface CandidateSaveData {
-  name: string;
-  email?: string;
-  phone?: string;
-  experience: ExperienceItem[];
-  education: EducationItem[];
-  skills: string[];
-  languages: LanguageItem[];
-  summary?: string;
-  rawText?: string;
-  employabilityScore: number;
-  topRecommendations: string[];
-  lastProcessed: string;
-  areasForDevelopment?: string[];
-  interviewQuestions?: string[];
-  lastJob?: string;
-  lastEducation?: string;
-  disability?: string;
-  previousIncarceration?: string;
-  formalEducationYears?: number;
-  workExperienceYears?: number;
-  isAptForEmployment?: boolean;
-  cvFileName?: string;
-}
-
 // USADO EN history.tsx y cvServices.ts
 export interface CVRecord {
   id: string;
@@ -254,15 +227,4 @@ export interface UploadedFile {
   extractedData?: ExtractedCVData;
   candidateAnalysis?: CandidateAnalysisResponse;
   isSaved?: boolean;
-}
-
-export interface CandidateFile {
-  id: string;
-  name: string;
-  size: number;
-  status: FileStatus;
-  progress: number;
-  errorMessage?: string;
-  extractedData?: ExtractedCVData;
-  candidateAnalysis?: CandidateAnalysisResponse;
 }

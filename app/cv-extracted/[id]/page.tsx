@@ -16,8 +16,8 @@ import type { CandidateDataExtended, CandidateDetails, CandidateExtractedData } 
 import { ExtractedDataDisplay } from "@/components/extracted-data-display";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { mapCandidateExtractedDataToDetails } from "@/utils/candidateMapper";
-import { EditCandidateModal } from "@/components/edit-candidate-modal";
+import { mapCandidateExtractedDataToDetails } from "@/utils";
+
 
 export default function ExtractedDataPage() {
   const router = useRouter();
@@ -37,7 +37,6 @@ export default function ExtractedDataPage() {
     setError(null);
     try {
       const data = await getExtractedData(id);
-      console.log("[v0] Extracted data loaded:", data);
       if (data) {
         setOriginalExtractedData(data); 
         const mappedDetails = mapCandidateExtractedDataToDetails(data);
@@ -134,25 +133,24 @@ export default function ExtractedDataPage() {
 
       <div className="mb-8">
         <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-3 text-balance">
-          Datos Extraídos del CV: {candidateDetails.cvFileName}
+          Datos de: {candidateDetails.name}
         </h1>
         <p className="text-muted-foreground text-lg text-pretty">
-          Revisa la información extraída por el sistema de procesamiento de
-          lenguaje natural (PLN).
+          Revisa la información analizada.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-1 gap-6">
         <div className="lg:col-span-2">
           <ExtractedDataDisplay data={candidateDetails} />
         </div>
 
-        <div className="space-y-4">
+        {/* <div className="space-y-4">
           <Card className="sticky top-6">
             <CardHeader>
               <CardTitle className="text-lg">Acciones</CardTitle>
               <CardDescription>
-                Decide qué hacer con estos datos extraídos
+                Decide qué hacer con estos datos 
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
@@ -163,11 +161,11 @@ export default function ExtractedDataPage() {
                 disabled={isSaving}
               >
                 <Edit className="w-4 h-4" />
-                Editar Datos
+                Analizar empleabilidad
               </Button>
             </CardContent>
           </Card>
-        </div>
+        </div> */}
       </div>
       {/* Renderiza el modal de edición */}
       {/* <EditCandidateModal

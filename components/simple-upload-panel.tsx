@@ -49,7 +49,6 @@ export function SimpleUploadPanel({ onFileUploaded }: SimpleUploadPanelProps) {
 
       try {
         const result = await extractCVDataAction(file);
-        console.log("Resultado de extracción de CV:", result);
 
         if (!result.success) {
           const errorCandidate: CandidateData = {
@@ -66,8 +65,6 @@ export function SimpleUploadPanel({ onFileUploaded }: SimpleUploadPanelProps) {
           status: "ready_for_review",
           extendedData: result.data as CandidateDataExtended,
         };
-
-        console.log("Candidato final después de extracción:", finalCandidate);
 
         onFileUploaded(finalCandidate);
       } catch (error: any) {

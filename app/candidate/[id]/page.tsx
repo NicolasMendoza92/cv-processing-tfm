@@ -5,9 +5,6 @@ import { useParams, useRouter } from "next/navigation";
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -22,9 +19,9 @@ import {
 } from "@/services/cvServices";
 import { EmployabilityScoreCard } from "@/components/employability-score-card";
 import type { CandidateDetails } from "@/types";
-import { mapExtendedToDetails } from "@/utils/transformCandidate";
 import { CandidateGeneralInfoCard } from "@/components/candidate-general-card";
 import { CandidateAdditionalDataCard } from "@/components/candidate-aditional-card";
+import { mapExtendedToDetails } from "@/utils";
 
 
 export default function CandidateDetailPage() {
@@ -158,35 +155,9 @@ export default function CandidateDetailPage() {
           <EmployabilityScoreCard
             score={candidate.employabilityScore}
             isApt={candidate.isAptForEmployment}
-            recommendations={candidate.topRecomendations}
+            recommendations={candidate.topRecommendations}
           />
         </div>
-      </div>
-
-      <div className="mt-8">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Target className="w-5 h-5 text-primary" />
-              Puestos de Trabajo Recomendados
-            </CardTitle>
-            <CardDescription>
-              Basado en el perfil del candidato, estos son los roles que mejor
-              se ajustan a sus habilidades y experiencia
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {jobRecommendations && jobRecommendations.length > 0 && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {jobRecommendations.map((job, index) => (
-                  <div key={index} className="p-3 border rounded">
-                    {job}
-                  </div>
-                ))}
-              </div>
-            )}
-          </CardContent>
-        </Card>
       </div>
     </div>
   );

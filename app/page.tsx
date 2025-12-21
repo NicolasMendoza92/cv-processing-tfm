@@ -23,8 +23,8 @@ import {
   updateCandidate,
 } from "@/services/cvServices";
 import { candidateSchema } from "@/schemas";
-import { transformToCandidateToAnalyze } from "@/utils/transformCandidate";
 import { ViewDetailModal } from "@/components/view-detail-modal";
+import { transformToCandidateToAnalyze } from "@/utils";
 
 export default function Home() {
   const [candidates, setCandidates] = useState<CandidateData[]>([]);
@@ -67,7 +67,6 @@ export default function Home() {
       createdAt: extendedData.createdAt ?? new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
-    console.log("Datos a enviar al backend:", dataToSend);
 
     try {
       const saved = await createCandidate(dataToSend);
@@ -78,7 +77,6 @@ export default function Home() {
             : c
         )
       );
-      console.log("Candidato guardado correctamente:", saved);
 
       toast.success(`Candidato “${extendedData.name}” guardado exitosamente!`);
       setActiveModal({ type: null, candidate: null });
@@ -103,15 +101,9 @@ export default function Home() {
       return;
     }
 
-    console.log("Procesando empleabilidad para candidato:", candidate);
-
     const candidateToAnalyze = transformToCandidateToAnalyze(
       candidate.extendedData,
       candidate.id
-    );
-    console.log(
-      "Datos transformados para análisis de empleabilidad:",
-      candidateToAnalyze
     );
     setCandidates((prev) =>
       prev.map((c) => (c.id === candidate.id ? { ...c, status: "pending" } : c))
@@ -124,8 +116,6 @@ export default function Home() {
         throw new Error(result.error || "Error en análisis de empleabilidad");
       }
 
-      console.log("Resultado del análisis de empleabilidad:", result.data);
-
       const updatedExtendedData: CandidateDataExtended = {
         ...candidate.extendedData,
         employabilityScore: result.data.employability_score,
@@ -135,14 +125,9 @@ export default function Home() {
         interviewQuestions: result.data.interview_questions,
         cvFileName: candidate.cvFileName ?? '',
       };
-      console.log(
-        "Datos extendidos actualizados de candidatos:",
-        updatedExtendedData
-      );
 
       // 1) Actualizar en el backend
       await updateCandidate(candidate.id, updatedExtendedData);
-
       // 2) Actualizar en el estado local
       setCandidates((prev) =>
         prev.map((c) =>

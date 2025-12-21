@@ -1,3 +1,4 @@
+'use server'
 import type {
   CVRecord,
   CandidateAnalysisResponse,
@@ -35,7 +36,7 @@ export async function getCVsStatus(): Promise<CVRecord[]> {
   try {
     const candidates = await getCandidates();
 
-    const cvRecords =candidates.map((candidate) => ({
+    const cvRecords = candidates.map((candidate) => ({
       id: candidate.id,
       cvFileName: candidate.cvFileName,
       uploadDate: candidate.uploadDate || new Date().toISOString(),
@@ -139,7 +140,6 @@ export async function processCandidateDataAction(
     }
 
     const data: CandidateAnalysisResponse = await response.json();
-
     return { success: true, data: data };
   } catch (e: any) {
     console.error(
@@ -257,9 +257,7 @@ export async function getTopRecommendations(
   }
 }
 
-export async function getCandidatesSummary(): Promise<
-  CandidateDataExtended[]
-> {
+export async function getCandidatesSummary(): Promise<CandidateDataExtended[]> {
   const response = await fetch(`${baseUrl}/api/allcandidates`, {
     method: "GET",
     headers: {

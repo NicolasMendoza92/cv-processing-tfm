@@ -24,7 +24,6 @@ interface CandidateListPanelProps {
 export function CandidateListPanel({
   candidates,
   onEditExtractedData,
-  onSaveCandidate,
   onProcessEmployability,
   onViewDetails,
   onDelete,
@@ -187,15 +186,6 @@ export function CandidateListPanel({
                         >
                           <Edit className="w-3 h-3" />
                           Editar/Completar Datos
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => onSaveCandidate(candidate)}
-                          className="gap-2"
-                        >
-                          <Save className="w-3 h-3" />
-                          Guardar sin Editar
                         </Button>
                       </>
                     )}
