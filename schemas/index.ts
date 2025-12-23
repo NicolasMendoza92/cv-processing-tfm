@@ -76,3 +76,27 @@ export const candidateSchema = z.object({
   interviewQuestions: z.array(z.string()).optional(),
   cvFileName: z.string().optional(),
 });
+
+// export const offerSchema = z.object({
+//   puesto: z.string().min(3, "El puesto debe tener al menos 3 caracteres"),
+//   categoria: z.string().optional(),
+//   empresa: z.string().optional(),
+//   descripcion: z.string().max(500, "La descripción no puede superar 500 caracteres").optional(),
+//   activo: z.boolean().default(true),
+//   fechaInicio: z.date().nullable(),
+//   fechaFin: z.date().nullable(),
+// })
+
+
+export const offerSchema = z.object({
+  puesto: z.string().min(3, "El puesto debe tener al menos 3 caracteres"),
+  categoria: z.string().optional(),
+  empresa: z.string().optional(),
+  descripcion: z
+    .string()
+    .max(500, "La descripción no puede superar 500 caracteres")
+    .optional(),
+  activo: z.boolean().default(true),
+  fechaInicio: z.coerce.date().nullable(),
+  fechaFin: z.coerce.date().nullable(),
+});

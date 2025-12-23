@@ -43,3 +43,15 @@ model Candidate {
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt
 }
+
+model Offer {
+  id          String   @id @default(uuid())
+  puesto      String
+  categoria   String?
+  empresa     String?
+  descripcion String?
+  activo      Boolean  @default(true)
+  fechaInicio DateTime?
+  fechaFin    DateTime?
+  createdAt   DateTime @default(now())
+}

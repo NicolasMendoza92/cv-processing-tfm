@@ -9,4 +9,5 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/Candidate'
+export type * from './models/Offer'
 export type * from './commonInputTypes'
