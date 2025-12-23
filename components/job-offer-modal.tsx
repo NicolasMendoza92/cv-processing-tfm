@@ -1,12 +1,12 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import * as z from "zod"
-import { Calendar } from "lucide-react"
-import { format } from "date-fns"
-import { es } from "date-fns/locale"
+import { useEffect, useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+import { Calendar } from "lucide-react";
+import { format } from "date-fns";
+import { es } from "date-fns/locale";
 import {
   Dialog,
   DialogContent,
@@ -14,79 +14,100 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Switch } from "@/components/ui/switch"
-import { Calendar as CalendarComponent } from "@/components/ui/calendar"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { cn } from "@/lib/utils"
-import { JobOffer, JobOfferFormData } from "@/types"
-
-const formSchema = z.object({
-  puesto: z.string().min(3, "El puesto debe tener al menos 3 caracteres"),
-  categoria: z.enum(["Desarrollo", "Diseño", "Marketing", "Ventas", "Admin", "Otros"]),
-  empresa: z.string().min(2, "La empresa debe tener al menos 2 caracteres"),
-  descripcion: z.string().max(500, "La descripción no puede superar 500 caracteres"),
-  activo: z.boolean().default(true),
-  fechaInicio: z.date().nullable(),
-  fechaFin: z.date().nullable(),
-})
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import { JobOffer, JobOfferFormData } from "@/types";
+import { offerSchema } from "@/schemas";
 
 interface JobOfferFormModalProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  onSave: (data: JobOfferFormData) => Promise<void>
-  editingOffer?: JobOffer | null
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onSave: (data: JobOfferFormData) => Promise<void>;
+  editingOffer?: JobOffer | null;
 }
 
-export function JobOfferFormModal({ open, onOpenChange, onSave, editingOffer }: JobOfferFormModalProps) {
-  const [isSubmitting, setIsSubmitting] = useState(false)
+export function JobOfferFormModal({
+  open,
+  onOpenChange,
+  onSave,
+  editingOffer,
+}: JobOfferFormModalProps) {
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: editingOffer
-      ? {
-          puesto: editingOffer.puesto,
-          categoria: editingOffer.categoria,
-          empresa: editingOffer.empresa,
-          descripcion: editingOffer.descripcion,
-          activo: editingOffer.activo,
-          fechaInicio: editingOffer.fechaInicio,
-          fechaFin: editingOffer.fechaFin,
-        }
-      : {
-          puesto: "",
-          categoria: "Otros",
-          empresa: "",
-          descripcion: "",
-          activo: true,
-          fechaInicio: null,
-          fechaFin: null,
-        },
-  })
+  const form = useForm<z.infer<typeof offerSchema>>({
+    resolver: zodResolver(offerSchema),
+    defaultValues: {  
+      puesto: "",
+      categoria: "Otros",
+      empresa: "",
+      descripcion: "",
+      activo: true,
+      fechaInicio: null,
+      fechaFin: null,
+    },
+  });
 
-  const handleSubmit = async (values: z.infer<typeof formSchema>) => {
-    setIsSubmitting(true)
-    try {
-      await onSave(values as JobOfferFormData)
-      form.reset()
-      onOpenChange(false)
-    } catch (error) {
-      console.error("Error saving offer:", error)
-    } finally {
-      setIsSubmitting(false)
+    useEffect(() => {
+    if (editingOffer) {
+      form.reset({
+        puesto: editingOffer.puesto,
+        categoria: editingOffer.categoria,
+        empresa: editingOffer.empresa,
+        descripcion: editingOffer.descripcion,
+        activo: editingOffer.activo,
+        fechaInicio: editingOffer.fechaInicio || null,
+        fechaFin: editingOffer.fechaFin || null,
+      });
+    } else {
+      form.reset(); // ← Limpia para crear nuevo
     }
-  }
+  }, [editingOffer, form]);
+
+  const handleSubmit = async (values: z.infer<typeof offerSchema>) => {
+    setIsSubmitting(true);
+    try {
+      await onSave(values as JobOfferFormData);
+      form.reset();
+      onOpenChange(false);
+    } catch (error) {
+      console.error("Error saving offer:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>{editingOffer ? "Editar Oferta" : "Añadir Nueva Oferta"}</DialogTitle>
+          <DialogTitle>
+            {editingOffer ? "Editar Oferta" : "Añadir Nueva Oferta"}
+          </DialogTitle>
           <DialogDescription>
             {editingOffer
               ? "Modifica los detalles de la oferta laboral"
@@ -95,7 +116,10 @@ export function JobOfferFormModal({ open, onOpenChange, onSave, editingOffer }: 
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="space-y-4"
+          >
             <FormField
               control={form.control}
               name="puesto"
@@ -103,7 +127,10 @@ export function JobOfferFormModal({ open, onOpenChange, onSave, editingOffer }: 
                 <FormItem>
                   <FormLabel>Puesto *</FormLabel>
                   <FormControl>
-                    <Input placeholder="ej. Desarrollador Full Stack" {...field} />
+                    <Input
+                      placeholder="ej. Desarrollador Full Stack"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -116,7 +143,10 @@ export function JobOfferFormModal({ open, onOpenChange, onSave, editingOffer }: 
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Categoría *</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Selecciona una categoría" />
@@ -165,7 +195,9 @@ export function JobOfferFormModal({ open, onOpenChange, onSave, editingOffer }: 
                       {...field}
                     />
                   </FormControl>
-                  <p className="text-xs text-muted-foreground">{field.value?.length || 0}/500 caracteres</p>
+                  <p className="text-xs text-muted-foreground">
+                    {field.value?.length || 0}/500 caracteres
+                  </p>
                   <FormMessage />
                 </FormItem>
               )}
@@ -183,9 +215,16 @@ export function JobOfferFormModal({ open, onOpenChange, onSave, editingOffer }: 
                         <FormControl>
                           <Button
                             variant={"outline"}
-                            className={cn("w-full pl-3 text-left font-normal", !field.value && "text-muted-foreground")}
+                            className={cn(
+                              "w-full pl-3 text-left font-normal",
+                              !field.value && "text-muted-foreground"
+                            )}
                           >
-                            {field.value ? format(field.value, "PPP", { locale: es }) : <span>Selecciona fecha</span>}
+                            {field.value ? (
+                              format(field.value, "PPP", { locale: es })
+                            ) : (
+                              <span>Selecciona fecha</span>
+                            )}
                             <Calendar className="ml-auto h-4 w-4 opacity-50" />
                           </Button>
                         </FormControl>
@@ -216,9 +255,16 @@ export function JobOfferFormModal({ open, onOpenChange, onSave, editingOffer }: 
                         <FormControl>
                           <Button
                             variant={"outline"}
-                            className={cn("w-full pl-3 text-left font-normal", !field.value && "text-muted-foreground")}
+                            className={cn(
+                              "w-full pl-3 text-left font-normal",
+                              !field.value && "text-muted-foreground"
+                            )}
                           >
-                            {field.value ? format(field.value, "PPP", { locale: es }) : <span>Selecciona fecha</span>}
+                            {field.value ? (
+                              format(field.value, "PPP", { locale: es })
+                            ) : (
+                              <span>Selecciona fecha</span>
+                            )}
                             <Calendar className="ml-auto h-4 w-4 opacity-50" />
                           </Button>
                         </FormControl>
@@ -251,14 +297,22 @@ export function JobOfferFormModal({ open, onOpenChange, onSave, editingOffer }: 
                     </div>
                   </div>
                   <FormControl>
-                    <Switch checked={field.value} onCheckedChange={field.onChange} />
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
                   </FormControl>
                 </FormItem>
               )}
             />
 
             <DialogFooter>
-              <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={isSubmitting}>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => onOpenChange(false)}
+                disabled={isSubmitting}
+              >
                 Cancelar
               </Button>
               <Button type="submit" disabled={isSubmitting}>
@@ -269,5 +323,5 @@ export function JobOfferFormModal({ open, onOpenChange, onSave, editingOffer }: 
         </Form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

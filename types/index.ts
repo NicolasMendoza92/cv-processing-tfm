@@ -231,34 +231,37 @@ export interface UploadedFile {
 
 
 // TIPOS PARA LA PAGINA OFERTAS
+export type Categoria = "Desarrollo" | "Disenio" | "Marketing" | "Ventas" | "Admin" | "Otros"
+
 export interface JobOffer {
   id: string
   puesto: string
-  categoria: "Desarrollo" | "Diseño" | "Marketing" | "Ventas" | "Admin" | "Otros"
-  empresa: string
-  descripcion: string
+  categoria?: Categoria
+  empresa?: string
+  descripcion?: string
   activo: boolean
   fechaInicio: Date | null
   fechaFin: Date | null
   createdAt: Date
 }
-
 export interface JobOfferFormData {
-  puesto: string
-  categoria: "Desarrollo" | "Diseño" | "Marketing" | "Ventas" | "Admin" | "Otros"
-  empresa: string
-  descripcion: string
+  puesto?: string
+  categoria?: Categoria
+  empresa?: string
+  descripcion?: string
   activo: boolean
-  fechaInicio: Date | null
-  fechaFin: Date | null
+  fechaInicio?: Date | null
+  fechaFin?: Date | null
 }
 
 export interface ExcelRowData {
   puesto: string
-  categoria: string
-  empresa: string
-  descripcion: string
-  activo: string | boolean
+  categoria?: Categoria
+  empresa?: string
+  descripcion?: string
+  // activo: string | boolean
   fecha_inicio: string
   fecha_fin: string
 }
+
+

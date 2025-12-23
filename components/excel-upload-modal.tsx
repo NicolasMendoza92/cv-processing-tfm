@@ -1,9 +1,9 @@
-"use client"
+"use client";
 
-import { useState, useCallback } from "react"
-import { useDropzone } from "react-dropzone"
-import Papa from "papaparse"
-import { Upload, FileSpreadsheet, X } from "lucide-react"
+import { useState, useCallback } from "react";
+import { useDropzone } from "react-dropzone";
+import Papa from "papaparse";
+import { Upload, FileSpreadsheet, X } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -11,80 +11,93 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Badge } from "@/components/ui/badge"
-import { ExcelRowData } from "@/types"
-
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { ExcelRowData } from "@/types";
 
 interface ExcelUploadModalProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  onUpload: (data: ExcelRowData[]) => Promise<void>
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onUpload: (data: ExcelRowData[]) => Promise<void>;
 }
 
-export function ExcelUploadModal({ open, onOpenChange, onUpload }: ExcelUploadModalProps) {
-  const [parsedData, setParsedData] = useState<ExcelRowData[]>([])
-  const [isUploading, setIsUploading] = useState(false)
-  const [fileName, setFileName] = useState<string>("")
+export function ExcelUploadModal({
+  open,
+  onOpenChange,
+  onUpload,
+}: ExcelUploadModalProps) {
+  const [parsedData, setParsedData] = useState<ExcelRowData[]>([]);
+  const [isUploading, setIsUploading] = useState(false);
+  const [fileName, setFileName] = useState<string>("");
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
-    const file = acceptedFiles[0]
-    if (!file) return
+    const file = acceptedFiles[0];
+    if (!file) return;
 
-    setFileName(file.name)
+    setFileName(file.name);
 
     Papa.parse(file, {
       header: true,
       skipEmptyLines: true,
       complete: (results) => {
-        setParsedData(results.data as ExcelRowData[])
+        const typedData = results.data as ExcelRowData[]
+        setParsedData(typedData)
       },
       error: (error) => {
-        console.error("Error parsing file:", error)
+        console.error("Error parsing file:", error);
       },
-    })
-  }, [])
+    });
+  }, []);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: {
       "text/csv": [".csv"],
       "application/vnd.ms-excel": [".xls"],
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": [".xlsx"],
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": [
+        ".xlsx",
+      ],
     },
     maxFiles: 1,
-  })
+  });
 
   const handleUpload = async () => {
-    setIsUploading(true)
+    setIsUploading(true);
     try {
-      await onUpload(parsedData)
-      setParsedData([])
-      setFileName("")
-      onOpenChange(false)
+      await onUpload(parsedData);
+      setParsedData([]);
+      setFileName("");
+      onOpenChange(false);
     } catch (error) {
-      console.error("Error uploading data:", error)
+      console.error("Error uploading data:", error);
     } finally {
-      setIsUploading(false)
+      setIsUploading(false);
     }
-  }
+  };
 
   const handleCancel = () => {
-    setParsedData([])
-    setFileName("")
-    onOpenChange(false)
-  }
+    setParsedData([]);
+    setFileName("");
+    onOpenChange(false);
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Cargar Excel de Ofertas</DialogTitle>
+          <DialogTitle>Cargar CSV de Ofertas</DialogTitle>
           <DialogDescription>
-            Sube un archivo Excel o CSV con las columnas: puesto, categoria, empresa, descripcion, activo, fecha_inicio,
-            fecha_fin
+            Sube un archivo CSV con las columnas: puesto, categoria,
+            empresa, descripcion, activo, fecha_inicio, fecha_fin
           </DialogDescription>
         </DialogHeader>
 
@@ -92,7 +105,9 @@ export function ExcelUploadModal({ open, onOpenChange, onUpload }: ExcelUploadMo
           <div
             {...getRootProps()}
             className={`border-2 border-dashed rounded-lg p-12 text-center cursor-pointer transition-colors ${
-              isDragActive ? "border-primary bg-primary/5" : "border-muted-foreground/25 hover:border-primary/50"
+              isDragActive
+                ? "border-primary bg-primary/5"
+                : "border-muted-foreground/25 hover:border-primary/50"
             }`}
           >
             <input {...getInputProps()} />
@@ -101,8 +116,12 @@ export function ExcelUploadModal({ open, onOpenChange, onUpload }: ExcelUploadMo
               <p className="text-lg font-medium">Suelta el archivo aquí...</p>
             ) : (
               <>
-                <p className="text-lg font-medium mb-2">Arrastra tu Excel con ofertas o haz clic para seleccionar</p>
-                <p className="text-sm text-muted-foreground">Formatos aceptados: CSV, XLS, XLSX</p>
+                <p className="text-lg font-medium mb-2">
+                  Arrastra tu Excel con ofertas o haz clic para seleccionar
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  Formatos aceptados: CSV, XLS, XLSX
+                </p>
               </>
             )}
           </div>
@@ -118,8 +137,8 @@ export function ExcelUploadModal({ open, onOpenChange, onUpload }: ExcelUploadMo
                 variant="ghost"
                 size="sm"
                 onClick={() => {
-                  setParsedData([])
-                  setFileName("")
+                  setParsedData([]);
+                  setFileName("");
                 }}
               >
                 <X className="w-4 h-4" />
@@ -141,11 +160,13 @@ export function ExcelUploadModal({ open, onOpenChange, onUpload }: ExcelUploadMo
                 <TableBody>
                   {parsedData.slice(0, 10).map((row, index) => (
                     <TableRow key={index}>
-                      <TableCell className="font-medium">{row.puesto}</TableCell>
+                      <TableCell className="font-medium">
+                        {row.puesto}
+                      </TableCell>
                       <TableCell>{row.categoria}</TableCell>
                       <TableCell>{row.empresa}</TableCell>
                       <TableCell>
-                        <Badge variant={row.activo ? "default" : "secondary"}>{row.activo ? "Sí" : "No"}</Badge>
+                         <Badge variant="default">Sí</Badge>
                       </TableCell>
                       <TableCell>{row.fecha_inicio}</TableCell>
                       <TableCell>{row.fecha_fin}</TableCell>
@@ -155,13 +176,19 @@ export function ExcelUploadModal({ open, onOpenChange, onUpload }: ExcelUploadMo
               </Table>
             </div>
             {parsedData.length > 10 && (
-              <p className="text-sm text-muted-foreground text-center">Mostrando 10 de {parsedData.length} registros</p>
+              <p className="text-sm text-muted-foreground text-center">
+                Mostrando 10 de {parsedData.length} registros
+              </p>
             )}
           </div>
         )}
 
         <DialogFooter>
-          <Button variant="outline" onClick={handleCancel} disabled={isUploading}>
+          <Button
+            variant="outline"
+            onClick={handleCancel}
+            disabled={isUploading}
+          >
             Cancelar
           </Button>
           {parsedData.length > 0 && (
@@ -172,5 +199,5 @@ export function ExcelUploadModal({ open, onOpenChange, onUpload }: ExcelUploadMo
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
+  );
 }
