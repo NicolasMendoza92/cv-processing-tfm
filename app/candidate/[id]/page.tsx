@@ -1,17 +1,32 @@
+export const dynamic = 'force-dynamic';
 import { Suspense } from "react";
 import CandidateContent from "@/components/candidate-content";
 import Loader from "@/components/loader";
+import { getCandidateDetails } from "@/services/cvServices";
 
 type PageProps = {
     params: Promise<{ id: string }>;
 };
 
-export default async function CandidateDetailPage({ params }: PageProps ) {
+export async function CandidateDetailContent({ params }: PageProps ) {
   const { id } = await params
+  const data = await getCandidateDetails(id)
 
   return (
-    <Suspense fallback={<Loader />}>
-      <CandidateContent id={id} />
-    </Suspense>
+      <CandidateContent data={data} />
   )
+}
+
+export default function CandidateDetailPage(props: PageProps) {
+  return (
+    <Suspense
+      fallback={
+        <div>
+          <Loader />
+        </div>
+      }
+    >
+      <CandidateDetailContent {...props} />
+    </Suspense>
+  );
 }

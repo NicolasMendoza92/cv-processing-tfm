@@ -1,7 +1,7 @@
 'use client'
 
 import { getCandidateDetails, getTopRecommendations } from "@/services/cvServices";
-import { CandidateDetails } from "@/types";
+import { CandidateDataExtended, CandidateDetails } from "@/types";
 import { mapExtendedToDetails } from "@/utils";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -12,7 +12,11 @@ import { CandidateGeneralInfoCard } from "./candidate-general-card";
 import { CandidateAdditionalDataCard } from "./candidate-aditional-card";
 import { EmployabilityScoreCard } from "./employability-score-card";
 
-export default function CandidateContent({ id }: { id: string }) {
+interface CandidateContentProps {
+  data: CandidateDataExtended | null
+}
+
+export default function CandidateContent({ data }: CandidateContentProps) {
   const router = useRouter();
   const [candidate, setCandidate] = useState<CandidateDetails | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -23,31 +27,42 @@ export default function CandidateContent({ id }: { id: string }) {
   const [isLoadingJobs, setIsLoadingJobs] = useState(false);
   const [jobsError, setJobsError] = useState<string | null>(null);
 
-  useEffect(() => {
-    async function loadCandidateDetails() {
-      setIsLoading(true);
-      setError(null);
-
-      try {
-        const data = await getCandidateDetails(id);
-
-        if (!data) {
-          setError("No se encontraron detalles para este candidato");
-        } else {
-          const CandidateDetails = mapExtendedToDetails(data);
-          setCandidate(CandidateDetails);
-          loadJobRecommendations(id);
-        }
-      } catch (err) {
-        console.error("[v0] Error loading candidate details:", err);
-        setError("Error al cargar los detalles del candidato");
-      } finally {
-        setIsLoading(false);
-      }
+    useEffect(() => {
+    if (!data) {
+      setCandidate(null);
+      return;
     }
 
-    loadCandidateDetails();
-  }, [id]);
+    const mapped = mapExtendedToDetails(data);
+    setCandidate(mapped);
+    setIsLoading(false);
+  }, [data]);
+
+  // useEffect(() => {
+  //   async function loadCandidateDetails() {
+  //     setIsLoading(true);
+  //     setError(null);
+
+  //     try {
+  //       const data = await getCandidateDetails(details.id);
+
+  //       if (!data) {
+  //         setError("No se encontraron detalles para este candidato");
+  //       } else {
+  //         const CandidateDetails = mapExtendedToDetails(data);
+  //         setCandidate(CandidateDetails);
+  //         loadJobRecommendations(id);
+  //       }
+  //     } catch (err) {
+  //       console.error("[v0] Error loading candidate details:", err);
+  //       setError("Error al cargar los detalles del candidato");
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   }
+
+  //   loadCandidateDetails();
+  // }, [id]);
 
   async function loadJobRecommendations(candidateId: string) {
     setIsLoadingJobs(true);
