@@ -8,6 +8,28 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const validatedData = candidateSchema.parse(body);
+    // Verificar si ya existe un candidato con ese email
+    if (!validatedData.email) {
+      return NextResponse.json(
+        { message: "El email es requerido." },
+        { status: 400 }
+      );
+    }
+
+    const existingCandidate = await prisma.candidate.findUnique({
+      where: { email: validatedData.email }
+    });
+
+    if (existingCandidate) {
+      return NextResponse.json(
+        { 
+          message: "Este candidato ya existe con el email proporcionado.",
+          candidate: existingCandidate 
+        }, 
+        { status: 409 } 
+      );
+    }
+
 
     const newCandidate = await prisma.candidate.create({
       data: {
