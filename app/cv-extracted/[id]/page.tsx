@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import CandidateContent from "@/components/candidate-content";
 import Loader from "@/components/loader";
 import ExtractedContent from "@/components/extracted-content";
 

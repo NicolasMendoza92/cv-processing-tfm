@@ -4,6 +4,34 @@ import {
   CandidateToAnalyzeType, CandidateDetails, CandidateExtractedData
 } from "@/types";
 
+export function mapDetailsToCandidateToAnalyze(
+  d: CandidateDetails
+): import("@/types").CandidateToAnalyzeType {
+  return {
+    id: d.cvFileName, 
+    name: d.name,
+    summary: d.lastJob, // o cualquier campo que uses como resumen
+    experience: [], // <-- si no tienes experiencia en Details, deja vacío
+    education: [], // <-- igual que arriba
+    languages: d.languages,
+    skills: d.skills,
+    gender: d.gender ?? null,
+    age: d.age ?? null,
+    maritalStatus: d.maritalStatus ?? null,
+    birthCountry: d.birthCountry ?? null,
+    numLanguages: d.numLanguages ?? null,
+    hasCar: d.hasCar ?? null,
+    criminalRecord: d.criminalRecord ?? null,
+    restrainingOrder: d.restrainingOrder ?? null,
+    numChildren: d.numChildren ?? null,
+    workDisability: d.workDisability ?? null,
+    disabilityFlag: d.disabilityFlag ?? null,
+    jobSeeker: d.jobSeeker ?? null,
+    weaknesses: d.weaknesses ?? null,
+    trainingProfile: d.trainingProfile ?? null,
+  };
+}
+
 export const transformToCandidateToAnalyze = (
   extendedData: CandidateDataExtended,
   candidateId: string

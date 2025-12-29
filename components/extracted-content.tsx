@@ -5,29 +5,34 @@ import { useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Card,
+  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Loader2, ArrowLeft } from "lucide-react";
-import { getExtractedData, updateCandidate } from "@/services/cvServices";
-import type { CandidateDataExtended, CandidateDetails, CandidateExtractedData } from "@/types";
+import { Loader2, ArrowLeft, CircuitBoard } from "lucide-react";
+import { getExtractedData, processCandidateDataAction, updateCandidate } from "@/services/cvServices";
+import type {
+  CandidateDataExtended,
+  CandidateDetails,
+  CandidateExtractedData,
+} from "@/types";
 import { ExtractedDataDisplay } from "@/components/extracted-data-display";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { mapCandidateExtractedDataToDetails } from "@/utils";
-
+import { mapCandidateExtractedDataToDetails, mapDetailsToCandidateToAnalyze } from "@/utils";
 
 export default function ExtractedContent({ id }: { id: string }) {
   const router = useRouter();
 
-  const [originalExtractedData, setOriginalExtractedData] = useState<CandidateExtractedData | null>(null);
+  const [originalExtractedData, setOriginalExtractedData] =
+    useState<CandidateExtractedData | null>(null);
   const [candidateDetails, setCandidateDetails] =
     useState<CandidateDetails | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false); 
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const loadCandidateData = async () => {
     setIsLoading(true);
@@ -35,9 +40,9 @@ export default function ExtractedContent({ id }: { id: string }) {
     try {
       const data = await getExtractedData(id);
       if (data) {
-        setOriginalExtractedData(data); 
+        setOriginalExtractedData(data);
         const mappedDetails = mapCandidateExtractedDataToDetails(data);
-        setCandidateDetails(mappedDetails); 
+        setCandidateDetails(mappedDetails);
       } else {
         setError("No se encontraron datos extraídos para este CV.");
       }
@@ -55,25 +60,22 @@ export default function ExtractedContent({ id }: { id: string }) {
     }
   }, [id]);
 
-   const handleEdit = () => {
-    setIsEditModalOpen(true);
-  };
-
-  const handleCloseEditModal = () => {
-    setIsEditModalOpen(false); 
-  };
-
-    const handleSaveEditedCandidate = async (candidateId: string, updatedData: CandidateDataExtended) => {
+ /*--------- Re-análisis ---------- */
+  const handleReAnalyzeCandidate = async () => {
+    if (!candidateDetails) return;
     setIsSaving(true);
     try {
-      await updateCandidate(candidateId, updatedData);
-      toast.success("Candidato actualizado exitosamente.");
-      // Recargar los datos para que la UI refleje los cambios
-      await loadCandidateData();
-    } catch (error: any) {
-      console.error("Fallo al guardar los cambios del candidato:", error);
-      toast.error(`Error al guardar los cambios: ${error.message || "Error desconocido."}`);
-      throw error; // Re-lanza para que el modal también pueda manejar el error
+      const payload = mapDetailsToCandidateToAnalyze(candidateDetails);
+      const res = await processCandidateDataAction(payload);
+
+      if (res.success && res.data) {
+        toast.success("Análisis de empleabilidad actualizado");
+        await loadCandidateData();
+      } else {
+        toast.error(res.error || "Error al analizar");
+      }
+    } catch (e: any) {
+      toast.error(e.message || "Error inesperado");
     } finally {
       setIsSaving(false);
     }
@@ -132,45 +134,27 @@ export default function ExtractedContent({ id }: { id: string }) {
         <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-3 text-balance">
           Datos de: {candidateDetails.name}
         </h1>
-        <p className="text-muted-foreground text-lg text-pretty">
-          Revisa la información analizada.
-        </p>
+        <div className="flex items-center gap-2">
+          <p className="text-muted-foreground text-lg text-pretty">
+            Revisa la información analizada.
+          </p>
+          <Button
+            onClick={handleReAnalyzeCandidate}
+            variant="outline"
+            className=" gap-2 bg-transparent"
+            disabled={isSaving}
+          >
+            <CircuitBoard className="w-4 h-4" />
+            Re-Analizar empleabilidad
+          </Button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-1 gap-6">
         <div className="lg:col-span-2">
           <ExtractedDataDisplay data={candidateDetails} />
         </div>
-
-        {/* <div className="space-y-4">
-          <Card className="sticky top-6">
-            <CardHeader>
-              <CardTitle className="text-lg">Acciones</CardTitle>
-              <CardDescription>
-                Decide qué hacer con estos datos 
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <Button
-                onClick={handleEdit}
-                variant="outline"
-                className="w-full gap-2 bg-transparent"
-                disabled={isSaving}
-              >
-                <Edit className="w-4 h-4" />
-                Analizar empleabilidad
-              </Button>
-            </CardContent>
-          </Card>
-        </div> */}
       </div>
-      {/* Renderiza el modal de edición */}
-      {/* <EditCandidateModal
-        isOpen={isEditModalOpen}
-        onClose={handleCloseEditModal}
-        candidate={originalExtractedData} 
-        onSave={handleSaveEditedCandidate}
-      /> */}
     </div>
   );
 }

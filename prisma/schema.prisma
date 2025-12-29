@@ -42,6 +42,8 @@ model Candidate {
   previousIncarceration String?
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt
+
+  @@map("candidates")
 }
 
 model Offer {
@@ -54,4 +56,6 @@ model Offer {
   fechaInicio DateTime?
   fechaFin    DateTime?
   createdAt   DateTime @default(now())
+
+  @@map("offers")
 }

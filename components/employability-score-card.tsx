@@ -1,26 +1,35 @@
-"use client"
+"use client";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Progress } from "@/components/ui/progress"
-import { CheckCircle2, XCircle, TrendingUp } from "lucide-react"
-import { cn } from "@/lib/utils"
-import { getScoreColor } from "@/utils"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { CheckCircle2, XCircle, TrendingUp } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { getScoreColor } from "@/utils";
 
 interface EmployabilityScoreCardProps {
-  score: number
-  isApt: boolean
-  recommendations: string[] | null
+  score: number;
+  isApt: boolean;
+  recommendations: string[] | null;
 }
 
-export function EmployabilityScoreCard({ score, isApt, recommendations }: EmployabilityScoreCardProps) {
-
-
+export function EmployabilityScoreCard({
+  score,
+  isApt,
+  recommendations,
+}: EmployabilityScoreCardProps) {
+  console.log("recom", recommendations);
   const getProgressColor = (score: number) => {
-    if (score >= 0.70) return "bg-green-600"
-    if (score >= 0.50) return "bg-amber-600"
-    return "bg-red-600"
-  }
+    if (score >= 0.7) return "bg-green-600";
+    if (score >= 0.5) return "bg-amber-600";
+    return "bg-red-600";
+  };
 
   return (
     <Card className="border-2">
@@ -29,16 +38,26 @@ export function EmployabilityScoreCard({ score, isApt, recommendations }: Employ
           <TrendingUp className="w-5 h-5 text-primary" />
           Evaluación de Empleabilidad
         </CardTitle>
-        <CardDescription>Análisis predictivo basado en el perfil del candidato</CardDescription>
+        <CardDescription>
+          Análisis predictivo basado en el perfil del candidato
+        </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Score Section */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-muted-foreground">Probabilidad de Conseguir Empleo</span>
-            <span className={cn("text-3xl font-bold", getScoreColor(score))}>{(score*100).toFixed(0)}%</span>
+            <span className="text-sm font-medium text-muted-foreground">
+              Probabilidad de Conseguir Empleo
+            </span>
+            <span className={cn("text-3xl font-bold", getScoreColor(score))}>
+              {(score * 100).toFixed(0)}%
+            </span>
           </div>
-          <Progress value={score*100} className="h-3" indicatorClassName={getProgressColor(score)} />
+          <Progress
+            value={score * 100}
+            className="h-3"
+            indicatorClassName={getProgressColor(score)}
+          />
         </div>
 
         {/* Apt Badge */}
@@ -57,12 +76,19 @@ export function EmployabilityScoreCard({ score, isApt, recommendations }: Employ
         </div>
 
         {/* Recommendations */}
-        {recommendations?.length || 0 > 0 && (
+
+        {(recommendations?.length ?? 0) > 0 && (
           <div className="space-y-3">
-            <h4 className="font-semibold text-sm text-foreground">Áreas de Desarrollo Recomendadas</h4>
+            <h4 className="font-semibold text-sm text-foreground">
+              Tipos de puesto recomendadas
+            </h4>
             <div className="flex flex-wrap gap-2">
-              {recommendations?.map((rec, index) => (
-                <Badge key={index} variant="outline" className="px-3 py-1.5 text-xs font-normal">
+              {recommendations!.map((rec, index) => (
+                <Badge
+                  key={`${rec}-${index}`}
+                  variant="outline"
+                  className="px-3 py-1.5 text-xs font-normal"
+                >
                   {rec}
                 </Badge>
               ))}
@@ -71,5 +97,5 @@ export function EmployabilityScoreCard({ score, isApt, recommendations }: Employ
         )}
       </CardContent>
     </Card>
-  )
+  );
 }

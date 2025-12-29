@@ -38,32 +38,6 @@ export default function CandidateContent({ data }: CandidateContentProps) {
     setIsLoading(false);
   }, [data]);
 
-  // useEffect(() => {
-  //   async function loadCandidateDetails() {
-  //     setIsLoading(true);
-  //     setError(null);
-
-  //     try {
-  //       const data = await getCandidateDetails(details.id);
-
-  //       if (!data) {
-  //         setError("No se encontraron detalles para este candidato");
-  //       } else {
-  //         const CandidateDetails = mapExtendedToDetails(data);
-  //         setCandidate(CandidateDetails);
-  //         loadJobRecommendations(id);
-  //       }
-  //     } catch (err) {
-  //       console.error("[v0] Error loading candidate details:", err);
-  //       setError("Error al cargar los detalles del candidato");
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   }
-
-  //   loadCandidateDetails();
-  // }, [id]);
-
   async function loadJobRecommendations(candidateId: string) {
     setIsLoadingJobs(true);
     setJobsError(null);
@@ -85,6 +59,8 @@ export default function CandidateContent({ data }: CandidateContentProps) {
       setIsLoadingJobs(false);
     }
   }
+
+  console.log('candidate', candidate)
 
   if (isLoading) {
     return (
