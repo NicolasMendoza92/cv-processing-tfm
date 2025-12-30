@@ -43,6 +43,8 @@ import {
 import { cn } from "@/lib/utils";
 import { JobOffer, JobOfferFormData } from "@/types";
 import { offerSchema } from "@/schemas";
+import { useCategories } from "@/hooks/categories"
+import { EditableCategoryCombobox } from "./editable-category-combobox";
 
 interface JobOfferFormModalProps {
   open: boolean;
@@ -58,6 +60,7 @@ export function JobOfferFormModal({
   editingOffer,
 }: JobOfferFormModalProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { categories, createCategory, deleteCategory } = useCategories()
 
   const form = useForm<z.infer<typeof offerSchema>>({
     resolver: zodResolver(offerSchema),
@@ -137,30 +140,22 @@ export function JobOfferFormModal({
               )}
             />
 
-            <FormField
+             <FormField
               control={form.control}
               name="categoria"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Categoría *</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Selecciona una categoría" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="Desarrollo">Desarrollo</SelectItem>
-                      <SelectItem value="Diseño">Diseño</SelectItem>
-                      <SelectItem value="Marketing">Marketing</SelectItem>
-                      <SelectItem value="Ventas">Ventas</SelectItem>
-                      <SelectItem value="Admin">Administración</SelectItem>
-                      <SelectItem value="Otros">Otros</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <FormControl>
+                    <EditableCategoryCombobox
+                      value={field.value || ""}
+                      onChange={field.onChange}
+                      categories={categories}
+                      onCreateCategory={createCategory}
+                      onDeleteCategory={deleteCategory}
+                      disabled={isSubmitting}
+                    />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}

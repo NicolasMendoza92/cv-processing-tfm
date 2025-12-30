@@ -22,6 +22,7 @@ interface CandidateCardProps {
   onFeedback: (id: string) => void;
   onEdit: (id: string) => void;
   onAnalyze: (candidate: CandidateDataExtended) => void | Promise<void>;
+  onMatchOffers?: (candidate: CandidateDataExtended) => void;
 }
 
 export function CandidateCard({
@@ -31,6 +32,7 @@ export function CandidateCard({
   onFeedback,
   onEdit,
   onAnalyze,
+  onMatchOffers
 }: CandidateCardProps) {
   const getScoreBadgeVariant = (score: number) => {
     if (score >= 0.7) return "success";
@@ -116,17 +118,28 @@ export function CandidateCard({
             <Eye className="w-4 h-4" />
             Ver Detalles
           </Button>
+          {onMatchOffers && (
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => onMatchOffers(candidate)}
+              className="gap-2"
+            >
+              <Briefcase className="w-4 h-4" />
+              Buscar matches
+            </Button>
+          )}
           {candidate.employabilityScore === 0 && (
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={() => onAnalyze(candidate)}
-                className="gap-2"
-              >
-                <TrendingUp className="w-3 h-3" />
-                Evaluar Empleabilidad
-              </Button>
-            )}
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => onAnalyze(candidate)}
+              className="gap-2"
+            >
+              <TrendingUp className="w-3 h-3" />
+              Evaluar Empleabilidad
+            </Button>
+          )}
           <div className="flex flex-col sm:flex-row gap-2">
             <Button
               onClick={() => onFeedback(candidate.id)}
@@ -152,7 +165,6 @@ export function CandidateCard({
             >
               <Edit2 className="w-4 h-4" />
             </Button>
-            
           </div>
         </div>
       </CardContent>

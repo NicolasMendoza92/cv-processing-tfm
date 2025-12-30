@@ -23,7 +23,13 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ExcelUploadModal } from "@/components/excel-upload-modal";
-import { ExcelRowData, JobOffer, JobOfferFormData } from "@/types";
+import {
+  CandidateMatchResponse,
+  ExcelRowData,
+  JobOffer,
+  JobOfferFormData,
+  OfferInput,
+} from "@/types";
 import { toast } from "sonner";
 import { JobOfferFormModal } from "@/components/job-offer-modal";
 import {
@@ -33,6 +39,8 @@ import {
   getOffers,
   updateOffer,
 } from "@/services/offerServices";
+import { matchCandidatesAction } from "@/services/cvServices";
+import { CandidateMatchModal } from "@/components/candidate-matcher-modal";
 
 export default function OfertasPage() {
   const [offers, setOffers] = useState<JobOffer[]>([]);
@@ -45,6 +53,11 @@ export default function OfertasPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState<Record<string, boolean>>({});
+  const [matchModalOpen, setMatchModalOpen] = useState(false);
+  const [matchResult, setMatchResult] = useState<CandidateMatchResponse | null>(
+    null
+  );
+  const [loadingMatch, setLoadingMatch] = useState(false);
 
   useEffect(() => {
     loadOffers();
@@ -87,7 +100,7 @@ export default function OfertasPage() {
 
   const handleExcelUpload = async (rows: ExcelRowData[]) => {
     try {
-      const result = await bulkCreateOffers(rows); 
+      const result = await bulkCreateOffers(rows);
       toast.success(`${result.count} ofertas importadas`);
       await loadOffers();
       setIsExcelModalOpen(false);
@@ -112,14 +125,26 @@ export default function OfertasPage() {
     }
   };
 
-  const handleFindMatches = async (offerId: string) => {
-    setLoadingMatchingId(offerId);
+  const handleFindMatches = async (offer: JobOffer) => {
+    setLoadingMatch(true);
+    setMatchResult(null);
 
-    // Simulate microservice call
-    await new Promise((resolve) => setTimeout(resolve, 3000));
+    const input: OfferInput = {
+      id: offer.id,
+      puesto: offer.puesto,
+      categoria: offer.categoria || "",
+      descripcion: offer.descripcion || "",
+    };
 
-    setLoadingMatchingId(null);
-    toast("Búsqueda completada");
+    const res = await matchCandidatesAction(input);
+
+    if (res.success) {
+      setMatchResult({ summary: res.summary!, candidates: res.candidates! });
+      setMatchModalOpen(true);
+    } else {
+      toast.error(res.error || "No se pudieron encontrar candidatos");
+    }
+    setLoadingMatch(false);
   };
 
   const handleDeleteOffer = async (id: string) => {
@@ -253,11 +278,11 @@ export default function OfertasPage() {
                           <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => handleFindMatches(offer.id)}
-                            disabled={loadingMatchingId === offer.id}
+                            onClick={() => handleFindMatches(offer)}
+                            disabled={loadingMatch}
                             className="gap-1"
                           >
-                            {loadingMatchingId === offer.id ? (
+                            {loadingMatch ? (
                               <>
                                 <Loader2 className="w-3 h-3 animate-spin" />
                                 Buscando...
@@ -304,6 +329,14 @@ export default function OfertasPage() {
         onSave={handleSaveOffer}
         editingOffer={editingOffer}
       />
+
+      {matchResult && (
+        <CandidateMatchModal
+          open={matchModalOpen}
+          onOpenChange={setMatchModalOpen}
+          data={matchResult}
+        />
+      )}
 
       <ExcelUploadModal
         open={isExcelModalOpen}

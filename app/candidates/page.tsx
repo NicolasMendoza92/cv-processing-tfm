@@ -9,11 +9,7 @@ import {
   updateCandidate,
   processCandidateDataAction,
 } from "@/services/cvServices";
-import type {
-  CandidateDataExtended,
-  CandidateExtractedData,
-  FeedbackData,
-} from "@/types";
+import type { CandidateDataExtended, FeedbackData } from "@/types";
 import { CandidateCard } from "@/components/candidate-card";
 import { DeleteConfirmationDialog } from "@/components/delete-confirmation-dialog";
 import { FeedbackModal } from "@/components/feedback-modal";
@@ -21,7 +17,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { EditCandidateModal } from "@/components/edit-candidate-modal";
 import { transformToCandidateToAnalyze } from "@/utils";
-
+import { OfferMatcherModal } from "@/components/offer-matcher-modal";
 
 export default function CandidatesPage() {
   const router = useRouter();
@@ -35,6 +31,9 @@ export default function CandidatesPage() {
     useState<CandidateDataExtended | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [candidateToEdit, setCandidateToEdit] =
+    useState<CandidateDataExtended | null>(null);
+  const [matchModalOpen, setMatchModalOpen] = useState(false);
+  const [candidateToMatch, setCandidateToMatch] =
     useState<CandidateDataExtended | null>(null);
 
   useEffect(() => {
@@ -66,7 +65,9 @@ export default function CandidatesPage() {
     }
   };
 
-  const handleProcessEmployability = async (candidate: CandidateDataExtended) => {
+  const handleProcessEmployability = async (
+    candidate: CandidateDataExtended
+  ) => {
     if (!candidate) {
       toast.error("El candidato no tiene datos extendidos completos");
       return;
@@ -198,6 +199,11 @@ export default function CandidatesPage() {
     }
   };
 
+  const handleMatchOffers = (candidate: CandidateDataExtended) => {
+    setCandidateToMatch(candidate);
+    setMatchModalOpen(true);
+  };
+
   if (isLoading) {
     return (
       <div className="container mx-auto px-4 py-8 md:py-12">
@@ -245,6 +251,7 @@ export default function CandidatesPage() {
               onFeedback={handleFeedbackClick}
               onEdit={handleEditClick}
               onAnalyze={handleProcessEmployability}
+              onMatchOffers={handleMatchOffers}
             />
           ))}
         </div>
@@ -274,6 +281,12 @@ export default function CandidatesPage() {
           onSubmit={handleFeedbackSubmit}
         />
       )}
+
+      <OfferMatcherModal
+        open={matchModalOpen}
+        onOpenChange={setMatchModalOpen}
+        candidate={candidateToMatch}
+      />
     </div>
   );
 }

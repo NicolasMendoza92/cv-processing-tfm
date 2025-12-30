@@ -9,6 +9,11 @@ import type {
   CandidateSummarizeResponse,
   CandidateToAnalyzeType,
   CandidateData,
+  OfferMatchResponse,
+  OfferInput,
+  CandidateMatchResponse,
+  CandidateMatchSummary,
+  MatchedCandidate,
 } from "@/types";
 
 const API_BASE_URL = process.env.API_BASE_URL;
@@ -147,6 +152,97 @@ export async function processCandidateDataAction(
       e
     );
     return { success: false, error: e.message || "Error de red o inesperado." };
+  }
+}
+
+// --- Server Action MICROSERVICIO 3 para hacer matching oferta-candidato ---
+export async function matchOffersAction(cvData: ExtractedCVData): Promise<{
+  success: boolean;
+  error?: string;
+} & OfferMatchResponse> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/offer-matcher`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(cvData),
+    });
+
+    if (!response.ok) {
+      const err: ErrorResponse = await response.json();
+      return { success: false, error: err.detail || 'Error emparejando ofertas' };
+    }
+
+    const { summary, offers } = await response.json();
+
+    // Mapeamos a nuestro formato interno
+    const top4 = offers
+      .sort((a: any, b: any) => b.match_percentage - a.match_percentage)
+      .slice(0, 4)
+      .map((o: any) => ({
+        id: o.id,
+        title: o.puesto,
+        company: o.empresa,
+        matchScore: o.match_percentage / 100, // pasamos a 0-1
+        reasons: o.reasons || [],
+      }));
+
+    return {
+      success: true,
+      summary: {
+        totalOffers: summary.total_offers,
+        matchedOffers: summary.matched_offers,
+        bestMatchScore: summary.best_match_score / 100, // 0-1
+      },
+      offers: top4,
+    };
+  } catch (e: any) {
+    return { success: false, error: e.message || 'Error de red' };
+  }
+}
+
+// --- Server Action MICROSERVICIO 4 para hacer matching oferta-candidato ---
+export async function matchCandidatesAction(
+  offer: OfferInput
+): Promise<{
+  success: boolean;
+  error?: string;
+  summary?: CandidateMatchSummary;
+  candidates?: MatchedCandidate[];
+}> {
+  try {
+    const res = await fetch(`${API_BASE_URL}/candidate-matcher`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(offer),
+    });
+
+    if (!res.ok) {
+      const err: ErrorResponse = await res.json();
+      return { success: false, error: err.detail || 'Error emparejando candidatos' };
+    }
+
+    const { summary, candidates } = await res.json();
+
+    // Mapeamos a nuestros tipos
+    return {
+      success: true,
+      summary: {
+        totalCandidates: summary.total_candidates,
+        matchedCandidates: summary.matched_candidates,
+        bestMatchScore: summary.best_match_score / 100, // 0-1
+      },
+      candidates: candidates.slice(0, 5).map((c: any) => ({
+        id: c.id,
+        name: c.name,
+        email: c.email,
+        phone: c.phone,
+        currentPosition: c.current_position,
+        matchScore: c.match_percentage / 100,
+        reasons: c.reasons || [],
+      })),
+    };
+  } catch (e: any) {
+    return { success: false, error: e.message || 'Error de red' };
   }
 }
 

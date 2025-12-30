@@ -22,16 +22,8 @@ export interface ExtractedCVData {
   name: string;
   email: string;
   phone: string;
-  experience: Array<{
-    title: string;
-    company?: string;
-    years: number;
-  }>;
-  education: Array<{
-    degree: string;
-    institution?: string;
-    year?: number;
-  }>;
+  experience: ExperienceItem[];
+  education: EducationItem[];
   skills: string[];
   languages: LanguageItem[];
   summary?: string;
@@ -207,6 +199,7 @@ export interface CandidateExtractedData {
   updatedAt: string;
 }
 
+
 // USADO EN history.tsx y cvServices.ts
 export interface CVRecord {
   id: string;
@@ -229,39 +222,93 @@ export interface UploadedFile {
   isSaved?: boolean;
 }
 
-
 // TIPOS PARA LA PAGINA OFERTAS
-export type Categoria = "Desarrollo" | "Disenio" | "Marketing" | "Ventas" | "Admin" | "Otros"
+// export type Categoria =
+//   | "Desarrollo"
+//   | "Disenio"
+//   | "Marketing"
+//   | "Ventas"
+//   | "Admin"
+//   | "Otros";
 
 export interface JobOffer {
-  id: string
-  puesto: string
-  categoria?: Categoria
-  empresa?: string
-  descripcion?: string
-  activo: boolean
-  fechaInicio: Date | null
-  fechaFin: Date | null
-  createdAt: Date
+  id: string;
+  puesto: string;
+  categoria?: string;
+  empresa?: string;
+  descripcion?: string;
+  activo: boolean;
+  fechaInicio: Date | null;
+  fechaFin: Date | null;
+  createdAt: Date;
 }
 export interface JobOfferFormData {
-  puesto?: string
-  categoria?: Categoria
-  empresa?: string
-  descripcion?: string
-  activo: boolean
-  fechaInicio?: Date | null
-  fechaFin?: Date | null
+  puesto?: string;
+  categoria?: string;
+  empresa?: string;
+  descripcion?: string;
+  activo: boolean;
+  fechaInicio?: Date | null;
+  fechaFin?: Date | null;
 }
 
 export interface ExcelRowData {
-  puesto: string
-  categoria?: Categoria
-  empresa?: string
-  descripcion?: string
+  puesto: string;
+  categoria?: string;
+  empresa?: string;
+  descripcion?: string;
   // activo: string | boolean
-  fecha_inicio: string
-  fecha_fin: string
+  fecha_inicio: string;
+  fecha_fin: string;
 }
 
 
+// OFERTAS Y MATHCER 
+
+export interface OfferMatchSummary {
+  totalOffers: number;
+  matchedOffers: number;
+  bestMatchScore: number; // 0-1
+}
+
+// Oferta individual ya mapeada
+export interface MatchedOffer {
+  id: string;
+  title: string;
+  company: string;
+  matchScore: number; // 0-1
+  reasons: string[];
+}
+
+// Respuesta completa de la acción
+export interface OfferMatchResponse {
+  summary?: OfferMatchSummary;
+  offers?: MatchedOffer[];
+}
+export interface OfferInput {
+  id: string;
+  puesto: string;
+  categoria: string;
+  descripcion: string;
+}
+
+export interface CandidateMatchSummary {
+  totalCandidates: number;
+  matchedCandidates: number;
+  bestMatchScore: number; // 0-1
+}
+
+export interface MatchedCandidate {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  currentPosition: string;
+  matchScore: number; // 0-1
+  reasons: string[];
+}
+
+export interface CandidateMatchResponse {
+  summary: CandidateMatchSummary;
+  candidates: MatchedCandidate[];
+}
