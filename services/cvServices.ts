@@ -11,7 +11,6 @@ import type {
   CandidateData,
   OfferMatchResponse,
   OfferInput,
-  CandidateMatchResponse,
   CandidateMatchSummary,
   MatchedCandidate,
 } from "@/types";
@@ -144,7 +143,7 @@ export async function processCandidateDataAction(
       return { success: false, error: errorData.detail };
     }
 
-    const data: CandidateAnalysisResponse = await response.json();
+    const data = await response.json();
     return { success: true, data: data };
   } catch (e: any) {
     console.error(
