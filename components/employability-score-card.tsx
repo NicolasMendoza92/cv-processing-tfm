@@ -24,7 +24,7 @@ export function EmployabilityScoreCard({
   isApt,
   recommendations,
 }: EmployabilityScoreCardProps) {
-  console.log("recom", recommendations);
+
   const getProgressColor = (score: number) => {
     if (score >= 0.7) return "bg-green-600";
     if (score >= 0.5) return "bg-amber-600";

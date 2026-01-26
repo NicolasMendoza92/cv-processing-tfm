@@ -18,7 +18,6 @@ import { CandidateListPanel } from "@/components/candidate-list-panel";
 import { CandidateData, CandidateDataExtended } from "@/types";
 import {
   createCandidate,
-  deleteCandidate,
   processCandidateDataAction,
   updateCandidate,
 } from "@/services/cvServices";
@@ -55,7 +54,6 @@ export default function Home() {
       lastProcessed: extendedData.lastProcessed || new Date().toISOString(),
       ...extendedData,
     });
-    console.log("Datos validados del candidato:", candidateData);
 
     if (!candidateData.success) {
       toast.error("Datos inválidos: " + candidateData.error.errors[0].message);
@@ -110,8 +108,9 @@ export default function Home() {
     );
 
     try {
+      console.log("Procesando empleabilidad para:", candidateToAnalyze);
       const result = await processCandidateDataAction(candidateToAnalyze);
-
+      console.log("Resultado del procesamiento:", result);
       if (!result.success || !result.data) {
         throw new Error(result.error || "Error en análisis de empleabilidad");
       }

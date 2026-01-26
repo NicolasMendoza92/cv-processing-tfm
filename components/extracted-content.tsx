@@ -1,17 +1,19 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Card,
-  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { Loader2, ArrowLeft, CircuitBoard } from "lucide-react";
-import { getExtractedData, processCandidateDataAction, updateCandidate } from "@/services/cvServices";
+import {
+  getExtractedData,
+  processCandidateDataAction,
+  updateCandidate,
+} from "@/services/cvServices";
 import type {
   CandidateDataExtended,
   CandidateDetails,
@@ -20,7 +22,10 @@ import type {
 import { ExtractedDataDisplay } from "@/components/extracted-data-display";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { mapCandidateExtractedDataToDetails, mapDetailsToCandidateToAnalyze } from "@/utils";
+import {
+  mapCandidateExtractedDataToDetails,
+  mapExtractedDataToCandidateToAnalyze,
+} from "@/utils";
 
 export default function ExtractedContent({ id }: { id: string }) {
   const router = useRouter();
@@ -60,21 +65,51 @@ export default function ExtractedContent({ id }: { id: string }) {
     }
   }, [id]);
 
- /*--------- Re-análisis ---------- */
   const handleReAnalyzeCandidate = async () => {
-    if (!candidateDetails) return;
+    if (!originalExtractedData || !candidateDetails) {
+      toast.error("Datos incompletos");
+      return;
+    }
     setIsSaving(true);
     try {
-      const payload = mapDetailsToCandidateToAnalyze(candidateDetails);
+      console.log(
+        "Starting re-analysis for candidate ID:",
+        originalExtractedData,
+      );
+      // ✅ Payload: datos ORIGINALES del CV (no edits)
+      const payload = mapExtractedDataToCandidateToAnalyze(
+        originalExtractedData,
+      );
+      console.log("Re-analyzing con datos extraídos:", payload);
+
       const res = await processCandidateDataAction(payload);
+      console.log("Nuevo análisis:", res);
 
       if (res.success && res.data) {
-        toast.success("Análisis de empleabilidad actualizado");
-        await loadCandidateData();
+        // ✅ UPDATE: combina original + nuevo análisis
+        const updatedData: CandidateDataExtended = {
+          ...originalExtractedData, // ID, experience, etc.
+          employabilityScore: res.data?.employability_score,
+          topRecommendations: res.data?.top_recommendations,
+          lastProcessed: res.data?.last_processed,
+          areasForDevelopment: res.data?.areas_for_development,
+          interviewQuestions: res.data?.interview_questions,
+          cvFileName: candidateDetails.cvFileName,
+        };
+
+        console.log("Updating candidate with:", updatedData);
+        console.log("Original extracted data ID:", originalExtractedData.id);
+        await updateCandidate(originalExtractedData.id, updatedData);
+
+        toast.success(
+          `Empleabilidad actualizada: ${(res.data.employability_score || 0).toFixed(2)}`,
+        );
+        await loadCandidateData(); // ← Recarga con datos nuevos de DB
       } else {
-        toast.error(res.error || "Error al analizar");
+        toast.error(res.error || "Error en análisis");
       }
     } catch (e: any) {
+      console.error("Re-analyze error:", e);
       toast.error(e.message || "Error inesperado");
     } finally {
       setIsSaving(false);

@@ -60,7 +60,6 @@ export default function CandidateContent({ data }: CandidateContentProps) {
     }
   }
 
-  console.log('candidate', candidate)
 
   if (isLoading) {
     return (

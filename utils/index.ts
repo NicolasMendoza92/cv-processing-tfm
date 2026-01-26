@@ -1,34 +1,73 @@
 import { candidateSchema } from "@/schemas";
 import {
   CandidateDataExtended,
-  CandidateToAnalyzeType, CandidateDetails, CandidateExtractedData
+  CandidateToAnalyzeType, CandidateDetails, CandidateExtractedData,
+  ExperienceItem,
+  EducationItem
 } from "@/types";
 
-export function mapDetailsToCandidateToAnalyze(
-  d: CandidateDetails
-): import("@/types").CandidateToAnalyzeType {
+
+export function mapExtractedDataToCandidateToAnalyze(
+  data: CandidateExtractedData
+): CandidateToAnalyzeType {
   return {
-    id: d.cvFileName, 
-    name: d.name,
-    summary: d.lastJob, // o cualquier campo que uses como resumen
-    experience: [], // <-- si no tienes experiencia en Details, deja vacío
-    education: [], // <-- igual que arriba
-    languages: d.languages,
-    skills: d.skills,
-    gender: d.gender ?? null,
-    age: d.age ?? null,
-    maritalStatus: d.maritalStatus ?? null,
-    birthCountry: d.birthCountry ?? null,
-    numLanguages: d.numLanguages ?? null,
-    hasCar: d.hasCar ?? null,
-    criminalRecord: d.criminalRecord ?? null,
-    restrainingOrder: d.restrainingOrder ?? null,
-    numChildren: d.numChildren ?? null,
-    workDisability: d.workDisability ?? null,
-    disabilityFlag: d.disabilityFlag ?? null,
-    jobSeeker: d.jobSeeker ?? null,
-    weaknesses: d.weaknesses ?? null,
-    trainingProfile: d.trainingProfile ?? null,
+    id: data.id,
+    name: data.name,
+    summary: data.summary ?? null,
+    
+    // Arrays directos
+    experience: data.experience || [],
+    education: data.education || [],
+    languages: data.languages || [],
+    skills: data.skills || [],
+    
+    // Demográficos: derivados + nulls
+    gender: null, // no en ExtractedData
+    age: null,
+    maritalStatus: null,
+    birthCountry: null,
+    numLanguages: null,
+    hasCar: null,
+    criminalRecord: data.previousIncarceration === "Si" ? true : null,
+    restrainingOrder: null,
+    numChildren: null,
+    workDisability: data.disability === "Si" ? true : null,
+    disabilityFlag: data.disability === "Si" ? true : null,
+    jobSeeker: true, // default
+    weaknesses: null,
+    trainingProfile: null,
+  };
+}
+
+export function mapExtendedDataToCandidateToAnalyze(
+  data: CandidateDataExtended
+): CandidateToAnalyzeType {
+  return {
+    id: data.id,
+    name: data.name,
+    summary: data.summary ?? null,
+    
+    // Arrays: directos o vacíos
+    experience: data.experience || [],
+    education: data.education || [],
+    languages: data.languages || [],
+    skills: data.skills || [],
+    
+    // Demográficos: directos (opcionales → undefined/null OK)
+    gender: data.gender ?? null,
+    age: data.age ?? null,
+    maritalStatus: data.maritalStatus ?? null,
+    birthCountry: data.birthCountry ?? null,
+    numLanguages: data.numLanguages ?? null,
+    hasCar: data.hasCar ?? null,
+    criminalRecord: data.criminalRecord ?? null,
+    restrainingOrder: data.restrainingOrder ?? null,
+    numChildren: data.numChildren ?? null,
+    workDisability: data.workDisability ?? null,
+    disabilityFlag: data.disabilityFlag ?? null,
+    jobSeeker: data.jobSeeker ?? null,
+    weaknesses: data.weaknesses ?? null,
+    trainingProfile: data.trainingProfile ?? null,
   };
 }
 
@@ -50,7 +89,6 @@ export const transformToCandidateToAnalyze = (
     birthCountry: extendedData.birthCountry ?? "",
     maritalStatus: extendedData.maritalStatus ?? "otro",
     cvFileName: extendedData.cvFileName ?? "",
-    // languages: array, pero sus strings internos también
     languages: (extendedData.languages || []).map((l) => ({
       name: l.name ?? "",
       level: l.level ?? "",

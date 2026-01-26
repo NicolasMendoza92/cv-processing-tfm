@@ -6,7 +6,6 @@ import type {
   ErrorResponse,
   CandidateDataExtended,
   CandidateExtractedData,
-  CandidateSummarizeResponse,
   CandidateToAnalyzeType,
   CandidateData,
   OfferMatchResponse,
@@ -245,46 +244,7 @@ export async function matchCandidatesAction(
   }
 }
 
-// --- Server Action para obtener el resumen de un candidato por ID ---
-export async function candidateSummaryAction(
-  candidateRawText: string
-): Promise<{
-  success: boolean;
-  data?: CandidateSummarizeResponse;
-  error?: string;
-}> {
-  try {
-    const response = await fetch(`${API_BASE_URL}/summarize-cv`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        raw_text: candidateRawText,
-      }),
-    });
-
-    if (!response.ok) {
-      const errorData: ErrorResponse = await response.json();
-      console.error(
-        "Backend error during candidate data processing:",
-        errorData.detail
-      );
-      return { success: false, error: errorData.detail };
-    }
-
-    const data: CandidateSummarizeResponse = await response.json();
-
-    return { success: true, data: data };
-  } catch (e: any) {
-    console.error(
-      "Network or unexpected error during candidate data processing:",
-      e
-    );
-    return { success: false, error: e.message || "Error de red o inesperado." };
-  }
-}
-
+// Función para obtener los detalles de un candidato por su ID
 export async function getCandidateDetails(
   id: string
 ): Promise<CandidateDataExtended | null> {
