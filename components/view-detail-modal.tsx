@@ -53,8 +53,8 @@ export function ViewDetailModal({ isOpen, onClose, candidate }: ViewDetailModalP
                   }
                 >
                   {candidate.employabilityResults?.isApt
-                    ? "APTO"
-                    : "NO APTO"}
+                    ? "NO APTO"
+                    : "APTO"}
                 </Badge>
               )}
             </div>

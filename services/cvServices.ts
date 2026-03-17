@@ -158,6 +158,7 @@ export async function matchOffersAction(cvData: ExtractedCVData): Promise<{
   success: boolean;
   error?: string;
 } & OfferMatchResponse> {
+  console.log("Iniciando matchOffersAction con datos:", cvData);
   try {
     const response = await fetch(`${API_BASE_URL}/offer-matcher`, {
       method: 'POST',
@@ -171,6 +172,7 @@ export async function matchOffersAction(cvData: ExtractedCVData): Promise<{
     }
 
     const { summary, offers } = await response.json();
+    console.log("Respuesta de offer-matcher:", { summary, offers });
 
     // Mapeamos a nuestro formato interno
     const top4 = offers
@@ -242,6 +244,7 @@ export async function matchCandidatesAction(
   } catch (e: any) {
     return { success: false, error: e.message || 'Error de red' };
   }
+  
 }
 
 // Función para obtener los detalles de un candidato por su ID
